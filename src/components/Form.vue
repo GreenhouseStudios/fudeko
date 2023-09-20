@@ -10,71 +10,51 @@
     </div>
     <br />
     <div v-if="userVerified">
-      <div v-for="prompt in prompts" :key="prompt.prompt_text">
-        <span class="prompt">
-          <span class="prompt-header">
-            <p>{{ prompt.promptText }}</p>
-            <button
-              v-if="activePrompt !== prompt"
-              class=""
-              @click="setActivePrompt(prompt)"
-            >
-              Answer
-            </button>
-          </span>
+      <div v-if="!submitted && prompts">
+        <div v-for="prompt in prompts" :key="prompt.prompt_text">
+          <span class="prompt">
+            <span class="prompt-header">
+              <p>{{ prompt.promptText }}</p>
+              <button
+                v-if="activePrompt !== prompt"
+                class=""
+                @click="setActivePrompt(prompt)"
+              >
+                Answer
+              </button>
+            </span>
 
-          <span v-if="activePrompt === prompt">
-            <textarea
-              v-model="response"
-              name="prompt_response"
-              class="prompt-response"
-              cols="30"
-              rows="20"
-              style="border: none"
-            ></textarea>
-            <button @click="submit">Submit</button>
+            <span v-if="activePrompt === prompt">
+              <textarea
+                v-model="response"
+                name="prompt_response"
+                class="prompt-response"
+                cols="30"
+                rows="20"
+                style="border: none"
+              ></textarea>
+              <button @click="submit">Submit</button>
+            </span>
           </span>
-        </span>
+        </div>
       </div>
+      <div class="complete" v-else>
+          <h2>Thanks for your submission! :)</h2>
+        </div>
     </div>
   </div>
 </template>
 
 <script>
-
-function convertToPromptObject(inputString) {
-  const regex = /(\d+),\s*([^,]+)(?=\s*,\s*|$)/g;
-  const prompts = {};
-
-  let match;
-
-  while ((match = regex.exec(inputString)) !== null) {
-    const promptNumber = parseInt(match[1], 10);
-    const promptText = match[2].trim(); // Trim any leading/trailing whitespace
-    prompts[promptNumber] = { promptNumber, promptText };
-  }
-
-  return prompts;
-}
-
 export default {
   data() {
     return {
-      prompts: [
-        { prompt_text: "What's your favorite way to spend a weekend?" },
-        {
-          prompt_text:
-            "If you could have any superpower, what would it be and why?",
-        },
-        {
-          prompt_text:
-            "What's the last book you read or movie you watched that left an impact on you?",
-        },
-      ],
+      prompts: [],
       activePrompt: null,
       response: "",
       user: "",
       userVerified: false,
+      submitted: false,
     };
   },
   methods: {
@@ -82,20 +62,37 @@ export default {
       this.activePrompt = p;
     },
     submit() {
-      alert(this.response);
+      const URL =
+        "https://script.google.com/macros/s/AKfycbztpBQ9d9Dmvmg_A2pqcdvHwCPC8X9mRVIxI-p9em1QOmb6FJHBOHVu_eFnZ_vXDqGP/exec";
+
+      const formData = new FormData();
+      formData.append("email", this.user);
+      formData.append("promptNum", this.activePrompt.promptNumber);
+      formData.append("response", this.response);
+      const bodyData = {
+        response: this.response,
+        email: this.user,
+        promptNumber: this.activePrompt.promptNumber,
+      };
+      fetch(URL, {
+        mode: "no-cors",
+        redirect: "follow",
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8",
+        },
+        body: JSON.stringify(bodyData),
+      })
+        .then((res) => res.text())
+        .then((data) => {
+          console.log(data);
+          this.submitted = true;
+        });
     },
     verifyUser() {
-      // const http = new XMLHttpRequest();
       const URL =
-        "https://script.google.com/macros/s/AKfycbwLbZMYhU0lwxMvoeLVEIh7H4yRz2I77IFdTOgzMAvF3b737LoVuE77NPb9dV8W8S7H/exec?user=" +
+        "https://script.google.com/macros/s/AKfycbztpBQ9d9Dmvmg_A2pqcdvHwCPC8X9mRVIxI-p9em1QOmb6FJHBOHVu_eFnZ_vXDqGP/exec?user=" +
         this.user;
-      // http.open("GET",url)
-      // http.send()
-
-      // http.onreadystatechange = (e) => {
-      //     console.log(e)
-      //     if(e) this.userVerified = true;
-      // }
 
       fetch(URL, {
         mode: "cors",
@@ -105,16 +102,14 @@ export default {
           "Content-Type": "text/plain;charset=utf-8",
         },
       })
-        .then((res) => res.text())
+        .then((res) => res.json())
         .then((data) => {
           this.userVerified = true;
-          this.prompts = convertToPromptObject(data)
+          this.prompts = data["body"];
         });
     },
   },
-  computed: {
-  
-  },
+  computed: {},
 };
 </script>
 
