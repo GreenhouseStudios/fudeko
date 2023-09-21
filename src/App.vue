@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <img src="./assets/mikan-circle.png" alt="fudeko mikan logo" height="100" class="h-48 mx-auto">
+    <img src="./assets/mikan-circle.png" alt="fudeko mikan logo" class="w-32 mx-auto md:w-48">
     <Form></Form>
   </div>
 </template>
@@ -19,7 +19,7 @@ export default {
 <style>
 
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

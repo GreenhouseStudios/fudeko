@@ -1,18 +1,18 @@
 <template>
-  <div class="container">
+  <div class="container relative px-8 md:w-1/2 sm:w-56">
     <h1 class="text-3xl font-bold underline">Fudeko Prompt Form</h1>
 
     <br />
-    <div class="prompt animate__animated animate__bounce" v-if="!userVerified">
+    <div class="prompt animate__animated animate__bounce" v-if="!userVerified && !loading">
       <label for="email">Enter your email address: </label>
       <input type="text" name="email" v-model="user" class="mr-8" />
       <button @click="verifyUser">Submit</button>
     </div>
     <br />
-    <div v-if="userVerified">
+    <div v-if="userVerified && !loading">
       <div v-if="!submitted && prompts">
         <div v-for="prompt in prompts" :key="prompt.prompt_text">
-          <span class="prompt">
+          <span class="prompt animate__animated animate__fadeInDown">
             <span class="prompt-header">
               <p>{{ prompt.promptText }}</p>
               <button
@@ -28,10 +28,11 @@
               <textarea
                 v-model="response"
                 name="prompt_response"
-                class="prompt-response"
+                class="px-2 py-2 prompt-response"
                 cols="30"
                 rows="20"
                 style="border: none"
+                placeholder="Type your response here"
               ></textarea>
               <button @click="submit">Submit</button>
             </span>
@@ -42,6 +43,10 @@
           <h2>Thanks for your submission! :)</h2>
         </div>
     </div>
+    <!-- <div class="loading">
+        <img src="../assets/mikan-circle.png" alt="loading state image" class="absolute">
+    </div> -->
+    <div v-if="loading" style="border-top-color:transparent" class="absolute w-16 h-16 border-4 border-yellow-300 border-solid rounded-full left-56 animate-spin"></div>
   </div>
 </template>
 
@@ -55,6 +60,7 @@ export default {
       user: "",
       userVerified: false,
       submitted: false,
+      loading: false,
     };
   },
   methods: {
@@ -62,6 +68,7 @@ export default {
       this.activePrompt = p;
     },
     submit() {
+      this.loading = true;
       const URL =
         "https://script.google.com/macros/s/AKfycbztpBQ9d9Dmvmg_A2pqcdvHwCPC8X9mRVIxI-p9em1QOmb6FJHBOHVu_eFnZ_vXDqGP/exec";
 
@@ -87,9 +94,11 @@ export default {
         .then((data) => {
           console.log(data);
           this.submitted = true;
+          this.loading = false;
         });
     },
     verifyUser() {
+      this.loading = true;
       const URL =
         "https://script.google.com/macros/s/AKfycbztpBQ9d9Dmvmg_A2pqcdvHwCPC8X9mRVIxI-p9em1QOmb6FJHBOHVu_eFnZ_vXDqGP/exec?user=" +
         this.user;
@@ -106,6 +115,7 @@ export default {
         .then((data) => {
           this.userVerified = true;
           this.prompts = data["body"];
+          this.loading = false;
         });
     },
   },
@@ -116,7 +126,6 @@ export default {
 <style lang="scss" scoped>
 .container {
   margin: 0 auto;
-  width: 30%;
 }
 
 .prompt-header {
