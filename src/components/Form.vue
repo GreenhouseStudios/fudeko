@@ -35,12 +35,16 @@
                 placeholder="Type your response here"
               ></textarea>
               <button @click="submit">Submit</button>
+              <span class="absolute bottom-1 right-1">Char: {{ responseCharCount }} Word: {{ responseWordCount }}</span>
             </span>
           </span>
         </div>
       </div>
-      <div class="complete" v-else>
+      <div class="complete" v-if="submitted">
           <h2>Thanks for your submission! :)</h2>
+        </div>
+        <div v-if="prompts.length < 1">
+          <h2>You are all caught up with your prompts, please check back later!</h2>
         </div>
     </div>
     <!-- <div class="loading">
@@ -68,6 +72,7 @@ export default {
       this.activePrompt = p;
     },
     submit() {
+      if(this.response.split(' ').length < 100 || this.response.length < 200) return
       this.loading = true;
       const URL =
         "https://script.google.com/macros/s/AKfycbztpBQ9d9Dmvmg_A2pqcdvHwCPC8X9mRVIxI-p9em1QOmb6FJHBOHVu_eFnZ_vXDqGP/exec";
@@ -119,7 +124,14 @@ export default {
         });
     },
   },
-  computed: {},
+  computed: {
+    responseWordCount(){
+      return this.response.split(" ").length - 1
+    },
+    responseCharCount(){
+      return this.response.length;
+    }
+  },
 };
 </script>
 
