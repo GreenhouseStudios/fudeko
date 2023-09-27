@@ -138,7 +138,9 @@ export default {
         .then((res) => res.json())
         .then((data) => {
           this.userVerified = true;
-          this.prompts = data["body"];
+          this.prompts = data["body"].map(value => ({ value, sort: Math.random() }))
+    .sort((a, b) => a.sort - b.sort)
+    .map(({ value }) => value);
           this.loading = false;
         });
     },
