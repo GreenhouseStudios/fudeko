@@ -6,51 +6,63 @@
     <div class="prompt animate__animated animate__bounce" v-if="!userVerified && !loading">
       <label for="email">Enter your email address: </label>
       <input type="text" name="email" v-model="user" class="mr-8" />
-      <button @click="verifyUser">Submit</button>
+      <button @click="verifyUser" :class="{ 'opacity-25 cursor-not-allowed': user.length <= 0 }"
+        :disabled="user.length <= 0"
+        class="p-2 bg-yellow-300 border-2 border-yellow-400 rounded disabled:bg-yellow-50 disabled:border-0 hover:bg-yellow-100">Submit</button>
     </div>
     <br />
     <div v-if="userVerified && !loading">
-      <div v-if="!submitted && prompts">
-        <div v-for="prompt in prompts" :key="prompt.prompt_text">
-          <span class="prompt animate__animated animate__fadeInDown">
+      <div v-if="!submitted && prompts && !userCaughtUp">
+        <div class="">
+          <h2 class="font-bold">Select one of the following prompts to answer this week:</h2>
+          <span class="flex gap-2 my-4">
+            <button v-for="prompt in prompts" :key="prompt.promptText" @click="setActivePrompt(prompt)"
+              class="w-1/3 p-5 px-3 bg-yellow-200 border-2 border-yellow-500 rounded animate__animated animate__fadeIn hover:bg-yellow-100"
+              :class="prompt === activePrompt ? 'bg-yellow-200' : 'bg-yellow-400'">{{ prompt.promptText }}</button>
+          </span>
+        </div>
+        <div>
+          <span v-if="activePrompt" class="prompt animate__animated animate__fadeInUp">
             <span class="prompt-header">
-              <p>{{ prompt.promptText }}</p>
-              <button
-                v-if="activePrompt !== prompt"
-                class=""
-                @click="setActivePrompt(prompt)"
-              >
-                Answer
-              </button>
+              <p v-if="previewing">Please confirm your submission text:</p>
+              <p v-else>{{ activePrompt.promptText }}</p>
             </span>
 
-            <span v-if="activePrompt === prompt">
-              <textarea
-                v-model="response"
-                name="prompt_response"
-                class="px-2 py-2 prompt-response"
-                cols="30"
-                rows="20"
-                style="border: none"
-                placeholder="Type your response here"
-              ></textarea>
-              <button @click="submit">Submit</button>
-              <span class="absolute bottom-1 right-1">Char: {{ responseCharCount }} Word: {{ responseWordCount }}</span>
+            <span>
+              <div v-if="!previewing">
+                <textarea v-model="response" name="prompt_response" class="px-2 py-2 prompt-response" cols="30" rows="10"
+                  style="border: none" placeholder="Type your response here"></textarea>
+
+                <!-- <button @click="submit" disabled="response.length <= 0" class="p-4 border-2 border-gray-400">Submit</button> -->
+                <input type="submit" :class="{ 'opacity-25 cursor-not-allowed': response.length <= 0 }" @click="preview"
+                  :disabled="response.length <= 0"
+                  class="p-2 font-bold bg-yellow-300 border-2 border-yellow-400 rounded disabled:bg-yellow-50 disabled:border-0 hover:bg-yellow-100">
+                <span class="absolute bottom-1 right-1">Char: {{ responseCharCount }} Word: {{ responseWordCount }}</span>
+              </div>
+              <div v-else>
+                <div class="p-10 mb-20 bg-yellow-50 preview-text">{{ response }}</div>
+                <div class="flex justify-end gap-4">
+                  <button
+                    @click="back" class="p-2 font-bold bg-yellow-300 border-2 border-yellow-400 rounded disabled:bg-yellow-50 disabled:border-0 hover:bg-yellow-100">Back</button><button
+                    @click="submit" class="p-2 font-bold bg-yellow-300 border-2 border-yellow-400 rounded disabled:bg-yellow-50 disabled:border-0 hover:bg-yellow-100">Confirm</button>
+                </div>
+              </div>
             </span>
           </span>
         </div>
       </div>
       <div class="complete" v-if="submitted">
-          <h2>Thanks for your submission! :)</h2>
-        </div>
-        <div v-if="prompts.length < 1">
-          <h2>You are all caught up with your prompts, please check back later!</h2>
-        </div>
+        <h2>Thanks for your submission! :)</h2>
+      </div>
+      <div v-if="prompts.length < 1">
+        <h2>You are all caught up with your prompts, please check back later!</h2>
+      </div>
     </div>
     <!-- <div class="loading">
         <img src="../assets/mikan-circle.png" alt="loading state image" class="absolute">
     </div> -->
-    <div v-if="loading" style="border-top-color:transparent" class="absolute w-16 h-16 border-4 border-yellow-300 border-solid rounded-full left-56 animate-spin"></div>
+    <div v-if="loading" style="border-top-color:transparent"
+      class="absolute w-16 h-16 border-4 border-yellow-300 border-solid rounded-full left-56 animate-spin"></div>
   </div>
 </template>
 
@@ -65,14 +77,21 @@ export default {
       userVerified: false,
       submitted: false,
       loading: false,
+      previewing: false,
     };
   },
   methods: {
     setActivePrompt(p) {
       this.activePrompt = p;
     },
+    preview() {
+      this.previewing = true;
+    },
+    back() {
+      this.previewing = false;
+    },
     submit() {
-      if(this.response.split(' ').length < 100 || this.response.length < 200) return
+      // if(this.response.split(' ').length < 100 || this.response.length < 200) return
       this.loading = true;
       const URL =
         "https://script.google.com/macros/s/AKfycbztpBQ9d9Dmvmg_A2pqcdvHwCPC8X9mRVIxI-p9em1QOmb6FJHBOHVu_eFnZ_vXDqGP/exec";
@@ -125,11 +144,14 @@ export default {
     },
   },
   computed: {
-    responseWordCount(){
+    responseWordCount() {
       return this.response.split(" ").length - 1
     },
-    responseCharCount(){
+    responseCharCount() {
       return this.response.length;
+    },
+    userCaughtUp(){
+      return this.prompts.length < 1
     }
   },
 };
@@ -160,20 +182,14 @@ export default {
   border-radius: 5px;
   background-color: rgb(252, 241, 220);
 
-  button {
-    background-color: orange;
-    border: none;
-    padding: 1em;
-    border-radius: 5px;
 
-    &:hover {
-      background-color: rgb(253, 199, 99);
-    }
-  }
 
   p {
     display: inline;
     margin-right: 10px;
   }
+}
+.preview-text{
+  font-family: Georgia, 'Times New Roman', Times, serif;
 }
 </style>
