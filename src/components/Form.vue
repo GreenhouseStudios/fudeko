@@ -32,8 +32,9 @@
               Prompt</button>
           </span>
         </div>
-        <div>
-          <span v-if="activePrompt" class="prompt animate__animated animate__fadeInUp">
+        <div v-if="activePrompt">
+          
+          <span  class="prompt animate__animated animate__fadeInUp">
             <span class="flex flex-col prompt-header">
               <p class="font-bold">{{ activePrompt.promptText }}</p>
               <p v-if="previewing" class="mt-5 font-medium">Please confirm your submission text:</p>
@@ -48,11 +49,11 @@
                 </div>
                 <textarea v-model="response" name="prompt_response" class="px-2 py-2 prompt-response" cols="30" rows="10"
                   style="border: none" placeholder="Type your response here"></textarea>
-
-                <!-- <button @click="submit" disabled="response.length <= 0" class="p-4 border-2 border-gray-400">Submit</button> -->
+<span class="flex gap-5 justify-center">
+                  <button @click="activePrompt = null" class="p-2 font-bold bg-yellow-300 border-2 border-yellow-400 rounded disabled:bg-yellow-50 disabled:border-0 hover:bg-yellow-100">Back</button>
                 <input type="submit" :class="{ 'opacity-25 cursor-not-allowed': response.length <= 0 }" @click="preview"
                   :disabled="response.length <= 0"
-                  class="p-2 font-bold bg-yellow-300 border-2 border-yellow-400 rounded disabled:bg-yellow-50 disabled:border-0 hover:bg-yellow-100">
+                  class="p-2 font-bold bg-yellow-300 border-2 border-yellow-400 rounded disabled:bg-yellow-50 disabled:border-0 hover:bg-yellow-100"></span>
                 <span class="absolute bottom-1 right-1">Char: {{ responseCharCount }} Word: {{ responseWordCount }}</span>
               </div>
               <div v-else>

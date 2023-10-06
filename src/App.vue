@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <img src="./assets/mikan-circle.png" alt="fudeko mikan logo" class="w-32 mx-auto md:w-48">
+    <img src="./assets/mikan-circle.png" alt="fudeko mikan logo" class="w-32 mt-5 mx-auto md:w-48">
 
     <nav>
     </nav>
