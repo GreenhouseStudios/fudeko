@@ -1,9 +1,6 @@
 <template>
   <div id="app">
-    <img src="./assets/mikan-circle.png" alt="fudeko mikan logo" class="w-32 mt-5 mx-auto md:w-48">
-
-    <nav>
-    </nav>
+    <img src="./assets/mikan-circle.png" alt="fudeko mikan logo" class="w-16 mx-auto mt-5 md:w-32">
     <router-view/>
   </div>
 </template>

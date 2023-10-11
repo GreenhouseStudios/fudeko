@@ -10,6 +10,7 @@
   "dependencies": {
     "animate.css": "^4.1.1",
     "autoprefixer": "^9.8.8",
+    "bootstrap-icons": "^1.11.1",
     "core-js": "^3.6.5",
     "postcss": "^7.0.39",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.17",
