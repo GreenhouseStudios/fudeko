@@ -1,5 +1,5 @@
 <template>
-  <div class="container relative px-4 md:px-8 md:w-1/2">
+  <div class="container relative px-4 md:px-8 md:w-full">
     <h1 class="text-3xl font-bold">Fudeko Prompt Form</h1>
 
     <br />
@@ -16,7 +16,7 @@
             <span class="flex flex-col gap-2 my-4 md:flex-row" id="prompt-choices-container">
               <div class="relative md:w-1/3 " id="button-wrapper" v-for="prompt in prompts" :key="prompt.promptText">
                 <button @click="setActivePrompt(prompt)"
-                  class="p-5 px-3 bg-yellow-200 border-2 border-yellow-400 rounded shadow-md md:h-48 animate__animated animate__fadeIn hover:bg-yellow-100"
+                  class="w-full p-5 px-3 bg-yellow-200 border-2 border-yellow-400 rounded shadow-md md:h-48 animate__animated animate__fadeIn hover:bg-yellow-100"
                   :class="prompt === activePrompt ? 'bg-yellow-200' : 'bg-yellow-300'">{{ prompt.promptText }}</button>
                 <!-- <button
                   class="absolute w-8 h-8 font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -right-2 hover:bg-red-300"
