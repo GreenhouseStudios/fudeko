@@ -9,6 +9,11 @@ const routes = [
         name: 'Form',
         component: () => import('../components/Form.vue'),
     },
+    {
+      path: '/Form/:email/:promptNumber',
+      name: 'Form',
+      component: () => import('../components/Form.vue'),
+  },
 ]
 
 const router = new VueRouter({
