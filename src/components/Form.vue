@@ -14,7 +14,7 @@
           <span v-if="!activePrompt && questionsNotToAsk.length < 3 && !preselectedPromptNumber" id="prompt-choose-container" class="mb-10">
             <h2 class="font-bold">Select one of the following prompts to answer this week:</h2>
             <span class="flex flex-col justify-center gap-3 my-4 md:gap-5 grow md:flex-row" id="prompt-choices-container">
-              <div class="relative" id="button-wrapper" v-for="prompt in prompts" :key="prompt.promptText"
+              <div class="relative" id="button-wrapper" v-for="prompt in randomizedPrompts" :key="prompt.promptText"
                 v-show="!questionsNotToAsk.includes(prompt.promptNumber)">
                 <button @click="setActivePrompt(prompt)"
                   class="w-full p-3 px-3 bg-yellow-200 border-2 border-yellow-400 rounded shadow-md md:max-w-md md:p-1 md:h-36 animate__animated animate__fadeIn hover:bg-yellow-100"
@@ -173,9 +173,7 @@ If something hard comes to mind, ask yourself if you want to go there. If you de
         }
         else {
           this.userVerified = true;
-          this.prompts = data["body"].map( value => ( { value, sort: Math.random() } ) )
-            .sort( ( a, b ) => a.sort - b.sort )
-            .map( ( { value } ) => value );
+          this.prompts = data["body"]
         }
         if(this.preselectedPromptNumber){
           this.activePrompt = this.prompts[this.preselectedPromptNumber - 1]
@@ -241,6 +239,11 @@ If something hard comes to mind, ask yourself if you want to go there. If you de
     },
   },
   computed: {
+    randomizedPrompts(){
+      return this.prompts.map( value => ( { value, sort: Math.random() } ) )
+            .sort( ( a, b ) => a.sort - b.sort )
+            .map( ( { value } ) => value );
+    },
     responseWordCount() {
       return this.response.trim().split( " " ).length;
     },
