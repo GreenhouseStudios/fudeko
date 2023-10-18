@@ -57,10 +57,11 @@
                     placeholder="Type your response here">
                   <trix-editor input="x"></trix-editor>
                 </div> -->
-                <TipTap class="mx-auto my-10 bg-white md:w-3/4" v-model="response"></TipTap>
-                <p class="font-semibold">Writing Tip: </p>
-                <p class="text-sm leading-none">{{ writingTip }}</p>
-                <span class="flex justify-center gap-5 mt-10">
+                <!-- <TipTap class="mx-auto my-10 bg-white md:w-3/4" v-model="response"></TipTap> -->
+                <Editor class="my-10 bg-white" v-model="response" style="height: 320px" placeholder="Type your response here"></Editor>
+                <!-- <p class="font-semibold" v-tooltip="'Hello'">Writing Tip </p> -->
+                <!-- <p class="text-sm leading-none">{{ writingTip }}</p> -->
+                <span class="flex justify-center gap-5 mt-24">
                   <button @click="back"
                     class="p-2 font-bold bg-yellow-300 border-2 border-yellow-400 rounded disabled:bg-yellow-50 disabled:border-0 hover:bg-yellow-100">Back</button>
                   <button :class="{ 'opacity-25 cursor-not-allowed': response.length <= 0 }" @click="preview"
@@ -126,8 +127,8 @@
 import FeedbackDifficulty from './FeedbackDifficulty.vue'
 
 // eslint-disable-next-line no-unused-vars
-import TipTap from './TipTap.vue'
-
+// import TipTap from './TipTap.vue'
+import Editor from 'primevue/editor';
 export default {
   data() {
     return {
@@ -261,7 +262,7 @@ If something hard comes to mind, ask yourself if you want to go there. If you de
       }
     }
   },
-  components: { FeedbackDifficulty, TipTap }
+  components: { FeedbackDifficulty, Editor }
 };
 </script>
 
