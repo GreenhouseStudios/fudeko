@@ -1,25 +1,45 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-
-Vue.use(VueRouter)
+import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
-    {
-        path: '/Form/:email',
-        name: 'Form',
-        component: () => import('../components/Form.vue'),
-    },
-    {
-      path: '/Form/:email/:promptNumber',
-      name: 'Form',
-      component: () => import('../components/Form.vue'),
+  {
+    path: "/form/:email",
+    name: "Form",
+    component: () => import("../components/Form.vue"),
   },
-]
+  {
+    path: "/form/:email/:promptNumber",
+    name: "SinglePrompt",
+    component: () => import("../components/Form.vue"),
+  },
+  {
+    path: "/responses",
+    name: "responses",
+    component: () => import("../components/Responses.vue"),
+  },
+  {
+    path: "/responses/:id",
+    name: "responseView",
+    component: () => import("../components/ResponseView.vue"),
+  },
+  {
+    path: "/admin",
+    name: "admin",
+    component: () => import("../views/AdminView.vue"),
+  },
+  {
+    path: "/",
+    name: "login",
+    component: () => import("../views/Login.vue"),
+  },
+];
 
-const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes
-})
+export const router = createRouter({
+  history: createWebHistory(),
+  routes,
+});
 
-export default router
+// const router = new VueRouter({
+//   mode: 'history',
+//   // base: process.env.BASE_URL,
+//   routes
+// })

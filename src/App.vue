@@ -1,3 +1,30 @@
+<script>
+//  import { supabase } from './lib/supabaseClient'
+import {useCounterStore} from '@/stores/store'
+import { mapActions } from 'pinia'
+
+  export default {
+  data() {
+    return {
+      participants: null
+    }
+  },
+  async mounted () {
+    if(this.user){
+      this.initializeStore();
+    }
+  },
+  computed: {
+    user() {
+      return true
+    }
+  },
+  methods: {
+    ...mapActions(useCounterStore,['setPrompts','initializeStore']),
+  },
+ }
+ </script>
+
 <template>
   <div id="app" class="h-screen p-0 bg-yellow-50">
     <img src="./assets/mikan-circle.png" alt="fudeko mikan logo" class="w-16 pt-5 mx-auto md:w-32">
