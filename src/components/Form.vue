@@ -224,7 +224,7 @@ If something hard comes to mind, ask yourself if you want to go there. If you de
       const bodyData = {
         response_text: this.response,
         participant: 2,
-        prompt: this.custom ? 0 : this.activePrompt.promptNumber,
+        prompt: this.custom ? 0 : this.activePrompt.id,
         user_title: this.userTitle,
         share_option: this.shareOption.name,
         response_difficulty: this.difficulty,

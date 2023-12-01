@@ -8,19 +8,8 @@
 </template>
 
 <script>
-import { supabase } from '../lib/supabaseClient';
-
-async function getResponses() {
-    const { data } = await supabase.from( 'responses' ).select()
-    console.log( data )
-    return data;
-}
-
-async function getPrompts() {
-    const { data } = await supabase.from( 'prompts' ).select()
-    console.log( data )
-    return data;
-}
+import { mapStores, mapState, mapActions } from 'pinia'
+import { useCounterStore } from '@/stores/store'
 
 export default {
     // props: {
@@ -31,15 +20,15 @@ export default {
     // },
     data() {
         return {
-            responses: [],
-            prompts: []
         }
     },
-    async mounted() {
-        this.responses = await getResponses();
-        this.prompts = await getPrompts();
+    methods: {
+
+        ...mapActions( useCounterStore, ['toggleLoading', 'toggleError', 'getUserPrompts'] ),
     },
     computed: {
+        ...mapStores( useCounterStore ),
+        ...mapState( useCounterStore, ['count', 'prompts', 'responses', 'loading', 'error', 'usersPromptChoices'] ),
         response() {
             return this.responses.find( r => r.id == this.$route.params.id )
         }

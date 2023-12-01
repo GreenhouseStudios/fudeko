@@ -2,6 +2,7 @@
 //  import { supabase } from './lib/supabaseClient'
 import {useCounterStore} from '@/stores/store'
 import { mapActions } from 'pinia'
+import Nav from './components/Nav.vue'
 
   export default {
   data() {
@@ -22,11 +23,16 @@ import { mapActions } from 'pinia'
   methods: {
     ...mapActions(useCounterStore,['setPrompts','initializeStore']),
   },
+  components: {
+    Nav,
+  },
  }
  </script>
 
 <template>
-  <div id="app" class="h-screen p-0 bg-yellow-50">
+  <div id="app" class="min-h-screen p-0 bg-yellow-50">
+    <!-- Nav component -->
+    <Nav></Nav>
     <img src="./assets/mikan-circle.png" alt="fudeko mikan logo" class="w-16 pt-5 mx-auto md:w-32">
     <router-view/>
   </div>

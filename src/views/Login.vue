@@ -1,5 +1,5 @@
 <template>
-    <div class="px-40 mx-auto">
+    <div class="flex justify-center px-40 mx-auto">
         <div class="w-1/5">
             <h1 class="my-10 text-2xl font-bold">Login</h1>
             <form>
@@ -7,10 +7,10 @@
                 <InputText id="email" type="text" v-model="email" /></div>
 
                 <div class="flex flex-col w-full my-2" ><label for="password">Password</label>
-                <Password id="password" v-model="password" :feedback="false" /></div>
+                <Password id="password" v-model="password" :feedback="false" inputStyleClass="w-full" inputStyle="width: '100%'" style="width: '100%'"/></div>
 
                 <div>
-                    <Button @click="login">Login</Button>
+                    <Button @click="loginUser" class="p-2 my-2 bg-yellow-300 border-2 border-yellow-400">Login</Button>
                 </div>
             </form>
         </div>
@@ -23,19 +23,26 @@ import Password from 'primevue/password';
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button'
 import { supabase } from '../lib/supabaseClient';
+import { useCounterStore } from '@/stores/store'
+import { mapStores, mapState, mapActions } from 'pinia' 
 // import { store } from '../stores/store';
 export default {
     data() {
         return {
             email: '',
-            password: 'rNs@Qc7Fj6xTj$sf'
+            password: ''
         }
     },
     methods: {
-        login() {
-            supabase.auth.signInWithPassword({email: this.email, password: this.password}).then((res) =>{
-                console.log(res)
-
+        ...mapActions( useCounterStore, ['toggleLoading', 'toggleError', 'getUserPrompts','login'] ),
+        async loginUser() {
+            await supabase.auth.signInWithPassword({email: this.email, password: this.password}).then((res) =>{
+            console.log(res)
+            this.toggleLoading();
+            this.login({email: this.email, password: this.password})
+            // this.$router.push('/form/' + this.email)
+            this.$router.push('/admin')
+            this.toggleLoading();
             }).catch(err => console.log(err))
         }
     },
@@ -44,6 +51,17 @@ export default {
     },
     mounted () {
 
+    },
+    computed: {
+        mapStores() {
+            return mapStores( useCounterStore )
+        },
+        mapState() {
+            return mapState( useCounterStore, ['count', 'prompts', 'user','responses', 'loading', 'error', 'usersPromptChoices'] )
+        },
+        name() {
+            return this.data 
+        }
     },
 }
 </script>

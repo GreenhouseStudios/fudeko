@@ -4,15 +4,18 @@ import { supabase } from "../lib/supabaseClient";
 export const useCounterStore = defineStore("counter", {
   state: () => {
     return {
-      count: 0,
       user: null,
-      userID: 0,
-      prompts: [],
       loading: false,
       error: false,
       participants: [],
+      prompts: [],
+      responses: [],
       usersPromptChoices: [],
     };
+  },
+  persist: {
+    storage: sessionStorage,
+    paths: ['user'],
   },
   actions: {
     increment() {
@@ -21,12 +24,19 @@ export const useCounterStore = defineStore("counter", {
     login(value) {
       this.user = value;
     },
+    logout() {  
+      this.user = null;
+    },
     setPrompts(value) {
       this.prompts = value;
     },
     async getPrompts() {
       const prompts = await supabase.from("prompts").select("id,prompt_text");
       this.prompts = prompts.data;
+    },
+    async getResponses() {
+      const responses = await supabase.from("responses").select();
+      this.responses = responses.data;
     },
     toggleLoading() {
       this.loading = !this.loading;
@@ -41,10 +51,15 @@ export const useCounterStore = defineStore("counter", {
     initializeStore() {
       this.getParticipants();
       this.getPrompts();
+      this.getResponses();
     },
     submitResponse() {},
     async getUserPrompts(userEmail) {
       const userID = this.participants.find((p) => p.email === userEmail).id;
+      // const result = await supabase.rpc("get_next_prompt_set", {user_id: userID})
+      // this.usersPromptChoices = result.data;
+
+      //Get latest three outbounds
       const outs = await supabase
         .from("outbounds")
         .select("prompt")
