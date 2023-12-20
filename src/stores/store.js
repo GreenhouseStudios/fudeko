@@ -11,6 +11,7 @@ export const useCounterStore = defineStore("counter", {
       prompts: [],
       responses: [],
       usersPromptChoices: [],
+      tips: [],
     };
   },
   persist: {
@@ -31,12 +32,16 @@ export const useCounterStore = defineStore("counter", {
       this.prompts = value;
     },
     async getPrompts() {
-      const prompts = await supabase.from("prompts").select("id,prompt_text");
+      const prompts = await supabase.from("prompts").select("*");
       this.prompts = prompts.data;
     },
     async getResponses() {
       const responses = await supabase.from("responses").select();
       this.responses = responses.data;
+    },
+    async getTips() {
+      const tips = await supabase.from("tips").select();
+      this.tips = tips.data;
     },
     toggleLoading() {
       this.loading = !this.loading;
@@ -52,6 +57,7 @@ export const useCounterStore = defineStore("counter", {
       this.getParticipants();
       this.getPrompts();
       this.getResponses();
+      this.getTips();
     },
     submitResponse() {},
     async getUserPrompts(userEmail) {
@@ -71,5 +77,12 @@ export const useCounterStore = defineStore("counter", {
         outs.data.map((o) => o.prompt).includes(p.id)
       );
     },
+    async submitPrompt(prompt){
+      const sub = await supabase.from("prompts").insert(prompt);
+      console.log(sub);
+    }
   },
+  getters:{
+  
+  }
 });

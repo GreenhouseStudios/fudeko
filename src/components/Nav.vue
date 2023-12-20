@@ -1,6 +1,7 @@
 <template>
     <div class="flex justify-end">
         <nav v-if="user">
+            <router-link to="/admin" class="text-yellow-600">Admin</router-link> |
             <router-link to="/logout" @click="logout" class="text-yellow-600">Logout</router-link>
         </nav>
         <nav v-else>

@@ -48,6 +48,21 @@ const routes = [
     name: "Admin",
     component: () => import("../views/AdminView.vue"),
   },
+  // {
+  //   path: "/prompts",
+  //   name: "Prompts",
+  //   component: () => import("../components/Prompts.vue"),
+  // },
+  {
+    path: "/prompts/new",
+    name: "NewPrompt",
+    component: () => import("../components/PromptEdit.vue"),
+  },
+  {
+    path: "/prompt/:id",
+    name: "Prompts",
+    component: () => import("../views/PromptView.vue"),
+  }
  
 ];
 

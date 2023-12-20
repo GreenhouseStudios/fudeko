@@ -21,19 +21,22 @@
 <script>
 
 import Dropdown from 'primevue/dropdown';
-
+import Prompts from '../components/Prompts.vue';
 import Responses from '../components/Responses.vue';
 import Participants from '../components/Participants.vue';
+import Tips from '../components/Tips.vue';
 export default {
     components: {
-        Responses, Participants, Dropdown
+        Responses, Participants, Dropdown, Prompts, Tips
     },
     data() {
         return {
             view: { label: 'Responses', value: 'responses', component: Responses },
             views: [
                 { label: 'Responses', value: 'responses', component: Responses },
-                { label: 'Participants', value: 'participants', component: Participants },]
+                { label: 'Participants', value: 'participants', component: Participants },
+                { label: 'Prompts', value: 'prompts', component: Prompts },
+                { label: 'Tips', value: 'tips', component: Tips },]
         }
     },
     computed: {
