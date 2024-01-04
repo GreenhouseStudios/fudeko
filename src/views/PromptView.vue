@@ -26,6 +26,11 @@
                 v-model="familiarity"  class="w-1/2"></Dropdown>
         </div>
 
+        <div>
+            <h2 class="text-left">Overall Difficulty</h2>
+            <p>{{ overallDifficulty }}</p>  
+        </div>
+
         <div class="py-5"> <button label="Submit" @click="submit"
                 class="p-2 font-bold bg-yellow-300 border-2 border-yellow-400 rounded disabled:bg-yellow-50 disabled:border-0 hover:bg-yellow-100">Submit</button>
         </div>
@@ -90,9 +95,13 @@ export default {
                 prompt_subtext: this.subtext,
                 prompt_positivity: this.positivity,
                 prompt_difficulty: this.difficulty,
-                prompt_familiarity: this.familiarity
+                prompt_familiarity: this.familiarity,
+                overall_prompt_difficulty: this.overallDifficulty
             }
-        }
+        },
+        overallDifficulty(){
+            return (this.promptDifficulties.indexOf( this.difficulty ) + 1) + (this.promptAssociations.indexOf( this.positivity ) + 1) + (this.promptFamiliarities.indexOf( this.familiarity ) + 1);
+        },
     },
 }
 </script>
