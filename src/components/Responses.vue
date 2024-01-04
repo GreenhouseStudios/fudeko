@@ -2,9 +2,9 @@
     <div class="px-40">
        <!-- <h1 class="mt-5 text-xl font-bold text-left">Responses</h1> -->
 
-        <DataTable :value="responses" class="mx-auto">
-            <Column field="participant" header="ParticipantID"><template #body="slotProps">{{ slotProps.data.participant }}</template></Column>
-            <Column field="created_at" header="Date"><template #body="slotProps">{{ new Date(slotProps.data.created_at).toLocaleDateString() + " " + new Date(slotProps.data.created_at).toLocaleTimeString() }}</template></Column>
+        <DataTable :value="responses" class="mx-auto" sortField="created_at" :sortOrder="-1">
+            <Column field="participant" header="Participant"><template #body="slotProps">{{ participants.find(p => p.id === slotProps.data.participant).first_name}}</template></Column>
+            <Column field="created_at" sortable header="Date"><template #body="slotProps">{{ new Date(slotProps.data.created_at).toLocaleDateString() + " " + new Date(slotProps.data.created_at).toLocaleTimeString() }}</template></Column>
             <Column field="prompt" header="Prompt"></Column>
             <Column> <template #body="slotProps"> <router-link :to="'/responses/'+slotProps.data.id" class="text-blue-500 hover:text-blue-300"> View</router-link></template></Column>
         </DataTable>
@@ -27,7 +27,8 @@ export default {
     },
     computed: {
         ...mapStores(useCounterStore),
-        ...mapState( useCounterStore, ['count', 'prompts', 'responses', 'loading', 'error',] ),
+        ...mapState( useCounterStore, ['count', 'prompts', 'responses', 'loading', 'error', 'participants'] ),
+        
     },
 }
 </script>

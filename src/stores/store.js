@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { supabase } from "../lib/supabaseClient";
 
+
 export const useCounterStore = defineStore("counter", {
   state: () => {
     return {
@@ -9,6 +10,9 @@ export const useCounterStore = defineStore("counter", {
       error: false,
       participants: [],
       prompts: [],
+      promptDifficulties: [],
+      promptAssociations: [],
+      promptFamiliarities: [],
       responses: [],
       usersPromptChoices: [],
       tips: [],
@@ -43,6 +47,17 @@ export const useCounterStore = defineStore("counter", {
       const tips = await supabase.from("tips").select();
       this.tips = tips.data;
     },
+    async getEnum(rpcName){
+      let { data, error } = await supabase
+    .rpc(rpcName)
+    console.log(error);
+    return data;
+    },
+    async getPromptEnums(){
+    this.promptAssociations = await this.getEnum("get_positivities");
+    this.promptDifficulties = await this.getEnum("get_difficulties");
+    this.promptFamiliarities = await this.getEnum("get_familiarities");
+    },
     toggleLoading() {
       this.loading = !this.loading;
     },
@@ -56,6 +71,7 @@ export const useCounterStore = defineStore("counter", {
     initializeStore() {
       this.getParticipants();
       this.getPrompts();
+      this.getPromptEnums();
       this.getResponses();
       this.getTips();
     },
@@ -80,6 +96,16 @@ export const useCounterStore = defineStore("counter", {
     async submitPrompt(prompt){
       const sub = await supabase.from("prompts").insert(prompt);
       console.log(sub);
+    },
+    async updatePrompt(id,updatedData){
+      try{
+        const {data,error} = await supabase.from("prompts").update(updatedData).eq("id",id);
+        console.log(data);
+        console.log(error)
+      } catch(err){
+        console.log(err);
+      }
+      
     }
   },
   getters:{

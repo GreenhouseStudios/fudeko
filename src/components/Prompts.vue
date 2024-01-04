@@ -4,10 +4,10 @@
         <div class="my-5">
             <router-link to="/prompts/new"><Button label="New" icon="pi pi-plus"></Button></router-link>
         </div>
-        <DataTable :filters="filters" :value="prompts" class="mx-auto" paginator :rows="10" dataKey="id" filterDisplay="row"
+        <DataTable sortField="id" :sortOrder="1" :filters="filters" :value="prompts" class="mx-auto" paginator :rows="10" dataKey="id" filterDisplay="row"
             :globalFilterFields="['prompt_set']">
             <Column field="id" header="PromptID"></Column>
-            <Column field="prompt_text" header="Prompt">{{ slotProps.data.prompt_text }}</Column>
+            <Column field="prompt_text" header="Prompt" >{{ slotProps.data.prompt_text }}</Column>
             <Column field="prompt_set" header="Set" sortable filterField="prompt_set" :showFilterMenu="false"
                 :filterMenuStyle="{ width: '14rem' }" style="min-width: 12rem">
                 <template #body="slotProps"> {{ slotProps.data.prompt_set }}</template>
