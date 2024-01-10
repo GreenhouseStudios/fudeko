@@ -18,11 +18,11 @@ const routes = [
     name: "Form",
     component: () => import("../components/Form.vue"),
   },
-  {
-    path: "/form",
-    name: "FormList",
-    component: () => import("../components/Form.vue"),
-  },
+  // {
+  //   path: "/form",
+  //   name: "FormList",
+  //   component: () => import("../components/Form.vue"),
+  // },
   {
     path: "/form/:email/:promptNumber",
     name: "SinglePrompt",
@@ -62,7 +62,12 @@ const routes = [
     path: "/prompt/:id",
     name: "Prompts",
     component: () => import("../views/PromptView.vue"),
-  }
+  },
+  // {
+  //   path: "/form/:id",
+  //   name: "Form",
+  //   component: () => import("../components/Form.vue"),
+  // }
  
 ];
 

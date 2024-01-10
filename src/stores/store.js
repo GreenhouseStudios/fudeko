@@ -48,9 +48,8 @@ export const useCounterStore = defineStore("counter", {
       this.tips = tips.data;
     },
     async getEnum(rpcName){
-      let { data, error } = await supabase
+      let { data  } = await supabase
     .rpc(rpcName)
-    console.log(error);
     return data;
     },
     async getPromptEnums(){
@@ -77,17 +76,14 @@ export const useCounterStore = defineStore("counter", {
     },
     submitResponse() {},
     async getUserPrompts(userEmail) {
-      const userID = this.participants.find((p) => p.email === userEmail).id;
+      const userID = this.participants.find((p) => p.email === userEmail)?.id;
+      console.log(userID)
       // const result = await supabase.rpc("get_next_prompt_set", {user_id: userID})
       // this.usersPromptChoices = result.data;
 
       //Get latest three outbounds
-      const outs = await supabase
-        .from("outbounds")
-        .select("prompt")
-        .eq("participant", userID)
-        .order("created_at", { ascending: false })
-        .limit(3);
+      const outs = await supabase.rpc('get_latest_outbound_set', {user_id: userID})
+      console.log(outs)
       this.outbounds = outs.data;
       this.usersPromptChoices = this.prompts.filter((p) =>
         outs.data.map((o) => o.prompt).includes(p.id)

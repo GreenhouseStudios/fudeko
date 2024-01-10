@@ -1,7 +1,7 @@
 <!-- eslint-disable no-mixed-spaces-and-tabs -->
 <template>
 	<div class="flex justify-start" id="feedback-container">
-		<label for="feedback" class="mx-1 font-bold">How difficult was this to answer?</label>
+		<label for="feedback" class="mx-2 font-bold">How difficult was this to answer?</label>
 
 		<select name="feedback" id="feedback" :value="difficulty"  @change="$emit('update:difficulty', $event.target.value)">
 			<option value="None"></option>
