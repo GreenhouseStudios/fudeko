@@ -1,9 +1,9 @@
 <template>
-    <div class="w-1/2 mx-auto py-5" v-if="prompt">
-        <h1 class="text-lg font-bold mb-5">Edit Prompt</h1>
+    <div class="w-1/2 py-5 mx-auto" v-if="prompt">
+        <h1 class="mb-5 text-lg font-bold">Edit Prompt</h1>
 
         <h2 class="text-left">Prompt Text</h2>
-        <Editor v-model="text" class=" mb-24 " :style="{ height: '100px' }"></Editor>
+        <Editor v-model="text" class="mb-24 " :style="{ height: '100px' }"></Editor>
         <h2 class="text-left">Subtext</h2>
         <Editor v-model="subtext" class="mb-24 " :style="{ height: '100px' }"></Editor>
 
@@ -70,7 +70,7 @@ export default {
     },
     methods: {
 
-        ...mapActions( useCounterStore, ['toggleLoading', 'toggleError', 'getUserPrompts', 'updatePrompt'] ),
+        ...mapActions( useCounterStore, ['toggleLoading', 'toggleError',  'updatePrompt'] ),
         submit() {
             this.toggleLoading();
             this.updatePrompt( this.prompt.id, this.promptData ).then( () => {

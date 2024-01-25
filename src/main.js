@@ -24,7 +24,7 @@ app.use(PrimeVue)
 //     pinia.state,
 //     (state) => {
 //         if(state.user){
-//             localStorage.setItem("user", JSON.stringify(state.user));
+//             localStorage.setItem("counter", JSON.stringify(state.user));
 //         }
 
 //     },

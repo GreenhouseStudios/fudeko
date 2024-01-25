@@ -34,7 +34,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions( useCounterStore, ['toggleLoading', 'toggleError', 'getUserPrompts','login'] ),
+        ...mapActions( useCounterStore, ['toggleLoading', 'toggleError', 'login'] ),
         async loginUser() {
             await supabase.auth.signInWithPassword({email: this.email, password: this.password}).then((res) =>{
             console.log(res)

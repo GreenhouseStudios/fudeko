@@ -24,7 +24,7 @@ export default {
     },
     methods: {
 
-        ...mapActions( useCounterStore, ['toggleLoading', 'toggleError', 'getUserPrompts'] ),
+        ...mapActions( useCounterStore, ['toggleLoading', 'toggleError', ] ),
     },
     computed: {
         ...mapStores( useCounterStore ),

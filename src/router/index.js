@@ -26,7 +26,7 @@ const routes = [
   {
     path: "/form/:email/:promptNumber",
     name: "SinglePrompt",
-    component: () => import("../components/Form.vue"),
+    component: () => import("../components/ResponseForm.vue"),
   },
   {
     path: "/logout",
@@ -37,7 +37,7 @@ const routes = [
     path: "/participant/:id",
     name: "Participant",
     component: () => import("../components/ParticipantHistory.vue"),
-  }, 
+  },
   {
     path: "/responses/:id",
     name: "Responses",
@@ -68,7 +68,31 @@ const routes = [
   //   name: "Form",
   //   component: () => import("../components/Form.vue"),
   // }
- 
+  {
+    path: "/form/page2/:id",
+    name: "ResponseForm",
+    component: () => import("../components/ResponseForm.vue"),
+  },
+  {
+    path: "/form/page2/custom",
+    name: "ResponseFormCustom",
+    component: () => import("../components/ResponseForm.vue"),
+  },
+  {
+    path: '/confirmSubmit',
+    name: 'ConfirmSubmit',
+    component: () => import("../components/Confirmation.vue"),
+  },
+  {
+    path: "/:catchAll(.*)",
+    name: "NotFound",
+    component: () => import("../views/NotFound.vue"),
+  },
+  {
+    path: "/submitresponse",
+    name: "SubmitResponse",
+    component: () => import("../components/Confirmation.vue"),
+  }
 ];
 
 export const router = createRouter({
@@ -77,7 +101,7 @@ export const router = createRouter({
 });
 
 router.beforeEach(async (to) => {
-  const protectedRoutes = ["Participant", "Responses", "Admin"]
+  const protectedRoutes = ["Participant", "Responses", "Admin"];
   const store = useCounterStore();
   console.log(store.user);
   const isAuthenticated = store.user;
@@ -86,7 +110,6 @@ router.beforeEach(async (to) => {
     !isAuthenticated &&
     // ❗️ Avoid an infinite redirect
     to.name !== "Login" &&
-    
     protectedRoutes.includes(to.name)
   ) {
     // redirect the user to the login page

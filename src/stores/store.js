@@ -8,6 +8,7 @@ export const useCounterStore = defineStore("counter", {
       user: null,
       loading: false,
       error: false,
+      participantID: null,
       participants: [],
       prompts: [],
       promptDifficulties: [],
@@ -23,8 +24,15 @@ export const useCounterStore = defineStore("counter", {
     paths: ['user'],
   },
   actions: {
-    increment() {
-      this.count++;
+    async submitUserResponse(bodyData){
+        await supabase
+        .from( 'responses' )
+        .insert( bodyData ).then( ( res ) => {
+          console.log( res )
+        } )
+    },
+    setParticipantID(value) {
+      this.participantID = value;
     },
     login(value) {
       this.user = value;
@@ -67,27 +75,36 @@ export const useCounterStore = defineStore("counter", {
       const { data } = await supabase.from("participants").select();
       this.participants = data;
     },
-    initializeStore() {
-      this.getParticipants();
-      this.getPrompts();
-      this.getPromptEnums();
-      this.getResponses();
-      this.getTips();
+    async initializeStore() {
+      await this.getParticipants();
+      await this.getPrompts();
+      await this.getPromptEnums();
+      await this.getResponses();
+      await this.getTips();
     },
-    submitResponse() {},
     async getUserPrompts(userEmail) {
       const userID = this.participants.find((p) => p.email === userEmail)?.id;
+      console.log(this.participants);
+      console.log(userEmail)
       console.log(userID)
-      // const result = await supabase.rpc("get_next_prompt_set", {user_id: userID})
-      // this.usersPromptChoices = result.data;
 
-      //Get latest three outbounds
-      const outs = await supabase.rpc('get_latest_outbound_set', {user_id: userID})
-      console.log(outs)
-      this.outbounds = outs.data;
-      this.usersPromptChoices = this.prompts.filter((p) =>
-        outs.data.map((o) => o.prompt).includes(p.id)
-      );
+
+      if(userID) {
+        //Get latest three outbounds
+        const outs = await supabase.rpc('get_latest_outbound_set', {user_id: userID})
+        this.outbounds = outs.data;
+  
+        if(this.outbounds){
+          for(var i = 0; i < this.outbounds.length; i++){
+            this.usersPromptChoices.push(this.prompts.find((p) => p.id === this.outbounds[i].prompt));
+           }
+        }
+        else{
+          console.error("No outbounds found for user " + userID)
+        }
+      }
+      
+     
     },
     async submitPrompt(prompt){
       const sub = await supabase.from("prompts").insert(prompt);
