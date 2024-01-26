@@ -1,8 +1,8 @@
 <template>
-    <div id="response-write" class="z-0 md:px-24 py-48">
+    <div id="response-write" class="z-0 py-48 md:px-24">
 
-        <span class="p-3 mx-auto md:px-5 md:w-2/3 md:p-5 prompt ">
-            <span class="flex flex-col md:w-1/3 mx-auto prompt-write-header">
+        <span class="p-3 mx-auto md:px-5 md:w-2/3 md:p-5 prompt " v-if="activePrompt">
+            <span class="flex flex-col mx-auto md:w-1/3 prompt-write-header">
                 <p class="text-lg font-bold">{{ activePrompt.prompt_text }}</p>
                 <p class="pt-1 text-sm font-bold">{{ activePrompt.prompt_subtext }}</p>
                 <!-- <p v-if="previewing" class="mt-5 font-medium">Please confirm your submission text:</p> -->
@@ -97,22 +97,21 @@ export default {
         }
     },
     async mounted() {
-        if ( this.$route.params.promptNumber && this.usersPromptChoices.length < 1 ) {
+        if ( this.$route.params.email && this.$route.params.promptNumber ) {
             this.user = this.$route.params.email;
             const participantRecord = this.participants.find( p => p.email == this.user );
             if ( participantRecord ) {
                 this.setParticipantID( participantRecord.id );
             }
-            // else {
-            //     this.$router.push( { name: 'Home' } )
-            // }
-            this.toggleLoading()
-            await this.getUserPrompts( this.user );
-            this.toggleLoading()
+            if ( this.usersPromptChoices.length < 1 ) {
+                this.toggleLoading()
+                await this.getUserPrompts( this.user );
+                this.toggleLoading()
+            }
         }
     },
     methods: {
-        ...mapActions( useCounterStore, ['submitUserResponse', 'toggleLoading'] ),
+        ...mapActions( useCounterStore, ['submitUserResponse', 'toggleLoading', 'getUserPrompts', 'setParticipantID'] ),
         preview() {
             this.previewing = true;
         },
@@ -140,7 +139,7 @@ export default {
     },
     computed: {
         ...mapStores( useCounterStore ),
-        ...mapState( useCounterStore, ['loading', 'error', 'usersPromptChoices', 'responses', 'tips', 'participantID'] ),
+        ...mapState( useCounterStore, ['loading', 'error', 'usersPromptChoices', 'responses', 'tips', 'participants', 'participantID'] ),
         submitButtonDisabled() {
             return this.shareOption === ""
         },
@@ -155,15 +154,15 @@ export default {
         },
 
         activePrompt() {
-            if ( this.$route.params.promptNumber ) {
+            if ( this.$route.params.promptNumber && this.usersPromptChoices.length > 0) {
                 const promptNumber = parseInt( this.$route.params.promptNumber )
+                console.log( promptNumber )
                 return this.usersPromptChoices[promptNumber - 1]
             }
             if ( this.custom ) {
                 return { prompt_text: "Custom Prompt" }
-            } else {
-                return this.usersPromptChoices.find( p => p.id === this.promptID )
             }
+            return null;
         },
         promptID() {
             return parseInt( this.$route.params.id )
