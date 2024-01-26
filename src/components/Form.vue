@@ -77,7 +77,7 @@ export default defineComponent( {
   async mounted() {
     // this.toggleLoading();
 
-    if ( this.$route.params.email && this.usersPromptChoices.length < 1 ) {
+    if ( this.$route.params.email) {
       this.user = this.$route.params.email;
       const participantRecord = this.participants.find( p => p.email == this.user );
       if ( participantRecord ) {
@@ -88,6 +88,7 @@ export default defineComponent( {
         this.$router.push( { name: 'Home' } )
       }
 
+      if(this.usersPromptChoices.length < 1)
       await this.getUserPrompts( this.user );
     }
     // this.toggleLoading();

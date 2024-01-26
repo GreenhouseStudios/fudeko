@@ -78,9 +78,14 @@ const routes = [
     name: "ResponseFormCustom",
     component: () => import("../components/ResponseForm.vue"),
   },
+  // {
+  //   path: '/confirmSubmit',
+  //   name: 'ConfirmSubmit',
+  //   component: () => import("../components/Confirmation.vue"),
+  // },
   {
-    path: '/confirmSubmit',
-    name: 'ConfirmSubmit',
+    path: "/submitresponse",
+    name: "SubmitResponse",
     component: () => import("../components/Confirmation.vue"),
   },
   {
@@ -88,11 +93,7 @@ const routes = [
     name: "NotFound",
     component: () => import("../views/NotFound.vue"),
   },
-  {
-    path: "/submitresponse",
-    name: "SubmitResponse",
-    component: () => import("../components/Confirmation.vue"),
-  }
+
 ];
 
 export const router = createRouter({

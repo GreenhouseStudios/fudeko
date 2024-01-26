@@ -141,6 +141,9 @@ export default {
     computed: {
         ...mapStores( useCounterStore ),
         ...mapState( useCounterStore, ['loading', 'error', 'usersPromptChoices', 'responses', 'tips', 'participantID'] ),
+        submitButtonDisabled() {
+            return this.shareOption === ""
+        },
         custom() {
             return this.$route.path.includes( 'custom' )
         },

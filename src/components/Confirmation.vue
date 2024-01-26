@@ -41,11 +41,6 @@ export default {
             this.$router.push( { name: 'ResponseForm' } )
         },
     },
-    computed: {
-        submitButtonDisabled() {
-            return this.shareOption === ""
-        },
-    },
 }
 </script>
 
