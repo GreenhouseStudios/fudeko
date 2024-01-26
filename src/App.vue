@@ -41,8 +41,8 @@ export default {
       </router-link>
       <Nav class="float-right"></Nav>
     </header>
-
-    <router-view v-if="!loading" />
+<main class="md:px-48">
+    <router-view v-if="!loading" /></main>
   </div>
 </template>
 

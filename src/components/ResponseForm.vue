@@ -1,8 +1,8 @@
 <template>
-    <div id="response-write" class="z-0 px-24 py-48">
+    <div id="response-write" class="z-0 md:px-24 py-48">
 
         <span class="p-3 mx-auto md:px-5 md:w-2/3 md:p-5 prompt ">
-            <span class="flex flex-col w-1/3 mx-auto prompt-write-header">
+            <span class="flex flex-col md:w-1/3 mx-auto prompt-write-header">
                 <p class="text-lg font-bold">{{ activePrompt.prompt_text }}</p>
                 <p class="pt-1 text-sm font-bold">{{ activePrompt.prompt_subtext }}</p>
                 <!-- <p v-if="previewing" class="mt-5 font-medium">Please confirm your submission text:</p> -->
