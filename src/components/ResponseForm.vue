@@ -162,6 +162,9 @@ export default {
             if ( this.custom ) {
                 return { prompt_text: "Custom Prompt" }
             }
+            if( this.$route.params.id ) {
+                return this.usersPromptChoices.find( p => p.id == parseInt(this.$route.params.id) )
+            }
             return null;
         },
         promptID() {
