@@ -3,8 +3,8 @@
 
         <span class="p-3 mx-auto md:px-5 md:w-2/3 md:p-5 prompt " v-if="activePrompt">
             <span class="flex flex-col mx-auto md:w-1/3 prompt-write-header">
-                <p class="text-lg font-bold">{{ activePrompt.prompt_text }}</p>
-                <p class="pt-1 text-sm font-bold">{{ activePrompt.prompt_subtext }}</p>
+                <p class="text-lg font-bold" v-html="activePrompt.prompt_text"></p>
+                <p class="pt-1 text-sm font-bold" v-html="activePrompt.prompt_subtext"></p>
                 <!-- <p v-if="previewing" class="mt-5 font-medium">Please confirm your submission text:</p> -->
 
             </span>
@@ -64,7 +64,7 @@
                 class="p-2 font-bold bg-yellow-200 border-2 border-yellow-300 rounded disabled:bg-yellow-50 disabled:border-0 hover:bg-yellow-100">Back</button> -->
 
                         <button @click="submit" :disabled="submitButtonDisabled"
-                            class="p-2 font-bold bg-yellow-300 border-2 border-yellow-400 rounded disabled:bg-yellow-50 disabled:border-0"
+                            class="p-2 font-bold bg-yellow-300 border-2 border-yellow-400 rounded "
                             :class="submitButtonDisabled ? 'bg-yellow-50 border-yellow-100' : 'hover:bg-yellow-200'">Send</button>
 
                     </div>

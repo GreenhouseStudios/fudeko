@@ -7,8 +7,8 @@
                 <div class="relative" id="button-wrapper" v-for="prompt in randomizedPrompts" :key="prompt.prompt_text">
                     <button @click="setActivePrompt(prompt.id)"
                         class="w-full p-3 px-3 bg-yellow-200 border-2 border-yellow-400 rounded shadow-md md:max-w-md md:p-1 md:h-36 animate__animated animate__fadeIn hover:bg-yellow-100"
-                        :class="prompt === activePrompt ? 'bg-yellow-200' : 'bg-yellow-300'">{{ prompt.prompt_text
-                        }}</button>
+                        :class="prompt === activePrompt ? 'bg-yellow-200' : 'bg-yellow-300'" v-html="prompt.prompt_text"> 
+                        </button>
                     <button
                         class="absolute flex items-center justify-center w-8 h-8 font-bold text-center bg-red-500 border-2 border-white rounded-full -top-2 -right-2 hover:bg-red-300"
                         @click.prevent.stop="DoNotAsk(prompt)" v-tooltip="'Never ask this question again?'"></button>
