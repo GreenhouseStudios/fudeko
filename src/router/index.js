@@ -78,11 +78,11 @@ const routes = [
     name: "ResponseFormCustom",
     component: () => import("../components/ResponseForm.vue"),
   },
-  // {
-  //   path: '/confirmSubmit',
-  //   name: 'ConfirmSubmit',
-  //   component: () => import("../components/Confirmation.vue"),
-  // },
+  {
+    path: '/confirmSubmit',
+    name: 'ConfirmSubmit',
+    component: () => import("../components/Confirmation.vue"),
+  },
   {
     path: "/submitresponse",
     name: "SubmitResponse",
