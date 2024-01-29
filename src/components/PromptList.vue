@@ -9,9 +9,9 @@
                         class="w-full p-3 px-3 bg-yellow-200 border-2 border-yellow-400 rounded shadow-md md:max-w-md md:p-1 md:h-36 animate__animated animate__fadeIn hover:bg-yellow-100"
                         :class="prompt === activePrompt ? 'bg-yellow-200' : 'bg-yellow-300'" v-html="prompt.prompt_text"> 
                         </button>
-                    <button
-                        class="absolute flex items-center justify-center w-8 h-8 font-bold text-center bg-red-500 border-2 border-white rounded-full -top-2 -right-2 hover:bg-red-300"
-                        @click.prevent.stop="DoNotAsk(prompt)" v-tooltip="'Never ask this question again?'"></button>
+                    <Button
+                        class="absolute flex items-center justify-center w-8 h-8 font-bold text-center text-white bg-red-500 border-2 border-white rounded-full -top-2 -right-2 hover:bg-red-300"
+                        @click.prevent.stop="DoNotAsk(prompt)" v-tooltip="'Never ask this question again?'" icon="pi pi-times"></Button>
                 </div>
             </span>
         </div>
@@ -22,7 +22,7 @@
 import { useCounterStore } from '@/stores/store'
 import { supabase } from "../lib/supabaseClient";
 import { mapStores, mapState } from 'pinia'
-// import Button from 'primevue/button';
+import Button from 'primevue/button';
 export default {
     props: {
         prompts: {
@@ -69,7 +69,7 @@ export default {
         },
     },
     components: {
-        // Button,
+        Button,
     },
 }
 </script>
