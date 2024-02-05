@@ -4,10 +4,13 @@
             <h1 class="my-10 text-2xl font-bold">Login</h1>
             <form>
                 <div class="flex flex-col w-full my-2"><label for="email">Email</label>
-                <InputText id="email" type="text" v-model="email" class="border-2"/></div>
+                <InputText id="email" type="text" v-model="email" /></div>
+
+                <div class="flex flex-col w-full my-2" ><label for="password">Password</label>
+                <Password id="password" v-model="password" :feedback="false"/></div>
 
                 <div>
-                    <Button v-if="!this.email" Button @click="loginUser" class="p-2 my-2 bg-gray-300 border-2 border-gray-400" disabled>Login</Button>
+                    <Button v-if="!this.email||!this.password" Button @click="loginUser" class="p-2 my-2 bg-gray-300 border-2 border-gray-400" disabled>Login</Button>
                     <Button v-else @click="loginUser" class="p-2 my-2 bg-yellow-300 border-2 border-yellow-400">Login</Button>
                 </div>
             </form>
@@ -18,6 +21,7 @@
 
 <script>
 
+import Password from 'primevue/password';
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button'
 import { supabase } from '../lib/supabaseClient';
@@ -28,22 +32,29 @@ export default {
     data() {
         return {
             email: '',
+            password: ''
         }
     },
     methods: {
         ...mapActions( useCounterStore, ['toggleLoading', 'toggleError', 'login'] ),
         async loginUser() {
-                await supabase.auth.signInWithPassword({email: this.email}).then((res) =>{
+                await supabase.auth.signInWithPassword({email: this.email, password: this.password}).then((res) =>{
             console.log(res)
             this.toggleLoading();
-            this.login({email: this.email})
-            this.$router.push('/form/' + this.email)
+            if (res.data.user && !res.error){
+                this.login({email: this.email, password: this.password})
+            // this.$router.push('/form/' + this.email)
+            this.$router.push('/admin')
+            }
+            else {
+               document.querySelector('#error-message').innerHTML = "Invalid Login Credentials"
+            }
             this.toggleLoading();
-            }).catch(err => console.log(err))
+            }).catch(err => console.log(err)) 
         }
     },
     components: {
-        InputText, Button
+        Password, InputText, Button
     },
     mounted () {
 
