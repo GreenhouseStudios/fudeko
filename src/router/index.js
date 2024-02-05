@@ -9,6 +9,11 @@ const routes = [
     component: () => import("../views/HomeView.vue"),
   },
   {
+    path: "/adminlogin",
+    name: "AdminLogin",
+    component: () => import("../views/AdminLogin.vue"),
+  },
+  {
     path: "/login",
     name: "Login",
     component: () => import("../views/Login.vue"),
@@ -93,7 +98,6 @@ const routes = [
     name: "NotFound",
     component: () => import("../views/NotFound.vue"),
   },
-
 ];
 
 export const router = createRouter({
