@@ -22,6 +22,9 @@
                 pre-stamped envelopes), and can be done from the comfort of your own home. We're registering our first
                 cohort now. We hope you'll join us on this adventure—when you're ready, you can sign up below.</p>
         </section>
+        <section class="py-5">
+            <p>Already signed up? Click the link  <router-link to="/login" class="text-yellow-600">here</router-link> to be directed to your prompts of the day!</p>
+        </section>
         <section class="px-48 my-48">
             <h2 class="text-2xl font-bold text-left">Sign up</h2>
             <p class="my-2">Ready to sign up? Fill out the form below or mail in the print copy to the address on the form.</p>
