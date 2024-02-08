@@ -1,10 +1,12 @@
 <template>
-    <div class="flex justify-center px-40 mx-auto">
-        <div class="w-1/5">
-            <h1 class="my-10 text-2xl font-bold">Login</h1>
-            <form>
-                <div class="flex flex-col w-full my-2"><label for="email">Email</label>
-                <InputText id="email" type="text" v-model="email" class="border-2"/></div>
+    <div class="flex justify-center ">
+        <div class="">
+            <h1 class="text-2xl font-bold">Login</h1>
+            <form class="flex flex-col">
+                <div class="flex items-start flex-col w-full my-2">
+                <label for="email">Email</label>
+                <input id="email" type="text" v-model="email" class="border-2"/>
+            </div>
 
                 <div>
                     <Button v-if="!this.email" Button @click="loginUser" class="p-2 my-2 bg-gray-300 border-2 border-gray-400" disabled>Login</Button>
@@ -18,7 +20,7 @@
 
 <script>
 
-import InputText from 'primevue/inputtext';
+// import InputText from 'primevue/inputtext';
 import Button from 'primevue/button'
 import { supabase } from '../lib/supabaseClient';
 import { useCounterStore } from '@/stores/store'
@@ -43,7 +45,7 @@ export default {
         }
     },
     components: {
-        InputText, Button
+        Button
     },
     mounted () {
 
@@ -62,4 +64,8 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+#email {
+    width: 250px
+}
+</style>
