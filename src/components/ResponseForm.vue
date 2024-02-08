@@ -51,7 +51,7 @@
                             <span class="flex flex-wrap items-center justify-center gap-2 mt-2 mb-5 mr-5 align-middle">
                                 <button @click="shareOption = option" v-for="option in shareSettings" :key="option.name"
                                     class="z-10 w-48 h-24 p-2 border-2 rounded-md"
-                                    :class="option === shareOption ? 'bg-yellow-300 border-2 border-gray-600 font-bold border-2' : 'border-yellow-300 hover:bg-yellow-200'">{{
+                                    :class="option === shareOption ? 'bg-yellow-300 border-gray-600 font-bold border-2' : 'border-yellow-300 hover:bg-yellow-200'">{{
                                         option.name }}</button>
                             </span>
 
@@ -64,8 +64,8 @@
                 class="p-2 font-bold bg-yellow-200 border-2 border-yellow-300 rounded disabled:bg-yellow-50 disabled:border-0 hover:bg-yellow-100">Back</button> -->
 
                         <button @click="submit" :disabled="submitButtonDisabled"
-                            class="p-2 font-bold bg-yellow-300 border-2 border-yellow-400 rounded "
-                            :class="submitButtonDisabled ? 'bg-yellow-50 border-yellow-100' : 'hover:bg-yellow-200'">Send</button>
+                            class="p-2 font-bold rounded "
+                            :class="submitButtonDisabled ? 'bg-gray-300 border-2 border-gray-400' : 'hover:bg-yellow-200 border-yellow-400 bg-yellow-300 border-2 '">Send</button>
 
                     </div>
                 </div>
@@ -141,7 +141,7 @@ export default {
         ...mapStores( useCounterStore ),
         ...mapState( useCounterStore, ['loading', 'error', 'usersPromptChoices', 'responses', 'tips', 'participants', 'participantID'] ),
         submitButtonDisabled() {
-            return this.shareOption === ""
+          return (this.shareOption.description == "" || this.response == "" || !this.shareOption.name)
         },
         custom() {
             return this.$route.path.includes( 'custom' )
