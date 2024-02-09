@@ -1,17 +1,21 @@
 <template>
-    <div class="flex justify-center px-40 mx-auto">
-        <div class="w-1/5">
-            <h1 class="my-10 text-2xl font-bold">Login</h1>
-            <form>
-                <div class="flex flex-col w-full my-2"><label for="email">Email</label>
-                <InputText id="email" type="text" v-model="email" /></div>
-
-                <div class="flex flex-col w-full my-2" ><label for="password">Password</label>
-                <Password id="password" v-model="password" :feedback="false"/></div>
-
+    <div class="flex justify-center ">
+        <div class="">
+            <h1 class="text-2xl font-bold">Login</h1>
+            <form class="flex flex-col">
+                <div class="flex items-start flex-col w-full my-2">
+                    <label for="email">Email</label>
+                    <input class="border-2" id="email" type="text" v-model="email" />
+                </div>
+                <div class="flex items-start flex-col w-full my-2">
+                    <label for="password">Password</label>
+                    <input class="border-2" id="password" v-model="password" :feedback="false">
+                </div>
                 <div>
-                    <Button v-if="!this.email||!this.password" Button @click="loginUser" class="p-2 my-2 bg-gray-300 border-2 border-gray-400" disabled>Login</Button>
-                    <Button v-else @click="loginUser" class="p-2 my-2 bg-yellow-300 border-2 border-yellow-400">Login</Button>
+                    <button v-if="!this.email || !this.password" Button @click="loginUser"
+                        class="p-2 my-2 bg-gray-300 border-2 border-gray-400" disabled>Login</button>
+                    <button v-else @click="loginUser"
+                        class="p-2 my-2 bg-yellow-300 border-2 border-yellow-400">Login</button>
                 </div>
             </form>
             <p id="error-message"></p>
@@ -21,12 +25,12 @@
 
 <script>
 
-import Password from 'primevue/password';
-import InputText from 'primevue/inputtext';
-import Button from 'primevue/button'
+// import Password from 'primevue/password';
+// import InputText from 'primevue/inputtext';
+// import Button from 'primevue/button'
 import { supabase } from '../lib/supabaseClient';
 import { useCounterStore } from '@/stores/store'
-import { mapStores, mapState, mapActions } from 'pinia' 
+import { mapStores, mapState, mapActions } from 'pinia'
 // import { store } from '../stores/store';
 export default {
     data() {
@@ -36,41 +40,45 @@ export default {
         }
     },
     methods: {
-        ...mapActions( useCounterStore, ['toggleLoading', 'toggleError', 'login'] ),
+        ...mapActions(useCounterStore, ['toggleLoading', 'toggleError', 'login']),
         async loginUser() {
-                await supabase.auth.signInWithPassword({email: this.email, password: this.password}).then((res) =>{
-            console.log(res)
-            this.toggleLoading();
-            if (res.data.user && !res.error){
-                this.login({email: this.email, password: this.password})
-            // this.$router.push('/form/' + this.email)
-            this.$router.push('/admin')
-            }
-            else {
-               document.querySelector('#error-message').innerHTML = "Invalid Login Credentials"
-            }
-            this.toggleLoading();
-            }).catch(err => console.log(err)) 
+            await supabase.auth.signInWithPassword({ email: this.email, password: this.password }).then((res) => {
+                console.log(res)
+                this.toggleLoading();
+                if (res.data.user && !res.error) {
+                    this.login({ email: this.email, password: this.password })
+                    // this.$router.push('/form/' + this.email)
+                    this.$router.push('/admin')
+                }
+                else {
+                    document.querySelector('#error-message').innerHTML = "Invalid Login Credentials"
+                }
+                this.toggleLoading();
+            }).catch(err => console.log(err))
         }
     },
     components: {
-        Password, InputText, Button
+        // Password, InputText, Button
     },
-    mounted () {
+    mounted() {
 
     },
     computed: {
         mapStores() {
-            return mapStores( useCounterStore )
+            return mapStores(useCounterStore)
         },
         mapState() {
-            return mapState( useCounterStore, ['count', 'prompts', 'user','responses', 'loading', 'error', 'usersPromptChoices'] )
+            return mapState(useCounterStore, ['count', 'prompts', 'user', 'responses', 'loading', 'error', 'usersPromptChoices'])
         },
         name() {
-            return this.data 
+            return this.data
         }
     },
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+#email,
+#password {
+    width: 250px
+}</style>
