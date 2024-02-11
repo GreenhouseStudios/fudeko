@@ -22,7 +22,7 @@
                 pre-stamped envelopes), and can be done from the comfort of your own home. We're registering our first
                 cohort now. We hope you'll join us on this adventure—when you're ready, you can sign up below.</p>
         </section>
-        <section class="py-5">
+        <section class="py-5 my-5 bg-yellow-200 border-2 border-yellow-500">
             <p>Already signed up? Click the link  <router-link to="/login" class="text-yellow-600">here</router-link> to be directed to your prompts of the day!</p>
         </section>
         <section class="my-24">

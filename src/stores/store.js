@@ -82,12 +82,12 @@ export const useCounterStore = defineStore("counter", {
       await this.getResponses();
       await this.getTips();
     },
+    async participantHasUnansweredSets(participantID) {
+      const {data} = await supabase.rpc('has_unanswered_sets', {participant_id: participantID});
+      return data;
+    },
     async getUserPrompts(userEmail) {
       const userID = this.participants.find((p) => p.email === userEmail)?.id;
-      console.log(this.participants);
-      console.log(userEmail)
-      console.log(userID)
-
 
       if(userID) {
         //Get latest three outbounds
@@ -95,6 +95,7 @@ export const useCounterStore = defineStore("counter", {
         this.outbounds = outs.data;
   
         if(this.outbounds){
+          this.usersPromptChoices = [];
           for(var i = 0; i < this.outbounds.length; i++){
             this.usersPromptChoices.push(this.prompts.find((p) => p.id === this.outbounds[i].prompt));
            }

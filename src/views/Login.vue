@@ -3,7 +3,7 @@
         <div class="">
             <h1 class="text-2xl font-bold">Login</h1>
             <form class="flex flex-col">
-                <div class="flex items-start flex-col w-full my-2">
+                <div class="flex flex-col items-start w-full my-2">
                 <label for="email">Email</label>
                 <input id="email" type="text" v-model="email" class="border-2"/>
             </div>
@@ -24,7 +24,7 @@
 import Button from 'primevue/button'
 import { supabase } from '../lib/supabaseClient';
 import { useCounterStore } from '@/stores/store'
-import { mapStores, mapState, mapActions } from 'pinia' 
+import { mapStores, mapState, mapActions } from 'pinia'
 // import { store } from '../stores/store';
 export default {
     data() {
@@ -47,7 +47,7 @@ export default {
     components: {
         Button
     },
-    mounted () {
+    mounted() {
 
     },
     computed: {
@@ -55,10 +55,10 @@ export default {
             return mapStores( useCounterStore )
         },
         mapState() {
-            return mapState( useCounterStore, ['count', 'prompts', 'user','responses', 'loading', 'error', 'usersPromptChoices'] )
+            return mapState( useCounterStore, ['count', 'prompts', 'user', 'responses', 'loading', 'error', 'usersPromptChoices'] )
         },
         name() {
-            return this.data 
+            return this.data
         }
     },
 }
