@@ -9,7 +9,7 @@
                 </div>
                 <div class="flex items-start flex-col w-full my-2">
                     <label for="password">Password</label>
-                    <input class="border-2" id="password" v-model="password" :feedback="false">
+                    <input type="password" class="border-2" id="password" v-model="password" :feedback="false">
                 </div>
                 <div>
                     <button v-if="!this.email || !this.password" Button @click="loginUser"
