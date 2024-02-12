@@ -122,7 +122,7 @@ export default {
     },
     computed: {
         ...mapStores( useCounterStore ),
-        ...mapState( useCounterStore, ['loading', 'error', 'usersPromptChoices', 'responses', 'tips', 'participants', 'participantID'] ),
+        ...mapState( useCounterStore, ['loading', 'error', 'usersPromptChoices', 'tips', 'participantID', 'participantRecord'] ),
         submitButtonDisabled() {
           return (this.shareOption.description == "" || this.response == "" || !this.shareOption.name)
         },
@@ -154,7 +154,7 @@ export default {
             return parseInt( this.$route.params.id )
         },
         numberOfResponses() {
-            return this.responses.filter( r => r.participant == this.participantID ).length
+            return this.participantRecord.number_answered_sets;
         },
         currentTip() {
             return this.tips[this.numberOfResponses%this.tips.length]

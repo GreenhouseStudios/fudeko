@@ -22,7 +22,6 @@
 
 // import InputText from 'primevue/inputtext';
 import Button from 'primevue/button'
-import { supabase } from '../lib/supabaseClient';
 import { useCounterStore } from '@/stores/store'
 import { mapStores, mapState, mapActions } from 'pinia'
 // import { store } from '../stores/store';
@@ -34,14 +33,9 @@ export default {
     },
     methods: {
         ...mapActions( useCounterStore, ['toggleLoading', 'toggleError', 'login'] ),
-        async loginUser() {
-                await supabase.auth.signInWithPassword({email: this.email}).then((res) =>{
-            console.log(res)
-            this.toggleLoading();
-            this.login({email: this.email})
+        loginUser() {
+            this.login( this.email )
             this.$router.push('/form/' + this.email)
-            this.toggleLoading();
-            }).catch(err => console.log(err))
         }
     },
     components: {
@@ -55,11 +49,8 @@ export default {
             return mapStores( useCounterStore )
         },
         mapState() {
-            return mapState( useCounterStore, ['count', 'prompts', 'user', 'responses', 'loading', 'error', 'usersPromptChoices'] )
+            return mapState( useCounterStore, ['count', 'prompts', 'user', 'loading', 'error'] )
         },
-        name() {
-            return this.data
-        }
     },
 }
 </script>

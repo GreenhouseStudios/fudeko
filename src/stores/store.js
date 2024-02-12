@@ -9,6 +9,7 @@ export const useCounterStore = defineStore("counter", {
       loading: false,
       error: false,
       participantID: null,
+      participantRecord: null,
       participants: [],
       prompts: [],
       promptDifficulties: [],
@@ -34,8 +35,19 @@ export const useCounterStore = defineStore("counter", {
     setParticipantID(value) {
       this.participantID = value;
     },
-    login(value) {
+    async getParticipantRecord(id) {
+      this.participantRecord = await supabase.from("participants").select().eq("id", id);
+    },
+    async login(value) {
       this.user = value;
+      const rec = await supabase.from("participants").select().eq("email", value);
+      this.participantRecord = rec.data[0];
+      this.setParticipantID(this.participantRecord.id);
+    },
+    async loginAdmin(value) {
+      this.user = value;
+      await this.getParticipants();
+      await this.getResponses();
     },
     logout() {  
       this.user = null;
@@ -52,8 +64,15 @@ export const useCounterStore = defineStore("counter", {
       this.responses = responses.data;
     },
     async getTips() {
-      const tips = await supabase.from("tips").select();
+      const tips = await supabase.from("tips").select().order('week', { ascending: true });
       this.tips = tips.data;
+    },
+    async verifyUserExists(email) {
+      const { data, error } = await supabase.from("participants").select().eq("email", email);
+      if (error) {
+        console.error(error);
+      }
+      return data;
     },
     async getEnum(rpcName){
       let { data  } = await supabase
@@ -76,10 +95,8 @@ export const useCounterStore = defineStore("counter", {
       this.participants = data;
     },
     async initializeStore() {
-      await this.getParticipants();
       await this.getPrompts();
       await this.getPromptEnums();
-      await this.getResponses();
       await this.getTips();
     },
     async participantHasUnansweredSets(participantID) {
@@ -87,24 +104,11 @@ export const useCounterStore = defineStore("counter", {
       return data;
     },
     async getUserPrompts(userEmail) {
-      const userID = this.participants.find((p) => p.email === userEmail)?.id;
-
-      if(userID) {
-        //Get latest three outbounds
-        const outs = await supabase.rpc('get_latest_outbound_set', {user_id: userID})
-        this.outbounds = outs.data;
-  
-        if(this.outbounds){
-          this.usersPromptChoices = [];
-          for(var i = 0; i < this.outbounds.length; i++){
-            this.usersPromptChoices.push(this.prompts.find((p) => p.id === this.outbounds[i].prompt));
-           }
-        }
-        else{
-          console.error("No outbounds found for user " + userID)
-        }
+      console.log(userEmail);
+      if(this.participantID) {
+        const prompts = await supabase.rpc('get_latest_prompt_set', {user_id: this.participantID})
+        this.usersPromptChoices = prompts.data;
       }
-      
      
     },
     async submitPrompt(prompt){

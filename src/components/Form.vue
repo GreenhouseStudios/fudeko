@@ -1,7 +1,7 @@
 <template>
   <div class="container relative px-4 py-36 md:px-8 md:w-full">
 
-    <div v-if="userVerified && !loading">
+    <div v-if="!loading">
       <div v-if="hasUnansweredSet">
 
         <div id="prompt-choose-container" class="mb-10">
@@ -38,26 +38,21 @@ export default defineComponent( {
 
       activePrompt: null,
       user: "",
-      userVerified: false,
       custom: false,
       hasUnansweredSet: true,
-      // declinedPrompts: [],
-      // files: []
     };
   },
   async mounted() {
-    if ( this.$route.params.email ) {
+    if ( this.$route.params.email){
+      if( !this.participantRecord )
+        await this.login( this.$route.params.email );
       this.user = this.$route.params.email;
-      const participantRecord = this.participants.find( p => p.email == this.user );
-      if ( participantRecord ) {
+      if ( this.participantRecord ) {
         this.userVerified = true
-        this.setParticipantID( participantRecord.id );
-      }
-      else {
-        this.$router.push( { name: 'Home' } )
+        this.setParticipantID( this.participantRecord.id );
       }
 
-      if ( await this.participantHasUnansweredSets( participantRecord.id ) )
+      if ( await this.participantHasUnansweredSets( this.participantRecord.id ) )
         await this.getUserPrompts( this.user );
       else this.hasUnansweredSet = false;
     }
@@ -65,7 +60,7 @@ export default defineComponent( {
 
   methods: {
 
-    ...mapActions( useCounterStore, ['toggleLoading', 'toggleError', 'getUserPrompts', 'setParticipantID', 'participantHasUnansweredSets'] ),
+    ...mapActions( useCounterStore, ['toggleLoading', 'toggleError', 'getUserPrompts', 'setParticipantID', 'participantHasUnansweredSets', 'verifyUserExists', 'login'] ),
     addFile( e ) {
       this.files.push( e.target.files[0] )
       console.log( e.target.files[0] )
@@ -83,13 +78,10 @@ export default defineComponent( {
   },
   computed: {
     ...mapStores( useCounterStore ),
-    ...mapState( useCounterStore, ['prompts', 'loading', 'error', 'usersPromptChoices', 'participants', 'responses', 'tips'] ),
-    userRecord() {
-      return this.participants.find( p => p.email == this.user )
-    },
+    ...mapState( useCounterStore, ['prompts', 'loading', 'error', 'usersPromptChoices', 'tips', 'participantRecord'] ),
 
     userCaughtUp() {
-      return this.usersPromptChoices.length < 1;
+      return this.usersPromptChoices && this.usersPromptChoices.length < 1;
     },
 
     preselectedPromptNumber() {
@@ -101,10 +93,6 @@ export default defineComponent( {
         return null
       }
     },
-    participantID() {
-      return this.participants.find( p => p.email == this.$route.params.email ).id
-    },
-
 
   },
   components: { PromptList, }
