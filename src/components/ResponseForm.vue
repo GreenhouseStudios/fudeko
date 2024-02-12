@@ -3,8 +3,8 @@
 
         <span class="p-3 mx-auto md:px-5 md:w-2/3 md:p-5 prompt " v-if=" hasUnansweredSets">
             <span class="flex flex-col mx-auto md:w-1/2 prompt-write-header">
-                <p class="pb-3 text-4xl" v-html="activePrompt.prompt_text"></p>
-                <p class="pt-1 text-lg font-bold" v-html="activePrompt.prompt_subtext"></p>
+                <h2 class="pb-3 text-4xl" v-html="activePrompt.prompt_text"></h2>
+                <h3 class="pt-1 text-lg font-bold" v-html="activePrompt.prompt_subtext"></h3>
             </span>
 
             <span>
