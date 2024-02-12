@@ -5,7 +5,7 @@
             <form class="flex flex-col">
                 <div class="flex flex-col items-start w-full my-2">
                 <label for="email">Email</label>
-                <input id="email" type="text" v-model="email" class="c"/>
+                <input id="email" type="text" v-model="email" class="border-2"/>
             </div>
 
                 <div>
