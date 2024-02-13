@@ -1,7 +1,7 @@
 <template>
     <div id="response-write" class="z-0 py-32 md:px-24">
 
-        <span class="p-3 mx-auto md:px-5 md:w-2/3 md:p-5 prompt " v-if=" hasUnansweredSets">
+        <span class="p-3 mx-auto md:px-5 md:w-2/3 md:p-5 prompt " v-if="hasUnansweredSets">
             <span class="flex flex-col mx-auto md:w-1/2 prompt-write-header">
                 <h2 class="pb-3 text-4xl" v-html="activePrompt.prompt_text"></h2>
                 <h3 class="pt-1 text-lg font-bold" v-html="activePrompt.prompt_subtext"></h3>
@@ -21,12 +21,16 @@
                 </div>
 
                 <div class="py-12">
-                    <FeedbackDifficulty :difficulty.sync="difficulty" />
+                    <div class="flex flex-col justify-start w-1/4" id="feedback-container">
+                        <label for="feedback" class="mx-2 font-bold">How difficult was this to answer?</label>
+                        <Dropdown v-model="difficulty" :options="difficultyOptions" class="m-2" ></Dropdown>
+                    </div>
+
                     <div class="flex flex-col items-start my-5" id="share-options-container">
                         <h2 class="font-bold">Would you like to publish this response?</h2>
                         <div class="flex" id="sharing-options">
 
-                            <span class="flex flex-wrap items-center justify-center gap-2 mt-2 mb-5 mr-5 align-middle">
+                            <span class="flex flex-wrap items-center justify-center gap-2 my-2 mr-5 align-middle">
                                 <button @click="shareOption = option" v-for="option in shareSettings" :key="option.name"
                                     class="z-10 w-48 h-24 p-2 border-2 rounded-md"
                                     :class="option === shareOption ? 'bg-yellow-300 border-gray-600 font-bold border-2' : 'border-yellow-300 hover:bg-yellow-200'">{{
@@ -34,13 +38,29 @@
                             </span>
 
                         </div>
-                        <i class="mx-auto md:w-1/2" v-html="shareOption.description"></i>
+
+
+                        <i class="mx-auto my-5 md:w-full" v-html="shareOption.description"></i>
+
+                        <div class="flex" v-if="shareOption && shareOption.name != 'Keep Private'">
+                            <span class="flex flex-wrap items-center justify-center gap-2 mt-2 mb-5 mr-5 align-middle">
+                                <button @click="attrOption = option" v-for="option in attrSettings" :key="option.name"
+                                    class="z-10 w-48 h-24 p-2 border-2 rounded-md"
+                                    :class="option === attrOption ? 'bg-yellow-300 border-gray-600 font-bold border-2' : 'border-yellow-300 hover:bg-yellow-200'">{{
+                                        option.description }}</button></span>
+                        </div>
+
+                        <div v-if="attrOption.name == 'CreditWithGivenName'"> You will be credited as {{
+                            participantRecord.first_name + ' ' + participantRecord.last_name }}</div>
+                        <div v-if="attrOption.name == 'CreditDifferent'">
+                            <label for="alt-credit" class="mr-2">Enter name to be credited as:</label>
+                            <input id="alt-credit" type="text" v-model="creditName" class="p-2 border-2 rounded-md">
+                        </div>
                     </div>
 
                     <div class="flex justify-end gap-4 mt-5">
 
-                        <button @click="submit" :disabled="submitButtonDisabled"
-                            class="p-2 font-bold rounded "
+                        <button @click="submit" :disabled="submitButtonDisabled" class="p-2 font-bold rounded "
                             :class="submitButtonDisabled ? 'bg-gray-300 border-2 border-gray-400' : 'hover:bg-yellow-200 border-yellow-400 bg-yellow-300 border-2 '">Send</button>
 
                     </div>
@@ -59,23 +79,28 @@
 import { useCounterStore } from '@/stores/store'
 import { mapStores, mapState, mapActions } from 'pinia'
 import WritingTip from '@/components/WritingTip.vue'
-import FeedbackDifficulty from '@/components/FeedbackDifficulty.vue'
+// import FeedbackDifficulty from '@/components/FeedbackDifficulty.vue'
 // import Confirmation from './Confirmation.vue'
 import Editor from 'primevue/editor'
+import Dropdown from 'primevue/dropdown'
 export default {
     components: {
         WritingTip,
         Editor,
-        FeedbackDifficulty
+        Dropdown
     },
     data() {
         return {
             response: "",
             userTitle: "",
             shareSettings: [{ name: "Keep Private", description: "You can always opt to share your response later if you change your mind. You can still share your responses with your friends and family on your private page if you want." }, { name: "Share with Storytellers", description: "Your words may be just the thing to jog another storyteller’s memory. Choose this option if you are okay with sharing this response with other storytellers in Fudeko email and letter correspondence. The response will not be made publicly available. Still, while we discourage storytellers from forwarding Fudeko emails outside the group, we cannot totally prevent it. Thank you for helping to build a creative and collaborative storytelling community!" }, { name: "Release with Creative Commons License", description: " <a class='blue-200' href='https://creativecommons.org/licenses/by-nc-sa/4.0/'>(CC-BY-NC-SA 4.0 DEED)</a> Want to make this response publicly available for education or research? This license allows others to use, excerpt, or adapt your response as long as they 1) give proper attribution, 2) do not profit from it, and 3) release the resulting project under the same license. While a CC license cannot be retroactively revoked, we can remove the response(s) from our website. However, if they have been shared elsewhere, you will have to negotiate with those parties if you wish to have them taken down. If you have concerns/doubts, we encourage you to keep the response private or only share it with the group for now." }, { name: "Release Anonymously with Creative Commons License", description: "(CC-BY-NC-SA 4.0 DEED) Choose this to make this response anonymously available to the public for education or research purposes. While still released under the same CC license, proper attribution in this case is “by Anonymous, courtesy of the Fudeko Project.” If you decide you would like to be named with the response later, just email us at hana@fudekoproject.org and we will update the attribution information accordingly" }],
+            attrSettings: [{ name: "RemainAnonymous", description: "Remain Anonymous" }, { name: "CreditWithGivenName", description: "Credit me as my registered name" }, { name: "CreditDifferent", description: "Credit me as a different name" },],
             difficulty: "",
+            attrOption: "",
             shareOption: "",
             hasUnansweredSets: true,
+            creditName: "",
+            difficultyOptions: [ "Easy", "Moderate", "Somewhat Difficult", "Difficult"],
         }
     },
     async mounted() {
@@ -109,10 +134,12 @@ export default {
             const bodyData = {
                 response_text: this.response,
                 participant: this.participantID,
-                prompt: this.custom ? 0 : this.activePrompt.id,
+                prompt: this.custom ? null : this.activePrompt.id,
                 user_title: this.userTitle,
                 share_option: this.shareOption.name,
                 response_difficulty: this.difficulty,
+                attribution_option: this.attrOption.name,
+                attribution_name: this.attrOption.name == "CreditDifferent" ? this.creditName : null,
             };
             await this.submitUserResponse( bodyData )
             this.toggleLoading();
@@ -124,7 +151,7 @@ export default {
         ...mapStores( useCounterStore ),
         ...mapState( useCounterStore, ['loading', 'error', 'usersPromptChoices', 'tips', 'participantID', 'participantRecord'] ),
         submitButtonDisabled() {
-          return (this.shareOption.description == "" || this.response == "" || !this.shareOption.name)
+            return ( this.shareOption.description == "" || this.response == "" || !this.shareOption.name  || !this.difficulty || !this.attrOption.name || this.attrOption.name == "CreditDifferent" && this.creditName == "")
         },
         custom() {
             return this.$route.path.includes( 'custom' )
@@ -135,7 +162,6 @@ export default {
         responseWordCount() {
             return this.response.split( ' ' ).length
         },
-
         activePrompt() {
             if ( this.$route.params.promptNumber && this.usersPromptChoices.length > 0 ) {
                 const promptNumber = parseInt( this.$route.params.promptNumber )
@@ -157,7 +183,7 @@ export default {
             return this.participantRecord.number_answered_sets;
         },
         currentTip() {
-            return this.tips[this.numberOfResponses%this.tips.length]
+            return this.tips[this.numberOfResponses % this.tips.length]
         },
     },
 
