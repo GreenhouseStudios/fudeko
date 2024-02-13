@@ -39,10 +39,12 @@ export const useCounterStore = defineStore("counter", {
       this.participantRecord = await supabase.from("participants").select().eq("id", id);
     },
     async login(value) {
-      this.user = value;
+
+      console.log("logging in")
       const rec = await supabase.from("participants").select().eq("email", value);
       this.participantRecord = rec.data[0];
       this.setParticipantID(this.participantRecord.id);
+      await this.getUserPrompts(value);
     },
     async loginAdmin(value) {
       this.user = value;

@@ -1,5 +1,5 @@
 <template>
-    <div id="response-write" class="z-0 py-32 md:px-24">
+    <div id="response-write" class="z-0 py-32 md:px-24" v-if="participantRecord">
 
         <span class="p-3 mx-auto md:px-5 md:w-2/3 md:p-5 prompt " v-if="hasUnansweredSets">
             <span class="flex flex-col mx-auto md:w-1/2 prompt-write-header">
@@ -23,7 +23,7 @@
                 <div class="py-12">
                     <div class="flex flex-col justify-start w-1/4" id="feedback-container">
                         <label for="feedback" class="mx-2 font-bold">How difficult was this to answer?</label>
-                        <Dropdown v-model="difficulty" :options="difficultyOptions" class="m-2" ></Dropdown>
+                        <Dropdown v-model="difficulty" :options="difficultyOptions" class="m-2"></Dropdown>
                     </div>
 
                     <div class="flex flex-col items-start my-5" id="share-options-container">
@@ -100,26 +100,21 @@ export default {
             shareOption: "",
             hasUnansweredSets: true,
             creditName: "",
-            difficultyOptions: [ "Easy", "Moderate", "Somewhat Difficult", "Difficult"],
+            difficultyOptions: ["Easy", "Moderate", "Somewhat Difficult", "Difficult"],
         }
     },
     async mounted() {
-        if ( this.$route.params.email || this.$route.params.promptNumber ) {
-            this.user = this.$route.params.email;
-            const participantRecord = this.participants.find( p => p.email == this.user );
-            if ( participantRecord ) {
-                this.setParticipantID( participantRecord.id );
-            }
-            if ( this.usersPromptChoices.length < 1 ) {
-                this.toggleLoading()
+        if ( this.$route.params.email ) {
+            console.log('mounted email')
+            if ( !this.participantRecord )
+                await this.login( this.$route.params.email );
+            if ( await this.participantHasUnansweredSets( this.participantRecord.id ) )
                 await this.getUserPrompts( this.user );
-                this.toggleLoading()
-            }
-            this.hasUnansweredSets = await this.participantHasUnansweredSets( this.participantID )
+            else this.hasUnansweredSet = false;
         }
     },
     methods: {
-        ...mapActions( useCounterStore, ['submitUserResponse', 'toggleLoading', 'getUserPrompts', 'setParticipantID', 'participantHasUnansweredSets'] ),
+        ...mapActions( useCounterStore, ['submitUserResponse', 'toggleLoading', 'getUserPrompts', 'setParticipantID', 'participantHasUnansweredSets', 'login'] ),
         preview() {
             this.previewing = true;
         },
@@ -151,7 +146,7 @@ export default {
         ...mapStores( useCounterStore ),
         ...mapState( useCounterStore, ['loading', 'error', 'usersPromptChoices', 'tips', 'participantID', 'participantRecord'] ),
         submitButtonDisabled() {
-            return ( this.shareOption.description == "" || this.response == "" || !this.shareOption.name  || !this.difficulty || !this.attrOption.name || this.attrOption.name == "CreditDifferent" && this.creditName == "")
+            return ( this.shareOption.description == "" || this.response == "" || !this.shareOption.name || !this.difficulty || !this.attrOption.name || this.attrOption.name == "CreditDifferent" && this.creditName == "" )
         },
         custom() {
             return this.$route.path.includes( 'custom' )

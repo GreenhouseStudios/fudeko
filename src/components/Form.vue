@@ -60,7 +60,7 @@ export default defineComponent( {
 
   methods: {
 
-    ...mapActions( useCounterStore, ['toggleLoading', 'toggleError', 'getUserPrompts', 'setParticipantID', 'participantHasUnansweredSets', 'verifyUserExists', 'login'] ),
+    ...mapActions( useCounterStore, ['toggleLoading', 'toggleError', 'getUserPrompts', 'setParticipantID', 'participantHasUnansweredSets',  'login'] ),
     addFile( e ) {
       this.files.push( e.target.files[0] )
       console.log( e.target.files[0] )
