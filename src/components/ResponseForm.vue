@@ -42,19 +42,20 @@
 
                         <i class="mx-auto my-5 md:w-full" v-html="shareOption.description"></i>
 
-                        <div class="flex" v-if="shareOption && shareOption.name != 'Keep Private'">
+                        <div v-if="shareOption && shareOption.name != 'Keep Private'">
                             <span class="flex flex-wrap items-center justify-center gap-2 mt-2 mb-5 mr-5 align-middle">
                                 <button @click="attrOption = option" v-for="option in attrSettings" :key="option.name"
                                     class="z-10 w-48 h-24 p-2 border-2 rounded-md"
                                     :class="option === attrOption ? 'bg-yellow-300 border-gray-600 font-bold border-2' : 'border-yellow-300 hover:bg-yellow-200'">{{
                                         option.description }}</button></span>
-                        </div>
 
-                        <div v-if="attrOption.name == 'CreditWithGivenName'"> You will be credited as {{
-                            participantRecord.first_name + ' ' + participantRecord.last_name }}</div>
-                        <div v-if="attrOption.name == 'CreditDifferent' && shareOption != shareSettings[0]">
-                            <label for="alt-credit" class="mr-2">Enter name to be credited as:</label>
-                            <input id="alt-credit" type="text" v-model="creditName" class="p-2 border-2 rounded-md">
+
+                            <div v-if="attrOption.name == 'CreditWithGivenName'" class="flex justify-start"> You will be credited as {{
+                                participantRecord.first_name + ' ' + participantRecord.last_name }}</div>
+                            <div v-if="attrOption.name == 'CreditDifferent'" class="flex justify-start">
+                                <label for="alt-credit" class="mr-2">Enter name to be credited as:</label>
+                                <input id="alt-credit" type="text" v-model="creditName" class="p-2 border-2 rounded-md">
+                            </div>
                         </div>
                     </div>
 
@@ -107,7 +108,7 @@ export default {
     },
     async mounted() {
         if ( this.$route.params.email ) {
-            console.log('mounted email')
+            console.log( 'mounted email' )
             if ( !this.participantRecord )
                 await this.login( this.$route.params.email );
             if ( await this.participantHasUnansweredSets( this.participantRecord.id ) )
@@ -127,7 +128,7 @@ export default {
             this.file = e.target.files[0]
         },
         async submit() {
-            if( this.submitButtonDisabled ) return;
+            if ( this.submitButtonDisabled ) return;
             this.toggleLoading();
             const bodyData = {
                 response_text: this.response,
@@ -149,7 +150,7 @@ export default {
         ...mapStores( useCounterStore ),
         ...mapState( useCounterStore, ['loading', 'error', 'usersPromptChoices', 'tips', 'participantID', 'participantRecord'] ),
         submitButtonDisabled() {
-            return this.response.length < 1  || !this.shareOption || this.shareOption.name != "Keep Private" && !this.attrOption
+            return this.response.length < 1 || !this.shareOption || this.shareOption.name != "Keep Private" && !this.attrOption
         },
         custom() {
             return this.$route.path.includes( 'custom' )
