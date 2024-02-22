@@ -79,7 +79,7 @@ const routes = [
     component: () => import("../components/ResponseForm.vue"),
   },
   {
-    path: "/form/page2/custom",
+    path: "/form/:email/page2/custom",
     name: "ResponseFormCustom",
     component: () => import("../components/ResponseForm.vue"),
   },
