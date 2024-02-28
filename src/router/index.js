@@ -44,6 +44,11 @@ const routes = [
     component: () => import("../components/ParticipantHistory.vue"),
   },
   {
+    path:"/responses/new",
+    name: "ResponseFormAdmin",
+    component: () => import("../components/ResponseForm.vue"),
+  },
+  {
     path: "/responses/:id",
     name: "Responses",
     component: () => import("../views/ResponseView.vue"),
@@ -78,6 +83,7 @@ const routes = [
     name: "ResponseForm",
     component: () => import("../components/ResponseForm.vue"),
   },
+ 
   {
     path: "/form/:email/page2/custom",
     name: "ResponseFormCustom",
@@ -106,7 +112,8 @@ export const router = createRouter({
 });
 
 router.beforeEach(async (to) => {
-  const protectedRoutes = ["Participant", "Responses", "Admin"];
+  const protectedRoutes = ["Participant", "Responses"];
+  const protectedAdminRoutes = ["Admin", "ResponseFormAdmin", "NewPrompt", "Prompts"];
   const store = useCounterStore();
   console.log(store.user);
   const isAuthenticated = store.user;
@@ -119,6 +126,13 @@ router.beforeEach(async (to) => {
   ) {
     // redirect the user to the login page
     return { name: "Login" };
+  }
+  if(
+    !isAuthenticated &&
+    to.name !== "AdminLogin" &&
+    protectedAdminRoutes.includes(to.name)
+  ){
+    return { name: "AdminLogin" };
   }
 });
 

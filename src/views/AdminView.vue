@@ -25,6 +25,8 @@ import Prompts from '../components/Prompts.vue';
 import Responses from '../components/Responses.vue';
 import Participants from '../components/Participants.vue';
 import Tips from '../components/Tips.vue';
+import { useCounterStore } from '../stores/store';
+import { mapActions } from 'pinia';
 export default {
     components: {
         Responses, Participants, Dropdown, Prompts, Tips
@@ -43,6 +45,12 @@ export default {
         currentTabComponent() {
             return this.view.component
         }
+    },
+    methods:{
+        ...mapActions(useCounterStore, ['fetchAdminData']),
+    },
+    mounted () {
+        this.fetchAdminData();
     },
 }
 </script>

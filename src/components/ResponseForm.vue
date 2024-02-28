@@ -1,8 +1,8 @@
 <template>
-    <div id="response-write" class="z-0 py-32 md:px-24" v-if="participantRecord">
+    <div id="response-write" class="z-0 py-32 md:px-24" v-if="participantRecord || isAdminRoute">
 
         <span class="p-3 mx-auto md:px-5 md:w-2/3 md:p-5 prompt " v-if="hasUnansweredSets">
-            <span class="flex flex-col mx-auto md:w-1/2 prompt-write-header">
+            <span class="flex flex-col mx-auto md:w-1/2 prompt-write-header" v-if="!isAdminRoute">
                 <h2 class="pb-3 text-4xl" v-html="activePrompt.prompt_text"></h2>
                 <h3 class="pt-1 text-lg font-bold" v-html="activePrompt.prompt_subtext"></h3>
             </span>
@@ -14,10 +14,30 @@
                         <input type="text" id="custom-prompt-title" placeholder="Title (optional)" class="p-1 w-100"
                             size="75" v-model="userTitle">
                     </div>
+
+
+                    <div v-if="isAdminRoute">
+                        <h1 class="m-10 text-xl">Admin: Enter Response for Participant</h1>
+                        <div class="my-10"><label for="participant-select" class="mr-5">Select Participant</label>
+                            <Dropdown id="participant-select" v-model="adminParticipant" :options="participants"
+                                optionLabel="last_name"></Dropdown>
+                        </div>
+                        <div class="my-10">
+                            <label for="select-prompt" class="mr-5">Select Prompt</label>
+                            <Dropdown id="select-prompt" v-model="adminPrompt" :options="prompts" optionLabel="prompt_text">
+                            </Dropdown>
+                        </div>
+                        <h2 class="m-2">
+                            {{ adminPrompt?.prompt_text }}
+
+                        </h2>
+                        <p>{{ adminPrompt?.prompt_subtext }}</p>
+                    </div>
+
                     <Editor class="my-10 bg-white" v-model="response" style="height: 320px"
                         placeholder="Type your response here"></Editor>
 
-                    <WritingTip :tip="currentTip"></WritingTip>
+                    <WritingTip :tip="currentTip" v-if="!isAdminRoute"></WritingTip>
                 </div>
 
                 <div class="py-12">
@@ -50,8 +70,9 @@
                                         option.description }}</button></span>
 
 
-                            <div v-if="attrOption.name == 'CreditWithGivenName'" class="flex justify-start"> You will be credited as {{
-                                participantRecord.first_name + ' ' + participantRecord.last_name }}</div>
+                            <div v-if="attrOption.name == 'CreditWithGivenName'" class="flex justify-start"> You will be
+                                credited as {{
+                                    participantRecord.first_name + ' ' + participantRecord.last_name }}</div>
                             <div v-if="attrOption.name == 'CreditDifferent'" class="flex justify-start">
                                 <label for="alt-credit" class="mr-2">Enter name to be credited as:</label>
                                 <input id="alt-credit" type="text" v-model="creditName" class="p-2 border-2 rounded-md">
@@ -104,6 +125,8 @@ export default {
             hasUnansweredSets: true,
             creditName: "",
             difficultyOptions: ["Easy", "Moderate", "Somewhat Difficult", "Difficult"],
+            adminPrompt: null,
+            adminParticipant: null,
         }
     },
     async mounted() {
@@ -130,17 +153,7 @@ export default {
         async submit() {
             if ( this.submitButtonDisabled ) return;
             this.toggleLoading();
-            const bodyData = {
-                response_text: this.response,
-                participant: this.participantID,
-                prompt: this.custom ? null : this.activePrompt.id,
-                user_title: this.userTitle,
-                share_option: this.shareOption.name,
-                response_difficulty: this.difficulty,
-                attribution_option: this.attrOption.name,
-                attribution_name: this.attrOption.name == "CreditDifferent" ? this.creditName : null,
-            };
-            await this.submitUserResponse( bodyData )
+            await this.submitUserResponse( this.formData )
             this.toggleLoading();
             this.$router.push( { name: 'ConfirmSubmit' } )
         },
@@ -148,7 +161,7 @@ export default {
     },
     computed: {
         ...mapStores( useCounterStore ),
-        ...mapState( useCounterStore, ['loading', 'error', 'usersPromptChoices', 'tips', 'participantID', 'participantRecord'] ),
+        ...mapState( useCounterStore, ['loading', 'error', 'usersPromptChoices', 'tips', 'participantID', 'participantRecord', 'prompts', 'participants'] ),
         submitButtonDisabled() {
             return this.response.length < 1 || !this.shareOption || this.shareOption.name != "Keep Private" && !this.attrOption
         },
@@ -161,7 +174,23 @@ export default {
         responseWordCount() {
             return this.response.split( ' ' ).length
         },
+        formData() {
+            return {
+                response_text: this.response,
+                participant: this.adminParticipant?.id || this.participantID,
+                prompt: this.adminPrompt?.id || this.activePrompt?.id,
+                user_title: this.userTitle,
+                share_option: this.shareOption.name,
+                response_difficulty: this.difficulty,
+                attribution_option: this.attrOption.name,
+                attribution_name: this.attrOption.name == "CreditDifferent" ? this.creditName : null,
+                entered_by_admin: this.adminPrompt ? true : false,
+            }
+        },
         activePrompt() {
+            if ( this.isAdminRoute ) {
+                return this.prompts[0]
+            }
             if ( this.$route.params.promptNumber && this.usersPromptChoices.length > 0 ) {
                 const promptNumber = parseInt( this.$route.params.promptNumber )
                 console.log( promptNumber )
@@ -179,11 +208,17 @@ export default {
             return parseInt( this.$route.params.id )
         },
         numberOfResponses() {
+            if ( this.isAdminRoute ) {
+                return 0;
+            }
             return this.participantRecord.number_answered_sets;
         },
         currentTip() {
             return this.tips[this.numberOfResponses % this.tips.length]
         },
+        isAdminRoute() {
+            return this.$route.path.includes( 'new' )
+        }
     },
 
 }

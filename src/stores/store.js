@@ -46,8 +46,12 @@ export const useCounterStore = defineStore("counter", {
       this.setParticipantID(this.participantRecord.id);
       await this.getUserPrompts(value);
     },
-    async loginAdmin(value) {
+    loginAdmin(value) {
       this.user = value;
+ 
+      this.participantRecord = null;
+    },
+    async fetchAdminData() {
       await this.getParticipants();
       await this.getResponses();
     },
@@ -58,7 +62,7 @@ export const useCounterStore = defineStore("counter", {
       this.prompts = value;
     },
     async getPrompts() {
-      const prompts = await supabase.from("prompts").select("*");
+      const prompts = await supabase.from("prompts").select("*").eq("prompt_set","fudeko")
       this.prompts = prompts.data;
     },
     async getResponses() {

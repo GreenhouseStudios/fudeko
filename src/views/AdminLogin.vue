@@ -1,13 +1,13 @@
 <template>
     <div class="flex justify-center ">
         <div class="">
-            <h1 class="text-2xl font-bold">Login</h1>
-            <form class="flex flex-col">
-                <div class="flex items-start flex-col w-full my-2">
+            <h1 class="text-2xl font-bold">Admin Login</h1>
+            <!-- <form class="flex flex-col"> -->
+                <div class="flex flex-col items-start w-full my-2">
                     <label for="email">Email</label>
                     <input class="border-2" id="email" type="text" v-model="email" />
                 </div>
-                <div class="flex items-start flex-col w-full my-2">
+                <div class="flex flex-col items-start w-full my-2">
                     <label for="password">Password</label>
                     <input type="password" class="border-2" id="password" v-model="password" :feedback="false">
                 </div>
@@ -17,7 +17,7 @@
                     <button v-else @click="loginUser"
                         class="p-2 my-2 bg-yellow-300 border-2 border-yellow-400">Login</button>
                 </div>
-            </form>
+            <!-- </form> -->
             <p id="error-message"></p>
         </div>
     </div>
@@ -40,14 +40,13 @@ export default {
         }
     },
     methods: {
-        ...mapActions(useCounterStore, ['toggleLoading', 'toggleError', 'login']),
+        ...mapActions(useCounterStore, ['toggleLoading', 'toggleError', 'loginAdmin']),
         async loginUser() {
             await supabase.auth.signInWithPassword({ email: this.email, password: this.password }).then((res) => {
                 console.log(res)
                 this.toggleLoading();
                 if (res.data.user && !res.error) {
-                    this.login({ email: this.email, password: this.password })
-                    // this.$router.push('/form/' + this.email)
+                    this.loginAdmin({ email: this.email, password: this.password })
                     this.$router.push('/admin')
                 }
                 else {
