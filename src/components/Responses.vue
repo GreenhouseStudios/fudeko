@@ -1,17 +1,23 @@
 <template>
-    <div class="px-40">
+    <div class="">
         <div class="my-5">
             <router-link to="/responses/new"><Button label="New" icon="pi pi-plus"></Button></router-link>
         </div>
-        <DataTable :value="responses" class="mx-auto" sortField="created_at" :sortOrder="-1">
-            <Column field="participant" header="Participant"><template #body="slotProps">{{ participants.find(p => p.id ===
-                slotProps.data.participant).first_name }}</template></Column>
-            <Column field="created_at" sortable header="Date"><template #body="slotProps">{{ new
-                Date(slotProps.data.created_at).toLocaleDateString() + " " + new
-                    Date(slotProps.data.created_at).toLocaleTimeString() }}</template></Column>
+        <DataTable :value="joinedResponses" class="" sortField="created_at" :sortOrder="-1" >
+            <Column field="participant" header="Participant"><template></template></Column>
+            <Column field="created_at" sortable header="Date">
+
+                <template #body="slotProps" class="text-xs">{{ new
+            Date(slotProps.data.created_at).toLocaleDateString() + " " + new
+                Date(slotProps.data.created_at).toLocaleTimeString() }}</template>
+            </Column>
             <Column field="prompt" header="Prompt"></Column>
-            <Column> <template #body="slotProps"> <router-link :to="'/responses/' + slotProps.data.id"
-                        class="text-blue-500 hover:text-blue-300"> View</router-link></template></Column>
+            <Column field="responsePreview" header="Response"></Column>
+            <Column>
+
+                <template #body="slotProps"> <router-link :to="'/responses/' + slotProps.data.id"
+                        class="p-2 text-white bg-blue-400 rounded-sm hover:bg-blue-500"> View</router-link></template>
+            </Column>
         </DataTable>
     </div>
 </template>
@@ -35,6 +41,16 @@ export default {
         ...mapStores( useCounterStore ),
         ...mapState( useCounterStore, ['count', 'prompts', 'responses', 'loading', 'error', 'participants'] ),
 
+        joinedResponses() {
+            return this.responses.map( r => {
+                return {
+                    ...r,
+                    prompt: this.prompts.find( p => p.id === r.prompt )?.prompt_text || "Custom",
+                    participant: this.participants.find( p => p.id === r.participant )?.first_name,
+                    responsePreview: r.response_text.slice( 0, 50 ).replace(/<[^>]*>?/gm, '') + "..."
+                }
+            } )
+        }
     },
 }
 </script>
