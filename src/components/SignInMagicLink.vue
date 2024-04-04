@@ -45,8 +45,8 @@ export default {
                 options: {
                     // set this to false if you do not want the user to be automatically signed up
                     shouldCreateUser: false,
-                    // emailRedirectTo: 'https://fudeko.netlify.app/profile/',
-                    emailRedirectTo: 'https://localhost:8080/profile/',
+                    emailRedirectTo: 'https://fudeko.netlify.app/profile/',
+                    // emailRedirectTo: 'https://localhost:8080/profile/',
                 },
 
             } ).then( ( data ) => {
