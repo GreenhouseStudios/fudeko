@@ -9,6 +9,11 @@ const routes = [
     component: () => import("../views/HomeView.vue"),
   },
   {
+    path: "/profile",
+    name: "Profile",
+    component: () => import("../views/Profile.vue"),
+  },
+  {
     path: "/adminlogin",
     name: "AdminLogin",
     component: () => import("../views/AdminLogin.vue"),
@@ -19,9 +24,19 @@ const routes = [
     component: () => import("../views/Login.vue"),
   },
   {
+    path: "/magic",
+    name: "magic",
+    component: () => import("../components/SignInMagicLink.vue"),
+  },
+  {
     path: "/form/:email",
     name: "Form",
     component: () => import("../components/Form.vue"),
+  },
+  {
+    path: '/confirmDecline',
+    name: 'ConfirmDecline',
+    component: () => import("../components/ConfirmDecline.vue"),
   },
   // {
   //   path: "/form",

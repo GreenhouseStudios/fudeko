@@ -30,13 +30,12 @@ export default {
 </script>
 
 <template>
-  <div id="app" class="min-h-screen p-0 px-2 bg-yellow-50">
+  <div id="app" class="min-h-screen px-2 py-5 bg-yellow-50">
     <header class="pb-24">
 
       <router-link to="/">
         <span class="flex items-center float-left pt-2">
-          <img src="./assets/mikan-circle.png" alt="fudeko mikan logo" class="inline w-16 md:w-12">
-          <h1 class="inline ml-2 font-bold">Fudeko Project</h1>
+          <img src="./assets/Fudeko-Logo-Final.png" alt="fudeko mikan logo" class="inline w-16 md:w-36">
         </span>
       </router-link>
       <Nav class="float-right"></Nav>
