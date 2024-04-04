@@ -47,7 +47,7 @@ export default {
                     ...r,
                     prompt: this.prompts.find( p => p.id === r.prompt )?.prompt_text || "Custom",
                     participant: this.participants.find( p => p.id === r.participant )?.first_name,
-                    responsePreview: r.response_text.slice( 0, 50 ).replace(/<[^>]*>?/gm, '') + "..."
+                    responsePreview: r.response_text?.slice( 0, 50 ).replace(/<[^>]*>?/gm, '') + "..."
                 }
             } )
         }
