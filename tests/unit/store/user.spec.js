@@ -23,6 +23,7 @@ describe("store", () => {
       error: false,
       participants: [],
       usersPromptChoices: [],
+      greetings: [],
     };
     expect(store.state).toEqual(defaultState);
   });
