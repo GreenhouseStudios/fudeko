@@ -5,7 +5,8 @@ import { supabase } from "../lib/supabaseClient";
 export const useCounterStore = defineStore("counter", {
   state: () => {
     return {
-      user: null,
+      isParticipantLoggedIn: null,
+      isAdminAuthenticated: null,
       loading: false,
       error: false,
       participantID: null,
@@ -16,6 +17,7 @@ export const useCounterStore = defineStore("counter", {
       promptAssociations: [],
       promptFamiliarities: [],
       responses: [],
+      greetings: [],
       usersPromptChoices: [],
       tips: [],
     };
@@ -25,12 +27,19 @@ export const useCounterStore = defineStore("counter", {
     paths: ['user'],
   },
   actions: {
-    async submitUserResponse(bodyData){
-        await supabase
-        .from( 'responses' )
-        .insert( bodyData ).then( ( res ) => {
-          console.log( res )
-        } )
+    async submitUserResponse(bodyData) {
+      await supabase
+        .from('responses')
+        .insert(bodyData).then((res) => {
+          console.log(res)
+        })
+    },
+    async submitGreetings(bodyData) {
+      await supabase
+        .from('greetings')
+        .insert(bodyData).then((res) => {
+          console.log(res)
+        })
     },
     setParticipantID(value) {
       this.participantID = value;
@@ -48,26 +57,39 @@ export const useCounterStore = defineStore("counter", {
     },
     loginAdmin(value) {
       this.user = value;
- 
+
       this.participantRecord = null;
     },
     async fetchAdminData() {
       await this.getParticipants();
       await this.getResponses();
+      await this.getGreetings();
     },
-    logout() {  
+    logout() {
       this.user = null;
     },
     setPrompts(value) {
       this.prompts = value;
     },
     async getPrompts() {
-      const prompts = await supabase.from("prompts").select("*").eq("prompt_set","fudeko")
+      const prompts = await supabase.from("prompts").select("*").eq("prompt_set", "fudeko")
       this.prompts = prompts.data;
+    },
+    async getPreviousResponses() {
+      const previousResponses = await supabase.from("responses").select(this.participantID).eq("prompt_set", "fudeko")
+      this.previousResponses = previousResponses.data;
     },
     async getResponses() {
       const responses = await supabase.from("responses").select();
       this.responses = responses.data;
+    },
+    async getGreetings() {
+      const greetings = await supabase.from("greetings").select();
+      this.greetings = greetings.data;
+    },
+    async getUserInformation() {
+      const { data: { user } } = await supabase.auth.getUser();
+      console.log(user)
     },
     async getTips() {
       const tips = await supabase.from("tips").select().order('week', { ascending: true });
@@ -80,15 +102,15 @@ export const useCounterStore = defineStore("counter", {
       }
       return data;
     },
-    async getEnum(rpcName){
-      let { data  } = await supabase
-    .rpc(rpcName)
-    return data;
+    async getEnum(rpcName) {
+      let { data } = await supabase
+        .rpc(rpcName)
+      return data;
     },
-    async getPromptEnums(){
-    this.promptAssociations = await this.getEnum("get_positivities");
-    this.promptDifficulties = await this.getEnum("get_difficulties");
-    this.promptFamiliarities = await this.getEnum("get_familiarities");
+    async getPromptEnums() {
+      this.promptAssociations = await this.getEnum("get_positivities");
+      this.promptDifficulties = await this.getEnum("get_difficulties");
+      this.promptFamiliarities = await this.getEnum("get_familiarities");
     },
     toggleLoading() {
       this.loading = !this.loading;
@@ -106,33 +128,33 @@ export const useCounterStore = defineStore("counter", {
       await this.getTips();
     },
     async participantHasUnansweredSets(participantID) {
-      const {data} = await supabase.rpc('has_unanswered_sets', {participant_id: participantID});
+      const { data } = await supabase.rpc('has_unanswered_sets', { participant_id: participantID });
       return data;
     },
     async getUserPrompts(userEmail) {
       console.log(userEmail);
-      if(this.participantID) {
-        const prompts = await supabase.rpc('get_latest_prompt_set', {user_id: this.participantID})
+      if (this.participantID) {
+        const prompts = await supabase.rpc('get_latest_prompt_set', { user_id: this.participantID })
         this.usersPromptChoices = prompts.data;
       }
-     
+
     },
-    async submitPrompt(prompt){
+    async submitPrompt(prompt) {
       const sub = await supabase.from("prompts").insert(prompt);
       console.log(sub);
     },
-    async updatePrompt(id,updatedData){
-      try{
-        const {data,error} = await supabase.from("prompts").update(updatedData).eq("id",id);
+    async updatePrompt(id, updatedData) {
+      try {
+        const { data, error } = await supabase.from("prompts").update(updatedData).eq("id", id);
         console.log(data);
         console.log(error)
-      } catch(err){
+      } catch (err) {
         console.log(err);
       }
-      
+
     }
   },
-  getters:{
-  
+  getters: {
+
   }
 });

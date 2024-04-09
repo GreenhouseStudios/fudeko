@@ -14,15 +14,40 @@ const routes = [
     component: () => import("../views/Profile.vue"),
   },
   {
+    path: "/forgotpassword",
+    name: "ForgotPassword",
+    component: () => import("../views/ForgotPassword.vue"),
+  },
+  {
     path: "/adminlogin",
     name: "AdminLogin",
     component: () => import("../views/AdminLogin.vue"),
+  },
+  {
+    path: "/previousresponses",
+    name: "PreviousResponses",
+    component: () => import("../views/PreviousResponses.vue"),
+  },
+  {
+    path: "/findprompts",
+    name: "FindPrompts",
+    component: () => import("../views/FindPrompts.vue"),
+  },
+  {
+    path: "/createaccount",
+    name: "CreateAccount",
+    component: () => import("../views/CreateAccount.vue"),
   },
   {
     path: "/login",
     name: "Login",
     component: () => import("../views/Login.vue"),
   },
+  {
+  path: "/sharedresponses",
+  name: "SharedResponses",
+  component: () => import("../views/SharedResponses.vue"),
+},
   {
     path: "/magic",
     name: "magic",
@@ -62,6 +87,11 @@ const routes = [
     path:"/responses/new",
     name: "ResponseFormAdmin",
     component: () => import("../components/ResponseForm.vue"),
+  },
+  {
+    path:"/greetings/new",
+    name: "GreetingForm",
+    component: () => import("../components/GreetingsForm.vue"),
   },
   {
     path: "/responses/:id",
@@ -150,6 +180,29 @@ router.beforeEach(async (to) => {
     return { name: "AdminLogin" };
   }
 });
+
+//   const store = useCounterStore();
+//   const isLoggedIn = store.isParticipantLoggedIn;
+//   const isAuthenticated = store.isAdminAuthenticated;
+  
+//   if (
+//     // make sure the user is authenticated
+//     !isLoggedIn &&
+//     // ❗️ Avoid an infinite redirect
+//     to.name !== "Login" &&
+//     protectedRoutes.includes(to.name)
+//   ) {
+//     // redirect the user to the login page
+//     return { name: "Login" };
+//   }
+//   if(
+//     !isAuthenticated &&
+//     to.name !== "AdminLogin" &&
+//     protectedAdminRoutes.includes(to.name)
+//   ){
+//     return { name: "AdminLogin" };
+//   }
+// });
 
 // const router = new VueRouter({
 //   mode: 'history',
