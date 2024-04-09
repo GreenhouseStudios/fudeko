@@ -1,23 +1,26 @@
 <template>
     <div class="flex justify-center ">
         <div class="">
-            <h1 class="text-2xl font-bold">Admin Login</h1>
+            <h1 class="text-2xl font-bold">Create an Account</h1>
             <form class="flex flex-col" @submit.prevent="onSubmit">
-                <div class="flex flex-col items-start w-full my-2">
+                <div class="flex items-start flex-col w-full my-2">
                     <label for="email">Email</label>
                     <input class="border-2" id="email" type="text" v-model="email" />
                 </div>
-                <div class="flex flex-col items-start w-full my-2">
+                <div class="flex items-start flex-col w-full my-2">
                     <label for="password">Password</label>
                     <input type="password" class="border-2" id="password" v-model="password" :feedback="false">
                 </div>
                 <div>
-                    <input v-if="!this.email || !this.password" Button @click="loginUser" type="submit"
-                        class="p-2 my-2 bg-gray-300 border-2 border-gray-400" disabled value="Login">
-                    <input v-else @click="loginUser"
-                        class="p-2 my-2 bg-yellow-300 border-2 border-yellow-400" type="submit" value="Login">
+                    <input v-if="!this.email || !this.password" Button @click="signUp" type="submit"
+                        class="p-2 my-2 bg-gray-300 border-2 border-gray-400" disabled value="Create Account">
+                    <input v-else @click="signUp" type="submit" value="Create Account"
+                        class="p-2 my-2 bg-yellow-300 border-2 border-yellow-400">
                 </div>
             </form>
+            <div class="flex items-center gap-2 my-3">
+                <p>Already have an Account?</p><router-link to="/login" class="underline">Sign In</router-link>
+            </div>
             <p id="error-message"></p>
         </div>
     </div>
@@ -25,7 +28,6 @@
 
 <script>
 
-// import Password from 'primevue/password';
 // import InputText from 'primevue/inputtext';
 // import Button from 'primevue/button'
 import { supabase } from '../lib/supabaseClient';
@@ -40,24 +42,15 @@ export default {
         }
     },
     methods: {
-        ...mapActions(useCounterStore, ['toggleLoading', 'toggleError', 'loginAdmin']),
-        async loginUser() {
-            await supabase.auth.signInWithPassword({ email: this.email, password: this.password }).then((res) => {
-                console.log(res)
-                this.toggleLoading();
-                if (res.data.user && !res.error) {
-                    this.loginAdmin({ email: this.email, password: this.password })
-                    this.$router.push('/admin')
-                }
-                else {
-                    document.querySelector('#error-message').innerHTML = "Invalid Login Credentials"
-                }
-                this.toggleLoading();
-            }).catch(err => console.log(err))
-        }
+        ...mapActions(useCounterStore, ['toggleLoading', 'toggleError', 'login']),
+        async signUp() {
+            await supabase.auth.signUp({
+                email: this.email,
+                password: this.password,
+            })
+        },
     },
     components: {
-        // Password, InputText, Button
     },
     mounted() {
 
