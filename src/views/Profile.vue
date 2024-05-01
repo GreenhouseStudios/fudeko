@@ -18,6 +18,7 @@
 import { supabase } from '@/lib/supabaseClient'
 // eslint-disable-next-line no-unused-vars
 import { useCounterStore } from '@/stores/store'
+import { mapActions } from 'pinia'
 import { mapStores, mapState } from 'pinia'
 import Button from 'primevue/button'
 import ResponseRow from '@/components/ResponseRow.vue'
@@ -29,7 +30,7 @@ export default {
         }
     },
     methods: {
-
+        ...mapActions( useCounterStore, ['toggleLoading', 'toggleError', 'login'] ),
     },
     components: {
         Button,
@@ -39,6 +40,7 @@ export default {
         supabase.auth.onAuthStateChange( ( event, session ) => {
             if ( event === 'SIGNED_IN' ) {
                 console.log( 'User signed in:', session.user );
+                this.login( session.user.email );
                 // Redirect or perform actions after successful login
             } else if ( event === 'SIGNED_OUT' ) {
                 console.log( 'User signed out' );
