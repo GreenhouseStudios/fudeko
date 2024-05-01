@@ -52,7 +52,6 @@ export default {
             } ).then( ( data ) => {
                 console.log( data );
                 this.emailSent = true;
-                this.login( this.email)
             } ).catch( ( error ) => {
                 console.log( error );
             } )
