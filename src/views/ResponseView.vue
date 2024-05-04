@@ -1,7 +1,7 @@
 <template>
     <div class="w-1/2 mx-auto ">
-        <h1 class="my-12 text-xl font-bold">{{ prompts.find(p => p.id == response.prompt).prompt_text }}</h1>
-        <h2 class="text-lg font-bold">By: {{ this.participant.first_name + " " + this.participant.last_name }}</h2>
+        <!-- <h1 class="my-12 text-xl font-bold">{{ prompts.find(p => p.id == response.prompt).prompt_text }}</h1> -->
+        <!-- <h2 class="text-lg font-bold">By: {{ this.participant.first_name + " " + this.participant.last_name }}</h2> -->
         <div v-html="response.response_text" class="p-12 my-24 bg-yellow-100 ">
 
         </div>

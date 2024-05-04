@@ -3,6 +3,7 @@
         <div class="my-5">
             <router-link to="/responses/new"><Button label="New" icon="pi pi-plus"></Button></router-link>
         </div>
+
         <DataTable :value="joinedResponses" class="" sortField="created_at" :sortOrder="-1" >
             <Column field="participant" header="Participant"><template></template></Column>
             <Column field="created_at" sortable header="Date">
