@@ -1,10 +1,10 @@
 <template>
     <div class="flex flex-col items-start justify-start">
         <h1 class="my-5 text-4xl font-bold">Hi, {{ this.participantRecord?.first_name }}</h1>
-        <p>View your response history...</p>
+        <p>View your response history, a detailed review of each response, and the settings you chose for each here. </p>
 
-        <ResponseRow v-for="i in [1, 2, 3]" :key="i" />
 
+        <ResponseRow :response="item" v-for="item in joinedResponses" :key="item" />
         <div>
 
             <router-link :to="'/form/' + this.participantRecord?.email"><Button
@@ -30,15 +30,17 @@ export default {
         }
     },
     methods: {
-        ...mapActions( useCounterStore, ['toggleLoading', 'toggleError', 'login'] ),
+        ...mapActions( useCounterStore, ['toggleLoading', 'toggleError', 'login','fetchAdminData'] ),
+           async getUserInformations() {
+            const { data: { user } } = await supabase.auth.getUser();
+            this.userEmail = user?.email
+        },
     },
-    components: {
-        Button,
-        ResponseRow
-    },
-    mounted() {
+      mounted() {
+        this.fetchAdminData();
+        this.getUserInformations();
         supabase.auth.onAuthStateChange( ( event, session ) => {
-            if ( event === 'SIGNED_IN' ) {
+             if ( event === 'SIGNED_IN' ) {
                 console.log( 'User signed in:', session.user );
                 this.login( session.user.email );
                 // Redirect or perform actions after successful login
@@ -47,10 +49,26 @@ export default {
                 // Redirect or perform actions after logout
             }
         } );
+        },
+    components: {
+        Button,
+        ResponseRow
     },
     computed: {
-        ...mapStores( useCounterStore ),
-        ...mapState( useCounterStore, ['prompts', 'user', 'loading', 'error', 'participantRecord'] ),
+        ...mapStores(useCounterStore),
+        ...mapState(useCounterStore, ['count', 'prompts', 'responses', 'loading', 'error', 'usersPromptChoices', 'participants','participantRecord']),
+        joinedResponses() {
+            return this.responses.filter(r => r.participant == this.participants.find(p => p.email == this.userEmail)?.id).map(r => {
+                return {
+                    ...r,
+                    promptQuestion: this.prompts.find(p => p.id === r.prompt)?.prompt_text || "Custom",
+                    created: new Date(this.responses.find(p => p.id === r.id)?.created_at)?.toLocaleDateString("en-US", { month: "short",day: '2-digit'}),
+                    responsePreview: (this.responses.find(p => p.id === r.id)?.response_text).replace(/<[^>]*>?/gm, '')
+
+
+                }
+            })
+        },
     },
 }
 </script>

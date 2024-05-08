@@ -8,6 +8,7 @@ export const useCounterStore = defineStore("counter", {
       user: null,
       loading: false,
       error: false,
+      greetings: [],
       participantID: null,
       participantRecord: null,
       participants: [],
@@ -31,6 +32,13 @@ export const useCounterStore = defineStore("counter", {
         .insert( bodyData ).then( ( res ) => {
           console.log( res )
         } )
+    },
+    async submitGreetings(bodyData) {
+      await supabase
+        .from('greetings')
+        .insert(bodyData).then((res) => {
+          console.log(res)
+        })
     },
     setParticipantID(value) {
       this.participantID = value;
@@ -66,9 +74,20 @@ export const useCounterStore = defineStore("counter", {
       const prompts = await supabase.from("prompts").select("*").eq("prompt_set","fudeko")
       this.prompts = prompts.data;
     },
+    async editGreeting(bodydata){
+      await supabase 
+      console.log(bodydata)
+      // .from('greetings')
+      // .update({ name: 'Australia' })
+      // .eq('id', 1)
+    } ,
     async getResponses() {
       const responses = await supabase.from("responses").select();
       this.responses = responses.data;
+    },
+    async getGreetings() {
+      const greetings = await supabase.from("greetings").select();
+      this.greetings = greetings.data;
     },
     async getTips() {
       const tips = await supabase.from("tips").select().order('week', { ascending: true });
@@ -105,6 +124,7 @@ export const useCounterStore = defineStore("counter", {
       await this.getPrompts();
       await this.getPromptEnums();
       await this.getTips();
+      await this.getGreetings();
     },
     async participantHasUnansweredSets(participantID) {
       const {data} = await supabase.rpc('has_unanswered_sets', {participant_id: participantID});

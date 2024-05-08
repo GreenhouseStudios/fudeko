@@ -25,11 +25,12 @@ import Prompts from '../components/Prompts.vue';
 import Responses from '../components/Responses.vue';
 import Participants from '../components/Participants.vue';
 import Tips from '../components/Tips.vue';
+import Greetings from '../components/Greetings.vue';
 import { useCounterStore } from '../stores/store';
 import { mapActions } from 'pinia';
 export default {
     components: {
-        Responses, Participants, Dropdown, Prompts, Tips
+        Responses, Participants, Dropdown, Prompts, Tips, Greetings
     },
     data() {
         return {
@@ -38,8 +39,10 @@ export default {
                 { label: 'Responses', value: 'responses', component: Responses },
                 { label: 'Participants', value: 'participants', component: Participants },
                 { label: 'Prompts', value: 'prompts', component: Prompts },
-                { label: 'Tips', value: 'tips', component: Tips },]
-        }
+                { label: 'Tips', value: 'tips', component: Tips },
+                { label: 'Greetings', value: 'greetings', component: Greetings },]
+
+            }
     },
     computed: {
         currentTabComponent() {

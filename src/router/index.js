@@ -64,6 +64,21 @@ const routes = [
     component: () => import("../components/ResponseForm.vue"),
   },
   {
+    path:"/greetings/new",
+    name: "GreetingFormAdmin",
+    component: () => import("../components/GreetingsForm.vue"),
+  },
+  {
+    path: "/greetings/:id",
+    name: "Greetings",
+    component: () => import("../views/GreetingsView.vue"),
+  },
+  {
+    path: "/greetings/edit/:id",
+    name: "GreetingsEdit",
+    component: () => import("../views/GreetingsViewEdit.vue"),
+  },
+  {
     path: "/responses/:id",
     name: "Responses",
     component: () => import("../views/ResponseView.vue"),
@@ -125,10 +140,9 @@ export const router = createRouter({
   history: createWebHistory(),
   routes,
 });
-
 router.beforeEach(async (to) => {
-  const protectedRoutes = ["Participant", "Responses"];
-  const protectedAdminRoutes = ["Admin", "ResponseFormAdmin", "NewPrompt", "Prompts"];
+  const protectedRoutes = ["Participant", "Responses", "Greetings"];
+  const protectedAdminRoutes = ["Admin", "ResponseFormAdmin", "NewPrompt", "Prompts", "GreetingsFormAdmin"];
   const store = useCounterStore();
   console.log(store.user);
   const isAuthenticated = store.user;
