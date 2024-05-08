@@ -22,8 +22,6 @@ import { mapActions } from 'pinia'
 import { mapStores, mapState } from 'pinia'
 import Button from 'primevue/button'
 import ResponseRow from '@/components/ResponseRow.vue'
-import { mapActions } from 'pinia';
-import { supabase } from '../lib/supabaseClient';
 
 export default {
     data() {
