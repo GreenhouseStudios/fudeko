@@ -1,7 +1,10 @@
 <template>
     <div class="flex justify-center ">
         <div v-if="!emailSent">
-            <h1 class="text-2xl font-bold">✨ Magic Login ✨</h1>
+            <h1 class="text-2xl font-bold">Login</h1>
+
+            <!-- <p class="my-5">Enter your email to receive a magic link to login</p> -->
+
             <form class="flex flex-col">
                 <div class="flex flex-col items-start w-full my-2">
                     <label for="email">Email</label>
@@ -10,7 +13,7 @@
 
                 <div>
                     <Button @click="loginUser" 
-                        class="p-2 my-2 bg-yellow-300 border-2 border-yellow-400" :disabled="!validEmail">Login</Button>
+                        class="p-2 my-2 bg-yellow-300 border-2 border-yellow-400" :disabled="!validEmail">Send Magic Link</Button>
                 </div>
             </form>
 
@@ -52,7 +55,6 @@ export default {
             } ).then( ( data ) => {
                 console.log( data );
                 this.emailSent = true;
-                this.login( this.email)
             } ).catch( ( error ) => {
                 console.log( error );
             } )

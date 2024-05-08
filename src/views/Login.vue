@@ -1,7 +1,8 @@
 <template>
     <div class="flex justify-center ">
         <div class="">
-            <h1 class="text-2xl font-bold">Login</h1>
+            <sign-in-magic-link />
+            <!-- <h1 class="text-2xl font-bold">Login</h1>
             <form class="flex flex-col">
                 <div class="flex flex-col items-start w-full my-2">
                 <label for="email">Email</label>
@@ -13,7 +14,7 @@
                     <Button v-else @click="loginUser" class="p-2 my-2 bg-yellow-300 border-2 border-yellow-400">Login</Button>
                 </div>
             </form>
-            <p id="error-message"></p>
+            <p id="error-message"></p> -->
         </div>
     </div>
 </template>
@@ -21,9 +22,10 @@
 <script>
 
 // import InputText from 'primevue/inputtext';
-import Button from 'primevue/button'
+// import Button from 'primevue/button'
 import { useCounterStore } from '@/stores/store'
 import { mapStores, mapState, mapActions } from 'pinia'
+import SignInMagicLink from '../components/SignInMagicLink.vue'
 // import { store } from '../stores/store';
 export default {
     data() {
@@ -39,7 +41,8 @@ export default {
         }
     },
     components: {
-        Button
+        // Button,
+        SignInMagicLink
     },
     mounted() {
 
