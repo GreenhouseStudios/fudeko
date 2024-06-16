@@ -11,6 +11,7 @@ export const useCounterStore = defineStore("counter", {
       greetings: [],
       participantID: null,
       participantRecord: null,
+      loggedInUser: null,
       participants: [],
       prompts: [],
       promptDifficulties: [],
@@ -47,12 +48,17 @@ export const useCounterStore = defineStore("counter", {
       this.participantRecord = await supabase.from("participants").select().eq("id", id);
     },
     async login(value) {
-
-      console.log("logging in")
+      this.loggedInUser = value;
       const rec = await supabase.from("participants").select().eq("email", value);
       this.participantRecord = rec.data[0];
       this.setParticipantID(this.participantRecord.id);
       await this.getUserPrompts(value);
+    },
+    async getParticipantRecordByEmail(email) {
+      const rec = await supabase.from("participants").select().eq("email", email);
+      this.participantRecord = rec.data[0];
+      this.setParticipantID(this.participantRecord.id);
+      await this.getUserPrompts(email);
     },
     loginAdmin(value) {
       this.user = value;
@@ -75,8 +81,9 @@ export const useCounterStore = defineStore("counter", {
       this.prompts = prompts.data;
     },
     async editGreeting(bodydata){
-      await supabase 
-      console.log(bodydata)
+      await supabase.from('greetings').update(bodydata).eq('id', bodydata.id)
+      // await supabase 
+      // console.log(bodydata)
       // .from('greetings')
       // .update({ name: 'Australia' })
       // .eq('id', 1)

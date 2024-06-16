@@ -133,14 +133,14 @@ export default {
         if ( this.$route.params.email ) {
             console.log( 'mounted email' )
             if ( !this.participantRecord )
-                await this.login( this.$route.params.email );
+                await this.getParticipantRecordByEmail( this.$route.params.email );
             if ( await this.participantHasUnansweredSets( this.participantRecord.id ) )
                 await this.getUserPrompts( this.user );
             else this.hasUnansweredSet = false;
         }
     },
     methods: {
-        ...mapActions( useCounterStore, ['submitUserResponse', 'toggleLoading', 'getUserPrompts', 'setParticipantID', 'participantHasUnansweredSets', 'login'] ),
+        ...mapActions( useCounterStore, ['submitUserResponse', 'toggleLoading', 'getUserPrompts', 'setParticipantID', 'participantHasUnansweredSets', 'getParticipantRecordByEmail'] ),
         preview() {
             this.previewing = true;
         },
