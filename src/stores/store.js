@@ -158,6 +158,14 @@ export const useCounterStore = defineStore("counter", {
         console.log(err);
       }
       
+    },
+    async AddNewParticipant(bodyData){
+
+      await supabase
+      .from('participants')
+      .insert(bodyData).then((res) => {
+        console.log(res)
+      })
     }
   },
   getters:{

@@ -1,6 +1,8 @@
 <template>
-    <div class="px-40">
-       <!-- <h1 class="mt-5 text-xl font-bold text-left">Participants</h1> -->
+    <div class="">
+        <div class="my-5">
+            <router-link to="/participants/new"><Button label="New" icon="pi pi-plus"></Button></router-link>
+        </div>
 
         <DataTable :value="participants" class="mx-auto">
             <Column field="id" header="ParticipantID"></Column>
@@ -8,10 +10,13 @@
             <Column> <template #body="slotProps"> <router-link :to="'/participant/'+slotProps.data.id" class="text-blue-500 hover:text-blue-300"> View</router-link></template></Column>
 
         </DataTable>
+        
+        
     </div>
 </template>
 
 <script>
+import Button from 'primevue/button';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import { useCounterStore } from '@/stores/store'
@@ -19,7 +24,7 @@ import { mapStores, mapState, } from 'pinia'
 
 export default {
     components: {
-        DataTable, Column, 
+        DataTable, Column, Button
     },
     data() {
         return {
