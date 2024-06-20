@@ -4,6 +4,7 @@ import { useCounterStore } from '@/stores/store'
 import { mapActions, mapState } from 'pinia'
 import Nav from './components/Nav.vue'
 import { RouterLink } from 'vue-router'
+import Footer from './components/Footer.vue'
 
 export default {
   data() {
@@ -24,13 +25,14 @@ export default {
   },
   components: {
     Nav,
-    RouterLink
+    RouterLink,
+    Footer
   },
 }
 </script>
 
 <template>
-  <div id="app" class="min-h-screen px-2 py-5 bg-yellow-50">
+  <div id="app" class="min-h-screen bg-yellow-50">
     <header class="pb-24">
 
       <router-link to="/">
@@ -40,8 +42,9 @@ export default {
       </router-link>
       <Nav class="float-right"></Nav>
     </header>
-<main class="md:px-48">
-    <router-view v-if="!loading" /></main>
+<main class="min-h-screen md:px-48">
+    <router-view class="h-full" v-if="!loading" /></main>
+    <Footer></Footer>
   </div>
 </template>
 

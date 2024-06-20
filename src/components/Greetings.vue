@@ -4,12 +4,11 @@
         <div class="my-5">
             <router-link to="/greetings/new"><Button label="New" icon="pi pi-plus"></Button></router-link>
         </div>
-        <DataTable :value="greetings" class="mx-auto" sortField="created_at">
-            <Column field="ID" header="Number"><template #body="slotProps">{{ slotProps.data.id }}</template></Column>
+        <DataTable :value="greetings" class="mx-auto" sortField="created_at" sortOrder="-1">
             <Column field="created_at" sortable header="Date"><template #body="slotProps">{{ new
                 Date(slotProps.data.created_at).toLocaleDateString() + " " + new
                     Date(slotProps.data.created_at).toLocaleTimeString() }}</template></Column>
-            <Column field="text" header="Greeting Text"><template #body="slotProps">{{ slotProps.data.text }}</template>
+            <Column field="text" header="Greeting Text"><template #body="slotProps">{{ slotProps.data.text.substr(0,50) }}</template>
             </Column>
             <Column>
 

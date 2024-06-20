@@ -34,8 +34,8 @@ const routes = [
     component: () => import("../components/Form.vue"),
   },
   {
-    path: '/confirmDecline',
-    name: 'ConfirmDecline',
+    path: "/confirmDecline",
+    name: "ConfirmDecline",
     component: () => import("../components/ConfirmDecline.vue"),
   },
   // {
@@ -59,17 +59,17 @@ const routes = [
     component: () => import("../components/ParticipantHistory.vue"),
   },
   {
-    path:"/responses/new",
+    path: "/responses/new",
     name: "ResponseFormAdmin",
     component: () => import("../components/ResponseForm.vue"),
   },
   {
-    path:"/participants/new",
+    path: "/participants/new",
     name: "ParticipantFormAdmin",
     component: () => import("../components/ParticipantForm.vue"),
   },
   {
-    path:"/greetings/new",
+    path: "/greetings/new",
     name: "GreetingFormAdmin",
     component: () => import("../components/GreetingsForm.vue"),
   },
@@ -118,15 +118,15 @@ const routes = [
     name: "ResponseForm",
     component: () => import("../components/ResponseForm.vue"),
   },
- 
+
   {
     path: "/form/:email/page2/custom",
     name: "ResponseFormCustom",
     component: () => import("../components/ResponseForm.vue"),
   },
   {
-    path: '/confirmSubmit',
-    name: 'ConfirmSubmit',
+    path: "/confirmSubmit",
+    name: "ConfirmSubmit",
     component: () => import("../components/Confirmation.vue"),
   },
   {
@@ -144,12 +144,22 @@ const routes = [
 export const router = createRouter({
   history: createWebHistory(),
   routes,
+  scrollBehavior: function(){
+    return { left: 0, top: 0 };
+  },
 });
+
+
 router.beforeEach(async (to) => {
   const protectedRoutes = ["Participant", "Responses", "Greetings"];
-  const protectedAdminRoutes = ["Admin", "ResponseFormAdmin", "NewPrompt", "Prompts", "GreetingsFormAdmin"];
+  const protectedAdminRoutes = [
+    "Admin",
+    "ResponseFormAdmin",
+    "NewPrompt",
+    "Prompts",
+    "GreetingsFormAdmin",
+  ];
   const store = useCounterStore();
-  console.log(store.user);
   const isAuthenticated = store.user;
   if (
     // make sure the user is authenticated
@@ -161,11 +171,11 @@ router.beforeEach(async (to) => {
     // redirect the user to the login page
     return { name: "Login" };
   }
-  if(
+  if (
     !isAuthenticated &&
     to.name !== "AdminLogin" &&
     protectedAdminRoutes.includes(to.name)
-  ){
+  ) {
     return { name: "AdminLogin" };
   }
 });
