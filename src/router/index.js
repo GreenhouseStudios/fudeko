@@ -69,6 +69,11 @@ const routes = [
     component: () => import("../components/ParticipantForm.vue"),
   },
   {
+    path: "/tips/new",
+    name: "TipFormAdmin",
+    component: () => import("../components/TipForm.vue"),
+  },
+  {
     path: "/greetings/new",
     name: "GreetingFormAdmin",
     component: () => import("../components/GreetingsForm.vue"),

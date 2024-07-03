@@ -167,6 +167,15 @@ export const useCounterStore = defineStore("counter", {
         console.log(res)
       })
     }
+    ,
+    async AddNewTip(bodyData){
+
+      await supabase
+      .from('tips')
+      .insert(bodyData).then((res) => {
+        console.log(res)
+      })
+    }
   },
   getters:{
   
