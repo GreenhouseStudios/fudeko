@@ -11,6 +11,9 @@
         <DataTable :value="filteredParticipants" class="mx-auto">
             <Column field="id" header="ParticipantID"></Column>
             <Column field="first_name" header="Name"><template #body="slotProps">{{ slotProps.data.first_name +  " " + slotProps.data.last_name }}</template></Column>
+            <Column field="email" header="Email"></Column>
+            <Column field="partner_email" header="Partner Email"></Column>
+            <Column field="status" header="Status"></Column>
             <Column> <template #body="slotProps"> <router-link :to="'/participant/'+slotProps.data.id" class="text-blue-500 hover:text-blue-300"> View</router-link></template></Column>
 
         </DataTable>

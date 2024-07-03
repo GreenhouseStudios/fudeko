@@ -23,9 +23,18 @@
                 </InputText>
             </div>
 
-            <div class="flex flex-col justify-start max-w-xl">
+            <div class="flex flex-col justify-start max-w-xl" v-show="false">
                 <label for="startDate" class="pb-2" v-tooltip="'Participant will start on the following Tuesday'">Start Date </label> 
                 <Calendar id="startDate" v-model="startDate" placeholder="Start Date" :minDate="currentDate"></Calendar>
+            </div>
+
+            <div class="flex gap-2 align-middle">
+                <label for="partnerReceivesPrompts" class="pb-2">Partner Receives Prompts</label>
+                <InputSwitch v-model="partnerReceivesPrompts" ></InputSwitch>
+            </div>
+            <div class="flex gap-2 align-middle">
+                <label for="partnerReceivesConfirmations" class="pb-2">Partner Receives Responses</label>
+                <InputSwitch v-model="partnerReceivesResponses" ></InputSwitch>
             </div>
 
             <Button class="max-w-md m-auto" @click="addParticipant" label="Add New Participant" :disabled="submitDisabled"></Button>
@@ -39,6 +48,7 @@ import { mapStores, mapState, mapActions } from 'pinia'
 import InputText from 'primevue/inputtext';
 import Calendar from 'primevue/calendar';
 import Button from 'primevue/button';
+import InputSwitch from 'primevue/inputswitch';
 
 
 
@@ -48,6 +58,7 @@ export default {
         InputText,
         Button,
         Calendar,
+        InputSwitch
     },
     data() {
         return {
@@ -56,7 +67,9 @@ export default {
             email: '',
             partnerEmail: '',
             startDate: null,
-            currentDate: new Date()
+            currentDate: new Date(),
+            partnerReceivesPrompts: true,
+            partnerReceivesResponses: true,
         }
     },
 
@@ -69,7 +82,10 @@ export default {
                 last_name: this.lastName,
                 email: this.email,
                 partner_email: this.partnerEmail,
-                start_date: this.startDate === null ? new Date() : this.startDate
+                start_date: this.startDate === null ? new Date() : this.startDate,
+                partner_receives_prompts: this.partnerReceivesPrompts,
+                partner_receives_responses: this.partnerReceivesResponses,
+                status: 'active'
             } ).then( () => {
                 this.toggleLoading();
                 this.$router.push( '/admin' );
@@ -83,7 +99,7 @@ export default {
         ...mapStores( useCounterStore ),
         ...mapState( useCounterStore, ['loading', 'error', 'usersPromptChoices', 'tips', 'participantID', 'participantRecord', 'prompts', 'participants'] ),
         submitDisabled() {
-            return this.firstName.length < 1 || this.lastName.length < 1 || this.email.length < 1 || this.startDate === null;
+            return this.firstName.length < 1 || this.lastName.length < 1 || this.email.length < 1 ;
         },
         bodyData() {
             return {
