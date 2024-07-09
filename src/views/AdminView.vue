@@ -1,5 +1,5 @@
 <template>
-    <div class="px-40 py-3 mx-auto">
+    <div class="md:px-40 px-10 py-3 mx-auto">
         <h1 class="text-4xl font-bold">Admin Console</h1>
 
         <Menubar :model="views" class="gap-5 mb-5"></Menubar>

@@ -1,7 +1,7 @@
 <template>
-    <div id="response-write">
+    <div id="response-write" class="mx-auto md:w-1/2 flex flex-col align-middle">
         <h2 class="my-5 text-xl font-bold">New Tip Form</h2>
-        <div class="flex flex-col justify-start gap-5 px-80">
+        <div class="flex flex-col justify-center align-middle mx-auto gap-5">
             <div class="flex flex-col justify-start max-w-xl">
                 <label for="tipTitle" class="pb-2">Tip Title</label>
                 <InputText id="tipTitle" v-model="tipTitle" placeholder="Tip Title"></InputText>
@@ -9,7 +9,7 @@
 
             <div class="flex flex-col justify-start max-w-xl">
                 <label for="tipText" class="pb-2">Tip Text</label>
-                <InputText id="tipText" v-model="tipText" placeholder="Tip Text"></InputText>
+                <Editor v-model="tipText" style="height: 320px; max-width: 600px" placeholder="Type your response here"></Editor>
             </div>
 
             <div class="flex flex-col justify-start max-w-xl">
@@ -28,6 +28,7 @@ import { mapStores, mapState, mapActions } from 'pinia'
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import InputNumber from 'primevue/inputnumber';
+import Editor from 'primevue/editor';
 
 
 
@@ -36,7 +37,8 @@ export default {
         // Editor,
         InputText,
         Button,
-        InputNumber
+        InputNumber,
+        Editor
     },
     data() {
         return {

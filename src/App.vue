@@ -42,7 +42,7 @@ export default {
       </router-link>
       <Nav class="float-right"></Nav>
     </header>
-<main class="min-h-screen md:px-48">
+<main class="min-h-screen  md:px-10">
     <router-view class="h-full" v-if="!loading" /></main>
     <Footer></Footer>
   </div>
