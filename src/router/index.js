@@ -140,6 +140,11 @@ const routes = [
     component: () => import("../components/Confirmation.vue"),
   },
   {
+    path: "/continue",
+    name: "Continue",
+    component: () => import("../views/Continue.vue"),
+  },
+  {
     path: "/:catchAll(.*)",
     name: "NotFound",
     component: () => import("../views/NotFound.vue"),

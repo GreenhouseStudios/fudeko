@@ -131,12 +131,19 @@ export default {
     },
     async mounted() {
         if ( this.$route.params.email ) {
-            console.log( 'mounted email' )
+            
             if ( !this.participantRecord )
                 await this.getParticipantRecordByEmail( this.$route.params.email );
             if ( await this.participantHasUnansweredSets( this.participantRecord.id ) )
                 await this.getUserPrompts( this.user );
             else this.hasUnansweredSet = false;
+            if(localStorage.get("response"))
+                this.response = localStorage.getItem("response");
+        }
+    },
+    watch: {
+        response(newValue) {
+            localStorage.setItem("response", newValue);
         }
     },
     methods: {
@@ -202,7 +209,7 @@ export default {
             if ( this.$route.params.id ) {
                 return this.usersPromptChoices.find( p => p.id == parseInt( this.$route.params.id ) )
             }
-            return null;
+            return null
         },
         promptID() {
             return parseInt( this.$route.params.id )

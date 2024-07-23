@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { supabase } from "../lib/supabaseClient";
-
+import { useLocalStorage } from "@vueuse/core";
 
 export const useCounterStore = defineStore("counter", {
   state: () => {
@@ -9,17 +9,18 @@ export const useCounterStore = defineStore("counter", {
       loading: false,
       error: false,
       greetings: [],
-      participantID: null,
+      participantID: useLocalStorage("participantID", null),
       participantRecord: null,
       loggedInUser: null,
       participants: [],
-      prompts: [],
-      promptDifficulties: [],
-      promptAssociations: [],
-      promptFamiliarities: [],
+      prompts: useLocalStorage("prompts", []),
+      promptDifficulties: useLocalStorage("promptDifficulties", []),
+      promptAssociations: useLocalStorage("promptAssociations", []),
+      promptFamiliarities: useLocalStorage("promptFamiliarities", []),
       responses: [],
       usersPromptChoices: [],
       tips: [],
+      partialResponse: useLocalStorage("partialResponse", ''),
     };
   },
   persist: {

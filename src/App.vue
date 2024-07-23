@@ -16,9 +16,12 @@ export default {
     this.toggleLoading();
     await this.initializeStore();
     this.toggleLoading();
+    if(this.participantID){
+      this.$router.push('/continue')
+    }
   },
   computed: {
-    ...mapState( useCounterStore, ['user', 'loading'] ),
+    ...mapState( useCounterStore, ['user', 'loading','participantID'] ),
   },
   methods: {
     ...mapActions( useCounterStore, ['initializeStore', 'toggleLoading'] ),
