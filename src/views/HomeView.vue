@@ -1,5 +1,8 @@
 <template>
-    <div class="py-5 md:px-48" p-10>
+    <div class="py-5 mt-20">
+        <section>
+            <img src="@/assets/Fudeko-Logo-Final.png" alt="fudeko mikan logo" class="w-60">
+        </section>
         <section>
             <h1 class="text-4xl font-bold">
                 Each story begins with a single letter.
@@ -22,8 +25,8 @@
                 pre-stamped envelopes), and can be done from the comfort of your own home. We're registering our first
                 cohort now. We hope you'll join us on this adventure—when you're ready, you can sign up below.</p>
         </section>
-        <section class="py-5 my-5 bg-yellow-200 border-2 border-yellow-500">
-            <p>Already signed up? Click the link  <router-link to="/login" class="text-yellow-600">here</router-link> to be directed to your prompts of the day!</p>
+        <section class="py-5 my-24 text-lg font-bold fudeko-blue max-w-1/2">
+            <p>Already signed up? Click the link  <router-link to="/login" class="fudeko-orange-text">here</router-link> to be directed to your prompts of the day!</p>
         </section>
         <section class="my-24">
             <h2 class="text-2xl font-bold text-left">Sign up</h2>

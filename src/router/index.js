@@ -7,6 +7,7 @@ const routes = [
     path: "/",
     name: "Home",
     component: () => import("../views/HomeView.vue"),
+    meta: {transition: 'fade'}
   },
   {
     path: "/profile",
@@ -122,12 +123,14 @@ const routes = [
     path: "/form/page2/:id",
     name: "ResponseForm",
     component: () => import("../components/ResponseForm.vue"),
+    meta: {transition: 'fade'}
   },
 
   {
     path: "/form/:email/page2/custom",
     name: "ResponseFormCustom",
     component: () => import("../components/ResponseForm.vue"),
+    meta: {transition: 'fade'}
   },
   {
     path: "/confirmSubmit",
@@ -143,6 +146,7 @@ const routes = [
     path: "/continue",
     name: "Continue",
     component: () => import("../views/Continue.vue"),
+    meta: {transition: 'fade'}
   },
   {
     path: "/:catchAll(.*)",

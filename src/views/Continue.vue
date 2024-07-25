@@ -1,11 +1,11 @@
 <template>
-    <div>
-        <h1>Welcome back, {{ first_name }}</h1>
-        <p>It looks like you were in the middle of something...</p>
+    <div class="flex flex-col justify-center min-h-screen">
+        <h1 class="text-4xl font-black">Welcome back, {{ first_name }}</h1>
+        <p>It looks like you were in the middle of something.</p>
 
-        <p><i v-html="response?.substring(0,13)"></i></p>
+        <p><i v-html="response?.substring(0,40)"></i></p>
         <p>Would you like to continue where you left off?</p>
-        <router-link to="/form/"><Button>Continue Writing</Button></router-link>
+        <router-link :to="'/form/page2/' + this.partialResponse.prompt"><Button class="text-lg font-bold">Continue Writing</Button></router-link>
     </div>
 </template>
 
@@ -28,7 +28,7 @@ import { useCounterStore } from '../stores/store';
           this.response = localStorage.getItem('response');
         },
         computed: {
-            ...mapState( useCounterStore, ['user', 'loading','participantRecord'] ),
+            ...mapState( useCounterStore, ['user', 'loading','participantRecord','partialResponse'] ),
             first_name() {
                 return this.participantRecord?.first_name;
             }

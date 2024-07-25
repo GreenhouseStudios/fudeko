@@ -9,7 +9,7 @@ export const useCounterStore = defineStore("counter", {
       loading: false,
       error: false,
       greetings: [],
-      participantID: useLocalStorage("participantID", null),
+      participantID: useLocalStorage("participantID", 0),
       participantRecord: null,
       loggedInUser: null,
       participants: [],
@@ -20,7 +20,7 @@ export const useCounterStore = defineStore("counter", {
       responses: [],
       usersPromptChoices: [],
       tips: [],
-      partialResponse: useLocalStorage("partialResponse", ''),
+      partialResponse: useLocalStorage("partialResponse", {}),
     };
   },
   persist: {
@@ -46,8 +46,17 @@ export const useCounterStore = defineStore("counter", {
       this.participantID = value;
     },
     async getParticipantRecord(id) {
-      this.participantRecord = await supabase.from("participants").select().eq("id", id);
+      // this.participantRecord = await supabase.from("participants").select().eq("id", id).data;
+      const rec = await supabase.from("participants").select().eq("id", id);
+      this.participantRecord = rec.data[0];
     },
+    recordPartialResponse(value) {
+      this.partialResponse = value;
+    },
+    clearPartialResponse() {
+      this.partialResponse = {};
+    }
+    ,
     async login(value) {
       this.loggedInUser = value;
       const rec = await supabase.from("participants").select().eq("email", value);
@@ -133,6 +142,9 @@ export const useCounterStore = defineStore("counter", {
       await this.getPromptEnums();
       await this.getTips();
       await this.getGreetings();
+      if(this.participantID) {
+        await this.getParticipantRecord(this.participantID);
+      }
     },
     async participantHasUnansweredSets(participantID) {
       const {data} = await supabase.rpc('has_unanswered_sets', {participant_id: participantID});

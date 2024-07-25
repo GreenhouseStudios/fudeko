@@ -6,6 +6,11 @@
 
 <script>
     export default {
+        mounted () {
+            setTimeout(() => {
+                this.$router.push('/')
+            }, 3000);
+        },
     }
 </script>
 

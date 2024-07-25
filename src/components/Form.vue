@@ -43,6 +43,9 @@ export default defineComponent( {
     };
   },
   async mounted() {
+    if(this.participantID && this.partialResponse){
+      this.$router.push('/continue')
+    }
     if ( this.$route.params.email){
       if( !this.participantRecord )
         await this.login( this.$route.params.email );
@@ -78,7 +81,7 @@ export default defineComponent( {
   },
   computed: {
     ...mapStores( useCounterStore ),
-    ...mapState( useCounterStore, ['prompts', 'loading', 'error', 'usersPromptChoices', 'tips', 'participantRecord'] ),
+    ...mapState( useCounterStore, ['prompts', 'loading', 'error', 'usersPromptChoices', 'tips', 'participantRecord','participantID','partialResponse'] ),
 
     userCaughtUp() {
       return this.usersPromptChoices && this.usersPromptChoices.length < 1;
