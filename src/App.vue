@@ -5,23 +5,36 @@ import { mapActions, mapState } from 'pinia'
 import Nav from './components/Nav.vue'
 import { RouterLink } from 'vue-router'
 import Footer from './components/Footer.vue'
+import Modal from './components/Modal.vue'
+import Button from 'primevue/button'
 
 export default {
   data() {
     return {
-      participants: null
+      participants: null,
+      modalShowing: false,
     }
   },
   async mounted() {
     this.toggleLoading();
     await this.initializeStore();
+    setTimeout(() => {
+      this.modalShowing = this.participantHasPartialResponse;
+    }, 500);
+    
     this.toggleLoading();
-    if ( this.participantID && this.partialResponse ) {
-      this.$router.push( '/continue' )
-    }
   },
   computed: {
-    ...mapState( useCounterStore, ['user', 'loading', 'participantID'] ),
+    ...mapState( useCounterStore, ['user', 'loading', 'participantID', 'participantRecord','partialResponse'] ),
+    first_name() {
+      return this.participantRecord?.first_name;
+    },
+    response() {
+      return this.participantRecord?.response_text;
+    },
+    participantHasPartialResponse() {
+      return this.participantID && this.partialResponse;
+    },
   },
   methods: {
     ...mapActions( useCounterStore, ['initializeStore', 'toggleLoading', 'partialResponse'] ),
@@ -29,31 +42,47 @@ export default {
   components: {
     Nav,
     RouterLink,
-    Footer
+    Footer,
+    Modal,
+    Button
   },
 }
 </script>
 
 <template>
-  <div id="app" class="bg-white">
-    <header class="pb-12">
+  <div id="app">
+    <div :class="modalShowing ? 'filter blur-xl' : ''" v-if="!loading">
+      <header class="pb-12">
 
-      <router-link to="/">
-        <span class="flex items-center float-left pt-2">
-          <img src="./assets/Fudeko-Logo-Final.png" alt="fudeko mikan logo" class="inline w-16 md:w-36">
-        </span>
+        <router-link to="/">
+          <span class="flex items-center float-left pt-2">
+            <img src="./assets/Fudeko-Logo-Final.png" alt="fudeko mikan logo" class="inline w-16 md:w-36">
+          </span>
+        </router-link>
+        <Nav class="float-right"></Nav>
+      </header>
+      <main class="md:px-48 sm:px-4">
+
+        <router-view class="" v-if="!loading" v-slot="{ Component, route }">
+          <transition :name="route.meta.transition" mode="out-in" duration="1000">
+            <component :is="Component" :route="route"></component>
+          </transition>
+        </router-view>
+      </main>
+      <Footer></Footer>
+    </div>
+
+    <Modal @close="modalShowing = false" :showing="modalShowing" v-if="participantHasPartialResponse && $route.path === '/'">
+      <h1 class="text-4xl font-black">Welcome back, {{ first_name }}</h1>
+      <p class="m-0 text-xl font-bold">It looks like you were in the middle of something.</p>
+
+      <p class="m-0 text-xl font-bold"><i v-html="response?.substring(0, 40)"></i></p>
+      <p class="m-0 text-xl font-bold">Would you like to continue where you left off?</p>
+      <router-link :to="'/form/page2/' + this.partialResponse.prompt">
+        <Button @click="modalShowing = false" class="mt-12 text-lg font-bold">Continue
+          Writing</Button>
       </router-link>
-      <Nav class="float-right"></Nav>
-    </header>
-    <main class="flex justify-center min-h-screen max-w-screen md:px-10">
-
-      <router-view class="h-full" v-if="!loading" v-slot="{Component, route}">
-        <transition :name="route.meta.transition" mode="out-in" duration="1000">
-          <component :is="Component" :route="route"></component>
-        </transition>
-      </router-view>
-    </main>
-    <Footer></Footer>
+    </Modal>
   </div>
 </template>
 
@@ -100,7 +129,7 @@ nav a.router-link-exact-active {
 
 .fudeko-orange {
   background-color: #f49230;
-  color: #fff;
+  color: #000;
 }
 
 .fudeko-orange-text {
@@ -115,11 +144,13 @@ nav a.router-link-exact-active {
   color: #066032;
 }
 
-.fade-enter-from, .fade-leave-to {
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
 }
 
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition: opacity .5s ease-out;
 }
 </style>

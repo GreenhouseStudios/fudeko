@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.38.3",
+    "@vueuse/components": "^10.11.0",
     "@vueuse/core": "^10.11.0",
     "animate.css": "^4.1.1",
     "autoprefixer": "^9.8.8",

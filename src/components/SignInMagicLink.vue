@@ -1,6 +1,6 @@
 <template>
-    <div class="flex justify-center ">
-        <div v-if="!emailSent">
+    <div class="flex flex-col justify-center min-h-screen">
+        <div v-if="!emailSent" class="mb-48">
             <h1 class="text-2xl font-bold">Login</h1>
 
             <!-- <p class="my-5">Enter your email to receive a magic link to login</p> -->

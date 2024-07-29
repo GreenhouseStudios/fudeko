@@ -1,5 +1,5 @@
 <template>
-    <div v-if="participantRecord" class="flex flex-col justify-end px-10 py-2">
+    <div v-if="participantRecord" class="flex flex-col justify-end py-2 md:px-10 md:mt-4 sm:mt-1 md:px-2">
         <div v-show="participantID" class="flex flex-col"><span v-if="participantID">Welcome Back, {{ participantRecord?.first_name }}</span>
         <a href="/logout" @click="clearParticipant" class="text-sm underline from-blue-400">Not {{ participantRecord?.email }}?</a></div>
         <!-- <router-link to="/login" v-if="!loggedInUser" class="text-lg">Login</router-link>
@@ -19,6 +19,7 @@ export default {
         ...mapActions( useCounterStore, ['toggleLoading', 'toggleError', 'login', 'logout'] ),
         clearParticipant(){
             localStorage.removeItem('participantID');
+            localStorage.removeItem('participantRecord');
         }
     },
 }
