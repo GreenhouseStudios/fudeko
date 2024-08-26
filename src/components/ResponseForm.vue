@@ -19,13 +19,15 @@
                     <div v-if="isAdminRoute">
                         <h1 class="m-10 text-xl">Admin: Enter Response for Participant</h1>
                         <div class="my-10"><label for="participant-select" class="mr-5">Select Participant</label>
-                            <Dropdown id="participant-select" v-model="adminParticipant" :options="participants"
-                                optionLabel="last_name"></Dropdown>
+                             
+                            <AutoComplete @complete="search" dropdown id="participant-select" v-model="candidateParticipant" :suggestions="participantsSearch"
+                                placeholder="Select Participant" class="w-100" optionLabel="label" ></AutoComplete>
+                            
                         </div>
                         <div class="my-10">
                             <label for="select-prompt" class="mr-5">Select Prompt</label>
-                            <Dropdown id="select-prompt" v-model="adminPrompt" :options="prompts" optionLabel="prompt_text">
-                            </Dropdown>
+                            <AutoComplete @complete="promptSearch" dropdown id="select-prompt" v-model="candidatePrompt" :suggestions="promptsSearch"
+                                placeholder="Select Prompt" class="w-100" optionLabel="label" ></AutoComplete>
                         </div>
                         <h2 class="m-2">
                             {{ adminPrompt?.prompt_text }}
@@ -101,17 +103,18 @@
 import { useCounterStore } from '@/stores/store'
 import { mapStores, mapState, mapActions } from 'pinia'
 import WritingTip from '@/components/WritingTip.vue'
-// import FeedbackDifficulty from '@/components/FeedbackDifficulty.vue'
-// import Confirmation from './Confirmation.vue'
 import Editor from 'primevue/editor'
 import Dropdown from 'primevue/dropdown'
+import AutoComplete from 'primevue/autocomplete';
+
 
 const shareSettingsArray = [{ name: "Keep Private", description: "You can always opt to share your response later if you change your mind. You can still share your responses with your friends and family on your private page if you want." }, { name: "Share with Storytellers", description: "Your words may be just the thing to jog another storyteller’s memory. Choose this option if you are okay with sharing this response with other storytellers in Fudeko email and letter correspondence. The response will not be made publicly available. Still, while we discourage storytellers from forwarding Fudeko emails outside the group, we cannot totally prevent it. Thank you for helping to build a creative and collaborative storytelling community!" }, { name: "Release with Creative Commons License", description: " <a class='blue-200' href='https://creativecommons.org/licenses/by-nc-sa/4.0/'>(CC-BY-NC-SA 4.0 DEED)</a> Want to make this response publicly available for education or research? This license allows others to use, excerpt, or adapt your response as long as they 1) give proper attribution, 2) do not profit from it, and 3) release the resulting project under the same license. While a CC license cannot be retroactively revoked, we can remove the response(s) from our website. However, if they have been shared elsewhere, you will have to negotiate with those parties if you wish to have them taken down. If you have concerns/doubts, we encourage you to keep the response private or only share it with the group for now." }];
 export default {
     components: {
         WritingTip,
         Editor,
-        Dropdown
+        Dropdown,
+        AutoComplete
     },
     data() {
         return {
@@ -125,8 +128,12 @@ export default {
             hasUnansweredSets: true,
             creditName: "",
             difficultyOptions: ["Easy", "Moderate", "Somewhat Difficult", "Difficult"],
-            adminPrompt: null,
-            adminParticipant: null,
+            candidatePrompt: '',
+            candidateParticipant: '',
+            participantsSearch: [],
+            promptsSearch: [],
+            items: [],
+            value: ''
         }
     },
     async mounted() {
@@ -137,6 +144,10 @@ export default {
             if ( await this.participantHasUnansweredSets( this.participantRecord.id ) )
                 await this.getUserPrompts( this.user );
             else this.hasUnansweredSet = false;
+        }
+        if(this.isAdminRoute) {
+            this.participantsSearch = this.participants.map(p => ({label: p.first_name + " " + p.last_name, value: p}));
+            this.promptsSearch = this.prompts.map(p => ({label: p.prompt_text, value: p}));
         }
     },
     methods: {
@@ -157,11 +168,29 @@ export default {
             this.toggleLoading();
             this.$router.push( { name: 'ConfirmSubmit' } )
         },
-
+        search(event) {
+            let people = this.participants.map(p => ({label: p.first_name + " " + p.last_name, value: p}));
+            this.participantsSearch = event.query ?
+              this.participants.map(p => ({label: p.first_name + " " + p.last_name, value: p})).filter((item) => { return item.label.toLowerCase().includes(event.query.toLowerCase()) })
+                : people;
+        },
+        promptSearch(event){
+            let prompts = this.prompts.map(p => ({label: p.prompt_text, value: p}));
+            this.promptsSearch = event.query ?
+              this.prompts.map(p => ({label: p.prompt_text, value: p})).filter((item) => { return item.label.toLowerCase().includes(event.query.toLowerCase()) })
+                : prompts;
+        }
     },
     computed: {
         ...mapStores( useCounterStore ),
-        ...mapState( useCounterStore, ['loading', 'error', 'usersPromptChoices', 'tips', 'participantID', 'participantRecord', 'prompts', 'participants'] ),
+        ...mapState( useCounterStore, ['loading', 'error', 'usersPromptChoices', 'tips', 'participantID', 'participantRecord', 
+        'prompts', 'participants'] ),
+        adminPrompt() {
+            return this.candidatePrompt.value
+        },
+        adminParticipant() {
+            return this.candidateParticipant.value
+        },
         submitButtonDisabled() {
             return this.response.length < 1 || !this.shareOption || this.shareOption.name != "Keep Private" && !this.attrOption
         },
@@ -218,7 +247,7 @@ export default {
         },
         isAdminRoute() {
             return this.$route.path.includes( 'new' )
-        }
+        },
     },
 
 }
