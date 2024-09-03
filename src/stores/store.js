@@ -21,6 +21,7 @@ export const useCounterStore = defineStore("counter", {
       usersPromptChoices: [],
       tips: [],
       partialResponse: useLocalStorage("partialResponse", {}),
+      test: "test",
     };
   },
   persist: {
