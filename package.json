@@ -45,7 +45,7 @@
     "eslint-plugin-vue": "^6.2.2",
     "jest": "^27.0.5",
     "sass-loader": "^10",
-    "supabase": "^1.110.1",
+    "supabase": "^1.191.3",
     "vue-cli-plugin-tailwind": "~3.0.0"
   },
   "eslintConfig": {

@@ -18,14 +18,12 @@ export default {
   async mounted() {
     this.toggleLoading();
     await this.initializeStore();
-    setTimeout(() => {
-      this.modalShowing = this.participantHasPartialResponse;
-    }, 500);
+    this.modalShowing = !!this.partialResponse && this.participantID;
     
     this.toggleLoading();
   },
   computed: {
-    ...mapState( useCounterStore, ['user', 'loading', 'participantID', 'participantRecord','partialResponse'] ),
+    ...mapState( useCounterStore, ['user', 'loading', 'participantID', 'participantRecord','partialResponse' ] ),
     first_name() {
       return this.participantRecord?.first_name;
     },
@@ -51,7 +49,20 @@ export default {
 
 <template>
   <div id="app">
-    <div :class="modalShowing ? 'filter blur-xl' : ''" v-if="!loading">
+
+    <Modal @close="modalShowing = false" :showing="modalShowing" v-if="modalShowing && partialResponse && $route.path === '/'"> 
+      <h1 class="text-4xl font-black">Welcome back, {{ first_name }}</h1>
+      <p class="m-0 text-xl font-bold">It looks like you were in the middle of something.</p>
+
+      <p class="m-0 text-xl font-bold"><i v-html="response?.substring(0, 40)"></i></p>
+      <p class="m-0 text-xl font-bold">Would you like to continue where you left off?</p>
+      <router-link :to="'/form/page2/' + this.partialResponse.prompt">
+        <Button @click="modalShowing = false" class="mt-12 text-lg font-bold">Continue
+          Writing</Button>
+      </router-link>
+    </Modal>
+    
+    <div :class="modalShowing ? 'filter blur-lg' : ''" v-if="!loading">
       <header class="pb-12">
 
         <router-link to="/">
@@ -72,17 +83,7 @@ export default {
       <Footer></Footer>
     </div>
 
-    <Modal @close="modalShowing = false" :showing="modalShowing" v-if="participantHasPartialResponse && $route.path === '/'">
-      <h1 class="text-4xl font-black">Welcome back, {{ first_name }}</h1>
-      <p class="m-0 text-xl font-bold">It looks like you were in the middle of something.</p>
-
-      <p class="m-0 text-xl font-bold"><i v-html="response?.substring(0, 40)"></i></p>
-      <p class="m-0 text-xl font-bold">Would you like to continue where you left off?</p>
-      <router-link :to="'/form/page2/' + this.partialResponse.prompt">
-        <Button @click="modalShowing = false" class="mt-12 text-lg font-bold">Continue
-          Writing</Button>
-      </router-link>
-    </Modal>
+   
   </div>
 </template>
 

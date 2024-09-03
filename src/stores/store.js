@@ -81,6 +81,7 @@ export const useCounterStore = defineStore("counter", {
     },
     logout() {  
       this.user = null;
+      this.partialResponse = {};
       this.participantRecord = null;
     },
     setPrompts(value) {

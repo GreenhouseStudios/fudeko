@@ -3,7 +3,7 @@
 
         <OnClickOutside @trigger="close">
             <transition name="fade">
-                <section v-show="showing" class="px-32 py-12 border-2 border-white rounded-sm shadow-lg fudeko-orange" ref="el">
+                <section v-show="showing" class="z-10 px-32 py-12 bg-white border-2 border-black rounded-sm shadow-lg " ref="el">
                     <slot>
 
                     </slot>

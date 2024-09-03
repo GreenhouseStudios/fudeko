@@ -1,5 +1,5 @@
 <template>
-    <div class="mt-16">
+    <div class="mt-16 border-2 border-black rounded-sm shadow-lg">
         <div class="relative p-3 bg-white">
             <h2 class="text-lg font-bold text-left " :class="hidden? '' : 'mb-2'">Writing Tip </h2>
           <div v-show="!hidden">  <h2 class="pb-1 text-lg">{{ currentTip.tip_title }}</h2>
