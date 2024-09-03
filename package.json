@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "npm cache clean --force && rm -rf node_modules package-lock.json && npm install && vue-cli-service build",
+    "build": "npm install --force && vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint"
   },
