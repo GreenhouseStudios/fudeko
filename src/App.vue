@@ -18,7 +18,7 @@ export default {
   async mounted() {
     this.toggleLoading();
     await this.initializeStore();
-    this.modalShowing = !!(this.partialResponse != {} && this.participantID);
+    this.modalShowing = !!(this.partialResponse.prompt && this.participantID);
     
     this.toggleLoading();
   },

@@ -271,11 +271,6 @@ export default {
     }
     if (this.partialResponse?.response_text) {
       this.response = this.partialResponse.response_text;
-      // this.userTitle = this.partialResponse.user_title;
-      // this.shareOption = this.shareSettings.find( s => s.name == this.partialResponse.share_option );
-      // this.difficulty = this.partialResponse.response_difficulty;
-      // this.attrOption = this.attrSettings.find( a => a.name == this.partialResponse.attribution_option );
-      // this.creditName = this.partialResponse.attribution_name;
     }
   },
   watch: {
@@ -291,22 +286,7 @@ export default {
           this.record(newValue);
         }
       }, 1000);
-      // setTimeout( () => {
-      //     this.countDown = this.timeToSave;
-      //     this.recordPartialResponse( {
-      //         response_text: newValue,
-      //         participant: this.participantRecord.id,
-      //         prompt: this.activePrompt.id,
-      //         user_title: this.userTitle,
-      //         share_option: this.shareOption.name,
-      //         response_difficulty: this.difficulty,
-      //         attribution_option: this.attrOption.name,
-      //         attribution_name: this.attrOption.name == "CreditDifferent" ? this.creditName : null,
-      //         entered_by_admin: this.adminPrompt ? true : false,
-      //     })
-      //     this.saved = true;
-      //     clearInterval( this.countDownInterval );
-      // }, 1000*this.timeToSave );
+    
     },
   },
   methods: {
