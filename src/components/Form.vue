@@ -12,7 +12,7 @@
         <span id="custom-prompt-btn-container" v-if="!activePrompt && !preselectedPromptNumber"
           class="flex justify-center">
           <button @click="useCustomPrompt"
-            class="p-2 px-3 mt-3 bg-yellow-200 border-2 border-yellow-400 rounded shadow-md animate__animated animate__fadeIn hover:bg-yellow-100">Use
+            class="p-2 px-3 mt-3 text-2xl font-bold bg-yellow-200 border-2 border-yellow-400 rounded shadow-md animate__animated animate__fadeIn hover:bg-yellow-100">Use
             Custom
             Prompt</button>
         </span>
