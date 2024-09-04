@@ -1,67 +1,20 @@
-<script>
-//  import { supabase } from './lib/supabaseClient'
-import { useCounterStore } from '@/stores/store'
-import { mapActions, mapState } from 'pinia'
-import Nav from './components/Nav.vue'
-import { RouterLink } from 'vue-router'
-import Footer from './components/Footer.vue'
-import Modal from './components/Modal.vue'
-import Button from 'primevue/button'
-
-export default {
-  data() {
-    return {
-      participants: null,
-      modalShowing: false,
-    }
-  },
-  async mounted() {
-    this.toggleLoading();
-    await this.initializeStore();
-    this.modalShowing = !!(this.partialResponse.prompt && this.participantID);
-    
-    this.toggleLoading();
-  },
-  computed: {
-    ...mapState( useCounterStore, ['user', 'loading', 'participantID', 'participantRecord','partialResponse' ] ),
-    first_name() {
-      return this.participantRecord?.first_name;
-    },
-    response() {
-      return this.participantRecord?.response_text;
-    },
-    participantHasPartialResponse() {
-      return this.participantID && this.partialResponse;
-    },
-  },
-  methods: {
-    ...mapActions( useCounterStore, ['initializeStore', 'toggleLoading', 'partialResponse'] ),
-  },
-  components: {
-    Nav,
-    RouterLink,
-    Footer,
-    Modal,
-    Button
-  },
-}
-</script>
-
 <template>
   <div id="app">
 
-    <Modal @close="modalShowing = false" :showing="modalShowing" v-if="modalShowing && partialResponse && $route.path === '/'"> 
+    <Modal @close="modalShowing = false" :showing="modalShowing" v-if="modalShowing && partialResponse">
       <h1 class="text-4xl font-black">Welcome back, {{ first_name }}</h1>
       <p class="m-0 text-xl font-bold">It looks like you were in the middle of something.</p>
 
       <p class="m-0 text-xl font-bold"><i v-html="response?.substring(0, 40)"></i></p>
       <p class="m-0 text-xl font-bold">Would you like to continue where you left off?</p>
+      <Button @click="discardResponse"
+        class="mt-12 text-lg font-bold text-white bg-red-500 hover:bg-red-400">Discard Response</Button>
       <router-link :to="'/form/page2/' + this.partialResponse.prompt">
-        <Button @click="modalShowing = false" class="mt-12 text-lg font-bold">Continue
-          Writing</Button>
+        <Button @click="modalShowing = false"
+          class="mt-12 text-lg font-bold text-white bg-green-500 hover:bg-green-400">Continue Writing</Button>
       </router-link>
     </Modal>
-    
+
     <div :class="modalShowing ? 'filter blur-lg' : ''" v-if="!loading">
       <header class="pb-12">
 
@@ -83,9 +36,62 @@ export default {
       <Footer></Footer>
     </div>
 
-   
+
   </div>
 </template>
+<script>
+//  import { supabase } from './lib/supabaseClient'
+import { useCounterStore } from '@/stores/store'
+import { mapActions, mapState } from 'pinia'
+import Nav from './components/Nav.vue'
+import { RouterLink } from 'vue-router'
+import Footer from './components/Footer.vue'
+import Modal from './components/Modal.vue'
+import Button from 'primevue/button'
+
+export default {
+  data() {
+    return {
+      participants: null,
+      modalShowing: false,
+    }
+  },
+  async mounted() {
+    this.toggleLoading();
+    await this.initializeStore();
+    this.modalShowing = !!( this.partialResponse.prompt && this.participantID );
+
+    this.toggleLoading();
+  },
+  computed: {
+    ...mapState( useCounterStore, ['user', 'loading', 'participantID', 'participantRecord', 'partialResponse'] ),
+    first_name() {
+      return this.participantRecord?.first_name;
+    },
+    response() {
+      return this.participantRecord?.response_text;
+    },
+  },
+  methods: {
+    ...mapActions( useCounterStore, ['initializeStore', 'toggleLoading', 'clearPartialResponse'] ),
+    discardResponse() {
+      let userEmail = this.participantRecord.email;
+      this.modalShowing = false;
+      this.clearPartialResponse();
+      this.$router.push( '/form/' + userEmail );
+    },
+  },
+  components: {
+    Nav,
+    RouterLink,
+    Footer,
+    Modal,
+    Button
+  },
+}
+</script>
+
+
 
 <style>
 #app {

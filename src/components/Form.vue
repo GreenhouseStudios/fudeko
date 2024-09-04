@@ -43,9 +43,9 @@ export default defineComponent( {
     };
   },
   async mounted() {
-    if(this.participantID && this.partialResponse){
-      this.$router.push('/continue')
-    }
+    // if(this.participantID && this.partialResponse){
+    //   this.$router.push('/continue')
+    // }
     if ( this.$route.params.email){
       if( !this.participantRecord )
         await this.login( this.$route.params.email );

@@ -177,9 +177,7 @@ router.beforeEach(async (to) => {
   const isAuthenticated = store.user;
   if ( store.participantID && store.partialResponse && to.name !== "Continue" ) {
     // return { name: "Continue" };
-    await setTimeout(() => {
-      return { name: "Continue" };
-    }, 1500);
+   
   }
   if (
     // make sure the user is authenticated

@@ -55,7 +55,7 @@ export const useCounterStore = defineStore("counter", {
       this.partialResponse = value;
     },
     clearPartialResponse() {
-      this.partialResponse = {};
+      this.partialResponse = null;
     }
     ,
     async login(value) {
