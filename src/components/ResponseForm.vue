@@ -1,187 +1,45 @@
 <template>
-  <div
-    id="response-write"
-    class="z-0 py-32 md:px-24"
-    v-if="participantRecord || isAdminRoute"
-  >
-    <span
-      class="p-3 mx-auto md:px-5 md:w-2/3 md:p-5 prompt"
-      v-if="hasUnansweredSets"
-    >
-      <span
-        class="flex flex-col mx-auto md:w-1/2 prompt-write-header"
-        v-if="!isAdminRoute"
-      >
+  <div id="response-write" class="z-0 py-32 md:px-24" v-if="participantRecord || isAdminRoute">
+    <span class="p-3 mx-auto md:px-5 md:w-2/3 md:p-5 prompt" v-if="hasUnansweredSets">
+      <span class="flex flex-col mx-auto md:w-1/2 prompt-write-header" v-if="!isAdminRoute">
         <h2 class="pb-3 text-4xl" v-html="activePrompt.prompt_text"></h2>
-        <h3
-          class="pt-1 text-lg font-bold"
-          v-html="activePrompt.prompt_subtext"
-        ></h3>
+        <h3 class="pt-1 text-lg font-bold" v-html="activePrompt.prompt_subtext"></h3>
       </span>
 
       <span>
         <div class="relative">
           <div v-if="custom">
             <label for="custom-prompt-title">Entry Title: </label>
-            <input
-              type="text"
-              id="custom-prompt-title"
-              placeholder="Title (optional)"
-              class="p-1 w-100"
-              size="75"
-              v-model="userTitle"
-            />
+            <input type="text" id="custom-prompt-title" placeholder="Title (optional)" class="p-1 w-100" size="75"
+              v-model="userTitle" />
           </div>
           <div v-if="isAdminRoute">
-            <h1 class="m-10 text-xl">Admin: Enter Response for Participant</h1>
-            <div class="my-10">
-              <label for="participant-select" class="mr-5"
-                >Select Participant</label
-              >
-              <Dropdown
-                id="participant-select"
-                v-model="adminParticipant"
-                :options="participants"
-                optionLabel="last_name"
-              ></Dropdown>
-            </div>
-            <div class="my-10">
-              <label for="select-prompt" class="mr-5">Select Prompt</label>
-              <Dropdown
-                id="select-prompt"
-                v-model="adminPrompt"
-                :options="prompts"
-                optionLabel="prompt_text"
-              >
-              </Dropdown>
-            </div>
-            <h2 class="m-2">
-              {{ adminPrompt?.prompt_text }}
-            </h2>
-            <p>{{ adminPrompt?.prompt_subtext }}</p>
+            <AdminResponseConfig :isAdminRoute="isAdminRoute" :adminParticipant="adminParticipant"
+              :participants="participants" :adminPrompt="adminPrompt" :prompts="prompts" />
           </div>
 
-          <Editor
-            class="my-20 bg-white"
-            v-model="response"
-            style="height: 320px"
-            placeholder="Type your response here"
-          ></Editor>
+          <Editor class="my-20 bg-white" v-model="response" style="height: 320px" placeholder="Type your response here">
+          </Editor>
 
           <span class="py-5 my-5">{{
             saved ? "Saved ✓" : "Saving in..." + countDown
           }}</span>
           <WritingTip :tip="currentTip" v-if="!isAdminRoute"></WritingTip>
         </div>
+        <ResponseDifficultySelect :difficulty="difficulty" :difficultyOptions="difficultyOptions" />
+        <ShareOptionSelect :shareSettings="shareSettings" :shareOption="shareOption" :attrSettings="attrSettings"
+          :attrOption="attrOption" :creditName="creditName" />
 
-        <div class="py-12">
-          <div
-            class="flex flex-col justify-start w-1/4"
-            id="feedback-container"
-          >
-            <label for="feedback" class="mx-2 font-bold"
-              >How difficult was this to answer?</label
-            >
-            <Dropdown
-              v-model="difficulty"
-              :options="difficultyOptions"
-              class="m-2"
-            ></Dropdown>
-          </div>
-
-          <div
-            class="flex flex-col items-start my-5"
-            id="share-options-container"
-          >
-            <h2 class="font-bold">Would you like to publish this response?</h2>
-            <div class="flex" id="sharing-options">
-              <span
-                class="flex flex-wrap items-center justify-center gap-2 my-2 mr-5 align-middle"
-              >
-                <button
-                  @click="shareOption = option"
-                  v-for="option in shareSettings"
-                  :key="option.name"
-                  class="z-10 w-48 h-24 p-2 border-2 rounded-md"
-                  :class="
-                    option === shareOption
-                      ? 'bg-yellow-300 border-gray-600 font-bold border-2'
-                      : 'border-yellow-300 hover:bg-yellow-200'
-                  "
-                >
-                  {{ option.name }}
-                </button>
-              </span>
-            </div>
-
-            <i
-              class="mx-auto my-5 md:w-full"
-              v-html="shareOption.description"
-            ></i>
-
-            <div v-if="shareOption && shareOption.name != 'Keep Private'">
-              <span
-                class="flex flex-wrap items-center justify-center gap-2 mt-2 mb-5 mr-5 align-middle"
-              >
-                <button
-                  @click="attrOption = option"
-                  v-for="option in attrSettings"
-                  :key="option.name"
-                  class="z-10 w-48 h-24 p-2 border-2 rounded-md"
-                  :class="
-                    option === attrOption
-                      ? 'bg-yellow-300 border-gray-600 font-bold border-2'
-                      : 'border-yellow-300 hover:bg-yellow-200'
-                  "
-                >
-                  {{ option.description }}
-                </button></span
-              >
-
-              <div
-                v-if="attrOption.name == 'CreditWithGivenName'"
-                class="flex justify-start"
-              >
-                You will be credited as
-                {{
-                  participantRecord.first_name +
-                  " " +
-                  participantRecord.last_name
-                }}
-              </div>
-              <div
-                v-if="attrOption.name == 'CreditDifferent'"
-                class="flex justify-start"
-              >
-                <label for="alt-credit" class="mr-2"
-                  >Enter name to be credited as:</label
-                >
-                <input
-                  id="alt-credit"
-                  type="text"
-                  v-model="creditName"
-                  class="p-2 border-2 rounded-md"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div class="flex justify-end gap-4 mt-5">
-            <button
-              @click="submit"
-              :disabled="submitButtonDisabled"
-              class="p-2 font-bold rounded"
-              :class="
-                submitButtonDisabled
-                  ? 'bg-gray-300 border-2 border-gray-400'
-                  : 'hover:bg-yellow-200 border-yellow-400 bg-yellow-300 border-2 '
-              "
-            >
-              Send
-            </button>
-          </div>
+        <div class="flex justify-end gap-4 mt-5">
+          <button @click="submit" :disabled="submitButtonDisabled" class="p-2 font-bold rounded" :class="submitButtonDisabled
+            ? 'bg-gray-300 border-2 border-gray-400'
+            : 'hover:bg-yellow-200 border-yellow-400 bg-yellow-300 border-2 '
+            ">
+            Send
+          </button>
         </div>
       </span>
+
     </span>
     <span v-else>
       <div class="w-1/3 p-12 mx-auto bg-yellow-200 border-2 border-yellow-400">
@@ -198,10 +56,7 @@
 import { useCounterStore } from "@/stores/store";
 import { mapStores, mapState, mapActions } from "pinia";
 import WritingTip from "@/components/WritingTip.vue";
-// import FeedbackDifficulty from '@/components/FeedbackDifficulty.vue'
-// import Confirmation from './Confirmation.vue'
 import Editor from "primevue/editor";
-import Dropdown from "primevue/dropdown";
 
 const shareSettingsArray = [
   {
@@ -224,7 +79,6 @@ export default {
   components: {
     WritingTip,
     Editor,
-    Dropdown,
   },
   data() {
     return {
@@ -262,35 +116,35 @@ export default {
     };
   },
   async mounted() {
-    if (this.$route.params.email) {
-      if (!this.participantRecord)
-        await this.getParticipantRecordByEmail(this.$route.params.email);
-      if (await this.participantHasUnansweredSets(this.participantRecord.id))
-        await this.getUserPrompts(this.user);
+    if ( this.$route.params.email ) {
+      if ( !this.participantRecord )
+        await this.getParticipantRecordByEmail( this.$route.params.email );
+      if ( await this.participantHasUnansweredSets( this.participantRecord.id ) )
+        await this.getUserPrompts( this.user );
       else this.hasUnansweredSet = false;
     }
-    if (this.partialResponse?.response_text) {
+    if ( this.partialResponse?.response_text ) {
       this.response = this.partialResponse.response_text;
     }
   },
   watch: {
-    response(newValue) {
+    response( newValue ) {
       this.saved = false;
       this.countDown = this.timeToSave;
-      if (this.countDownInterval) clearInterval(this.countDownInterval);
-      this.countDownInterval = setInterval(() => {
-        if (this.countDown > 0) this.countDown--;
+      if ( this.countDownInterval ) clearInterval( this.countDownInterval );
+      this.countDownInterval = setInterval( () => {
+        if ( this.countDown > 0 ) this.countDown--;
         else {
-          clearInterval(this.countDownInterval);
+          clearInterval( this.countDownInterval );
           this.saved = true;
-          this.record(newValue);
+          this.record( newValue );
         }
-      }, 1000);
-    
+      }, 1000 );
+
     },
   },
   methods: {
-    ...mapActions(useCounterStore, [
+    ...mapActions( useCounterStore, [
       "submitUserResponse",
       "toggleLoading",
       "getUserPrompts",
@@ -299,9 +153,9 @@ export default {
       "getParticipantRecordByEmail",
       "recordPartialResponse",
       "clearPartialResponse",
-    ]),
-    record(value) {
-      this.recordPartialResponse({
+    ] ),
+    record( value ) {
+      this.recordPartialResponse( {
         response_text: value,
         participant: this.participantRecord.id,
         prompt: this.activePrompt.id,
@@ -312,7 +166,7 @@ export default {
         attribution_name:
           this.attrOption.name == "CreditDifferent" ? this.creditName : null,
         entered_by_admin: this.adminPrompt ? true : false,
-      });
+      } );
     },
     preview() {
       this.previewing = true;
@@ -320,21 +174,21 @@ export default {
     back() {
       this.previewing = false;
     },
-    addFile(e) {
+    addFile( e ) {
       this.file = e.target.files[0];
     },
     async submit() {
-      if (this.submitButtonDisabled) return;
+      if ( this.submitButtonDisabled ) return;
       this.toggleLoading();
-      await this.submitUserResponse(this.formData);
+      await this.submitUserResponse( this.formData );
       this.clearPartialResponse();
       this.toggleLoading();
-      this.$router.push({ name: "ConfirmSubmit" });
+      this.$router.push( { name: "ConfirmSubmit" } );
     },
   },
   computed: {
-    ...mapStores(useCounterStore),
-    ...mapState(useCounterStore, [
+    ...mapStores( useCounterStore ),
+    ...mapState( useCounterStore, [
       "loading",
       "error",
       "usersPromptChoices",
@@ -344,22 +198,22 @@ export default {
       "prompts",
       "participants",
       "partialResponse",
-    ]),
+    ] ),
     submitButtonDisabled() {
       return (
         this.response.length < 1 ||
         !this.shareOption ||
-        (this.shareOption.name != "Keep Private" && !this.attrOption)
+        ( this.shareOption.name != "Keep Private" && !this.attrOption )
       );
     },
     custom() {
-      return this.$route.path.includes("custom");
+      return this.$route.path.includes( "custom" );
     },
     responseCharCount() {
       return this.response.length;
     },
     responseWordCount() {
-      return this.response.split(" ").length;
+      return this.response.split( " " ).length;
     },
     formData() {
       return {
@@ -376,36 +230,38 @@ export default {
       };
     },
     activePrompt() {
-      if (this.partialResponse?.prompt) {
-        return this.prompts.find((p) => p.id == this.partialResponse.prompt);
+      if ( this.partialResponse?.prompt ) {
+        return this.prompts.find( ( p ) => p.id == this.partialResponse.prompt );
       }
-      if (this.isAdminRoute) {
+      if ( this.isAdminRoute ) {
         return this.prompts[0];
       }
       if (
         this.$route.params.promptNumber &&
         this.usersPromptChoices.length > 0
       ) {
-        const promptNumber = parseInt(this.$route.params.promptNumber);
-        console.log(promptNumber);
+        const promptNumber = parseInt( this.$route.params.promptNumber );
         return this.usersPromptChoices[promptNumber - 1];
       }
-      if (this.custom) {
+      if(this.$route.params.promptId){
+        return this.prompts.find( ( p ) => p.id == this.$route.params.promptId );
+      }
+      if ( this.custom ) {
         return { prompt_text: "Custom Prompt" };
       }
-      if (this.$route.params.id) {
+      if ( this.$route.params.id ) {
         return this.usersPromptChoices.find(
-          (p) => p.id == parseInt(this.$route.params.id)
+          ( p ) => p.id == parseInt( this.$route.params.id )
         );
       }
 
       return null;
     },
     promptID() {
-      return parseInt(this.$route.params.id);
+      return parseInt( this.$route.params.id );
     },
     numberOfResponses() {
-      if (this.isAdminRoute) {
+      if ( this.isAdminRoute ) {
         return 0;
       }
       return this.participantRecord.number_answered_sets;
@@ -414,7 +270,7 @@ export default {
       return this.tips[this.numberOfResponses % this.tips.length];
     },
     isAdminRoute() {
-      return this.$route.path.includes("new");
+      return this.$route.path.includes( "new" );
     },
   },
 };

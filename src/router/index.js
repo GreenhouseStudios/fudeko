@@ -125,7 +125,11 @@ const routes = [
     component: () => import("../components/ResponseForm.vue"),
     meta: {transition: 'fade'}
   },
-
+  { path: "/form/:email/prompt/:promptId",
+    name: "ResponseFormPrompt",
+    component: () => import("../components/ResponseForm.vue"),
+    meta: {transition: 'fade'}
+  },
   {
     path: "/form/:email/page2/custom",
     name: "ResponseFormCustom",
