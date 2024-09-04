@@ -6,7 +6,7 @@
             <span v-if="declinedPrompts.length < 3" class="flex flex-col justify-center gap-3 my-4 md:gap-5 grow md:flex-row" id="prompt-choices-container">
                 <div class="relative" id="button-wrapper" v-for="prompt in randomizedPrompts" :key="prompt.prompt_text">
                     <button @click="setActivePrompt(prompt.id)"
-                        class="w-full p-3 px-3 bg-yellow-200 border-2 border-yellow-400 rounded shadow-md md:max-w-md md:p-1 md:h-36 animate__animated animate__fadeIn hover:bg-yellow-100"
+                        class="w-full p-3 px-3 text-2xl font-bold bg-yellow-200 border-2 border-yellow-400 rounded shadow-md md:max-w-md md:p-1 md:h-36 animate__animated animate__fadeIn hover:bg-yellow-100"
                         :class="prompt === activePrompt ? 'bg-yellow-200' : 'bg-yellow-300'" v-html="prompt.prompt_text"> 
                         </button>
                     <Button
