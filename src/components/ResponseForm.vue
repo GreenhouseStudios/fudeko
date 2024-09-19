@@ -14,8 +14,8 @@
               v-model="userTitle" />
           </div>
           <div v-if="isAdminRoute">
-            <AdminResponseConfig :isAdminRoute="isAdminRoute" :adminParticipant="adminParticipant"
-              :participants="participants" :adminPrompt="adminPrompt" :prompts="prompts" />
+            <AdminResponseConfig :adminParticipant="adminParticipant"
+              :participants="participants" :adminPrompt="adminPrompt" :prompts="prompts" @admin-participant-change="handleAdminParticipantChange" />
           </div>
 
           <Editor class="my-20 bg-white" v-model="response" style="height: 320px" placeholder="Type your response here">
@@ -57,6 +57,8 @@ import { useCounterStore } from "@/stores/store";
 import { mapStores, mapState, mapActions } from "pinia";
 import WritingTip from "@/components/WritingTip.vue";
 import Editor from "primevue/editor";
+import AdminResponseConfig from "@/components/AdminResponseConfig.vue";
+import ResponseDifficultySelect from "@/components/ResponseDifficultySelect.vue";
 
 const shareSettingsArray = [
   {
@@ -79,6 +81,8 @@ export default {
   components: {
     WritingTip,
     Editor,
+    AdminResponseConfig,
+    ResponseDifficultySelect,
   },
   data() {
     return {
@@ -184,6 +188,9 @@ export default {
       this.clearPartialResponse();
       this.toggleLoading();
       this.$router.push( { name: "ConfirmSubmit" } );
+    },
+    handleAdminParticipantChange( e ) {
+      this.adminParticipant = e.value;
     },
   },
   computed: {
