@@ -37,8 +37,8 @@
     </section>
     <section class="px-12 py-5 my-24 text-lg font-bold fudeko-blue">
       <p>
-        Already signed up? Click the link
-        <router-link to="/login" class="fudeko-orange-text">here</router-link>
+        Already signed up? 
+        <router-link :to="participantRecord ? '/form/' + participantRecord.email  : '/login'" class="fudeko-orange-text">Click here</router-link>
         to be directed to your prompts of the day!
       </p>
     </section>
@@ -64,11 +64,16 @@
 </template>
 
 <script>
+import { useCounterStore } from "@/stores/store";
+import { mapStores, mapState, mapActions } from "pinia";
 export default {
   setup() {
     return {};
   },
+  computed: {
+    ...mapStores(useCounterStore),
+    ...mapState(useCounterStore, ["partialResponse","participantRecord"]),
+  },
 };
 </script>
 
-<style lang="scss" scoped></style>
