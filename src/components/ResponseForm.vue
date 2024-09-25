@@ -7,7 +7,7 @@
       </span>
 
       <span>
-        <div class="relative">
+        <section class="relative">
           <div v-if="custom">
             <label for="custom-prompt-title">Entry Title: </label>
             <input type="text" id="custom-prompt-title" placeholder="Title (optional)" class="p-1 w-100" size="75"
@@ -24,11 +24,14 @@
           <span class="py-5 my-5">{{
             saved ? "Saved ✓" : "Saving in..." + countDown
           }}</span>
+          
           <WritingTip :tip="currentTip" v-if="!isAdminRoute"></WritingTip>
-        </div>
-        <ResponseDifficultySelect :difficulty="difficulty" :difficultyOptions="difficultyOptions" />
-        <ShareOptionSelect :shareSettings="shareSettings" :shareOption="shareOption" :attrSettings="attrSettings"
-          :attrOption="attrOption" :creditName="creditName" />
+        </section>
+        <!-- <ResponseDifficultySelect :difficulty="difficulty" :difficultyOptions="difficultyOptions" @change-difficulty="difficulty = $event"></ResponseDifficultySelect> -->
+        <ResponseDifficultySelect v-model="difficulty" :difficultyOptions="difficultyOptions" ></ResponseDifficultySelect>
+        
+        <ShareOptionSelect :shareSettings="shareSettingArray" v-model:shareOption="shareOption" :attrSettings="attrSettingArray"
+          v-model:attrOption="attrOption" v-model:creditName="creditName" :participantRecord="participantRecord"></ShareOptionSelect> 
 
         <div class="flex justify-end gap-4 mt-5">
           <button @click="submit" :disabled="submitButtonDisabled" class="p-2 font-bold rounded" :class="submitButtonDisabled
@@ -52,29 +55,29 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { useCounterStore } from "@/stores/store";
 import { mapStores, mapState, mapActions } from "pinia";
 import WritingTip from "@/components/WritingTip.vue";
 import Editor from "primevue/editor";
 import AdminResponseConfig from "@/components/AdminResponseConfig.vue";
 import ResponseDifficultySelect from "@/components/ResponseDifficultySelect.vue";
+import ShareOptionSelect from "@/components/ShareOptionSelect.vue";
+import { ShareOption, AttrOption } from "../types/Form";
 
-const shareSettingsArray = [
+const shareSettings: ShareOption[] = [
+  { name: "Keep Private", description: "You can always opt to share your response later if you change your mind. You can still share your responses with your friends and family on your private page if you want." },
+  { name: "Share Anonymously", description: "Your words may be just the thing to jog another storyteller’s memory. Choose this option if you are okay with sharing this response with other storytellers in Fudeko email and letter correspondence. The response will not be made publicly available. Still, while we discourage storytellers from forwarding Fudeko emails outside the group, we cannot totally prevent it. Thank you for helping to build a creative and collaborative storytelling community!" },
+  { name: "Share with Credit", description: "<a class='blue-200' href='https://creativecommons.org/licenses/by-nc-sa/4.0/'>(CC-BY-NC-SA 4.0 DEED)</a> Want to make this response publicly available for education or research? This license allows others to use, excerpt, or adapt your response as long as they 1) give proper attribution, 2) do not profit from it, and 3) release the resulting project under the same license. While a CC license cannot be retroactively revoked, we can remove the response(s) from our website. However, if they have been shared elsewhere, you will have to negotiate with those parties if you wish to have them taken down. If you have concerns/doubts, we encourage you to keep the response private or only share it with the group for now." },
+];
+const attrOptions: AttrOption[] = [
   {
-    name: "Keep Private",
-    description:
-      "You can always opt to share your response later if you change your mind. You can still share your responses with your friends and family on your private page if you want.",
+    name: "CreditWithGivenName",
+    description: "Credit me as my registered name",
   },
   {
-    name: "Share with Storytellers",
-    description:
-      "Your words may be just the thing to jog another storyteller’s memory. Choose this option if you are okay with sharing this response with other storytellers in Fudeko email and letter correspondence. The response will not be made publicly available. Still, while we discourage storytellers from forwarding Fudeko emails outside the group, we cannot totally prevent it. Thank you for helping to build a creative and collaborative storytelling community!",
-  },
-  {
-    name: "Release with Creative Commons License",
-    description:
-      " <a class='blue-200' href='https://creativecommons.org/licenses/by-nc-sa/4.0/'>(CC-BY-NC-SA 4.0 DEED)</a> Want to make this response publicly available for education or research? This license allows others to use, excerpt, or adapt your response as long as they 1) give proper attribution, 2) do not profit from it, and 3) release the resulting project under the same license. While a CC license cannot be retroactively revoked, we can remove the response(s) from our website. However, if they have been shared elsewhere, you will have to negotiate with those parties if you wish to have them taken down. If you have concerns/doubts, we encourage you to keep the response private or only share it with the group for now.",
+    name: "CreditDifferent",
+    description: "Credit me by a different name",
   },
 ];
 export default {
@@ -83,26 +86,15 @@ export default {
     Editor,
     AdminResponseConfig,
     ResponseDifficultySelect,
+    ShareOptionSelect
   },
   data() {
     return {
       response: "",
       userTitle: "",
-      shareSettings: shareSettingsArray,
-      attrSettings: [
-        { name: "RemainAnonymous", description: "Remain Anonymous" },
-        {
-          name: "CreditWithGivenName",
-          description: "Credit me as my registered name",
-        },
-        {
-          name: "CreditDifferent",
-          description: "Credit me as a different name",
-        },
-      ],
       difficulty: "",
-      attrOption: "",
-      shareOption: shareSettingsArray[0],
+      attrOption: attrOptions[0],
+      shareOption: shareSettings[0],
       hasUnansweredSets: true,
       creditName: "",
       difficultyOptions: [
@@ -117,6 +109,8 @@ export default {
       timeToSave: 5,
       countDown: 5,
       countDownInterval: null,
+      shareSettingArray: shareSettings,
+      attrSettingArray: attrOptions,
     };
   },
   async mounted() {
@@ -129,6 +123,11 @@ export default {
     }
     if ( this.partialResponse?.response_text ) {
       this.response = this.partialResponse.response_text;
+      this.userTitle = this.partialResponse.user_title;
+      // this.shareOption = shareSettings.find(
+      //   ( s ) => s.name == this.partialResponse.share_option
+      // );
+      this.difficulty = this.partialResponse.response_difficulty;
     }
   },
   watch: {
@@ -283,4 +282,3 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>

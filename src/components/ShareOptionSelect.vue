@@ -1,32 +1,23 @@
 <template>
-
   <div class="flex flex-col items-start my-5" id="share-options-container">
     <h2 class="font-bold">Would you like to publish this response?</h2>
     <div class="flex" id="sharing-options">
-      <span class="flex flex-wrap items-center justify-center gap-2 my-2 mr-5 align-middle">
-        <button @click="shareOption = option" v-for="option in shareSettings" :key="option.name"
-          class="z-10 w-48 h-24 p-2 border-2 rounded-md" :class="option === shareOption
-              ? 'bg-yellow-300 border-gray-600 font-bold border-2'
-              : 'border-yellow-300 hover:bg-yellow-200'
-            ">
-          {{ option.name }}
-        </button>
-      </span>
+
+      <Dropdown v-model="shareOption" :options="shareSettings" optionLabel="name" 
+         class="w-full md:w-14rem" placeholder="Select an option" />
+
     </div>
 
-    <i class="mx-auto my-5 md:w-full" v-html="shareOption.description"></i>
+    <i class="mx-auto my-5 md:w-full" v-html="shareOption?.description"></i>
 
-    <div v-if="shareOption && shareOption.name != 'Keep Private'">
-      <span class="flex flex-wrap items-center justify-center gap-2 mt-2 mb-5 mr-5 align-middle">
-        <button @click="attrOption = option" v-for="option in attrSettings" :key="option.name"
-          class="z-10 w-48 h-24 p-2 border-2 rounded-md" :class="option === attrOption
-              ? 'bg-yellow-300 border-gray-600 font-bold border-2'
-              : 'border-yellow-300 hover:bg-yellow-200'
-            ">
-          {{ option.description }}
-        </button></span>
+    <div v-if="shareOption && shareOption.name == 'Share with Credit'" class="flex flex-col">
 
-      <div v-if="attrOption.name == 'CreditWithGivenName'" class="flex justify-start">
+      <Dropdown v-model="attrOption" :options="attrSettings" optionLabel="description" 
+       class="w-full my-5 md:w-14rem"
+        placeholder="Select an attribute option" />
+
+
+      <div v-if="attrOption.name == 'CreditWithGivenName'" class="flex justify-start my-5">
         You will be credited as
         {{
           participantRecord.first_name +
@@ -34,7 +25,7 @@
           participantRecord.last_name
         }}
       </div>
-      <div v-if="attrOption.name == 'CreditDifferent'" class="flex justify-start">
+      <div v-if="attrOption.name == 'CreditDifferent'" class="flex items-center justify-start">
         <label for="alt-credit" class="mr-2">Enter name to be credited as:</label>
         <input id="alt-credit" type="text" v-model="creditName" class="p-2 border-2 rounded-md" />
       </div>
@@ -43,23 +34,18 @@
 </template>
 
 <script lang="ts" setup>
-import { toRefs } from "vue";
-
+import { ShareOption, AttrOption } from "../types/Form";
+const creditName = defineModel("creditName");
+const shareOption = defineModel<ShareOption>("shareOption");
+const attrOption = defineModel<AttrOption>("attrOption");
+import Dropdown from "primevue/dropdown";
 const props = defineProps<{
-  shareSettings: {
-    name: string;
-    description: string;
-  }[];
-  shareOption: {
-    name: string;
-    description: string;
+  shareSettings: ShareOption[];
+  attrSettings: AttrOption[];
+  participantRecord: {
+    first_name: string;
+    last_name: string;
   };
-  attrSettings: {
-    name: string;
-    description: string;
-  }[];
-  attrOption: string;
-  creditName: string;
 }>();
-const { shareSettings, shareOption, attrSettings, attrOption, creditName } = toRefs(props);
+const emit = defineEmits(["changeShareOption", "changeAttrOption", "changeCreditName"]);
 </script>
