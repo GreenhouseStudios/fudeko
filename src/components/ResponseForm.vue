@@ -209,7 +209,8 @@ export default {
       return (
         this.response.length < 1 ||
         !this.shareOption ||
-        ( this.shareOption.name != "Keep Private" && !this.attrOption )
+        ( this.shareOption.name != "Keep Private" && !this.attrOption ) ||
+        ( this.attrOption.name == "CreditDifferent" && !this.creditName )
       );
     },
     custom() {
