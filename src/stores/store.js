@@ -1,7 +1,8 @@
 import { defineStore } from "pinia";
 import { supabase } from "../lib/supabaseClient";
 import { useLocalStorage } from "@vueuse/core";
-
+import { createClient } from '@supabase/supabase-js'
+const supabaseAdmin = createClient(import.meta.env.VITE_APP_SUPABASE_URL, import.meta.env.VITE_APP_SUPABASE_KEY)
 export const useCounterStore = defineStore("counter", {
   state: () => {
     return {
@@ -29,6 +30,18 @@ export const useCounterStore = defineStore("counter", {
     paths: ['user'],
   },
   actions: {
+    async uploadFile(file) {
+      // const user = supabase.auth.user();
+      // if(!user){
+      //   throw new Error("User not authenticated");
+        
+      // }
+      const { data, error } = await supabaseAdmin.storage.from("response-media").upload("public/" + file.name.trim().replace(/\s/g, "-"), file);
+      if (error) {
+        console.error(error);
+      }
+      return data;
+    },
     async submitUserResponse(bodyData){
         await supabase
         .from( 'responses' )

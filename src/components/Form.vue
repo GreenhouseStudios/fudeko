@@ -18,7 +18,7 @@
         </span>
       </div>
       <div v-else class="">
-        <div class="w-1/3 p-12 mx-auto bg-yellow-200 border-2 border-yellow-400">
+        <div class="w-1/2 p-12 mx-auto text-left bg-yellow-200 border-2 border-yellow-400">
           <h1>You are caught up with your prompts! Please check again later for next week's prompts.</h1>
         </div>
       </div>
