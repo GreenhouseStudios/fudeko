@@ -42,6 +42,11 @@ export const useCounterStore = defineStore("counter", {
       }
       return data;
     },
+    async uploadFiles(files){
+      for(const file of files){
+        await this.uploadFile(file);
+      }
+    },
     async submitUserResponse(bodyData){
         await supabase
         .from( 'responses' )

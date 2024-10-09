@@ -170,10 +170,7 @@ export default {
       "uploadFile",
     ]),
     async handleFileChange(event) {
-
-      const file = event.files[0];
-      console.log(file);
-      this.uploadFile(file);
+      this.files.push(event.files[0])
     },
     record(value) {
       this.recordPartialResponse({
