@@ -167,7 +167,6 @@ export default {
       "getParticipantRecordByEmail",
       "recordPartialResponse",
       "clearPartialResponse",
-      "uploadFile",
     ]),
     async handleFileChange(event) {
       this.files.push(event.files[0])
@@ -249,6 +248,8 @@ export default {
         attribution_name:
           this.attrOption.name == "CreditDifferent" ? this.creditName : null,
         entered_by_admin: this.adminPrompt ? true : false,
+        files: this.files,
+        media: []
       };
     },
     activePrompt() {

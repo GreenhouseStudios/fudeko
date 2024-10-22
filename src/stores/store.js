@@ -30,24 +30,15 @@ export const useCounterStore = defineStore("counter", {
     paths: ['user'],
   },
   actions: {
-    async uploadFile(file) {
-      // const user = supabase.auth.user();
-      // if(!user){
-      //   throw new Error("User not authenticated");
-        
-      // }
-      const { data, error } = await supabaseAdmin.storage.from("response-media").upload("public/" + file.name.trim().replace(/\s/g, "-"), file);
-      if (error) {
-        console.error(error);
-      }
-      return data;
-    },
-    async uploadFiles(files){
-      for(const file of files){
-        await this.uploadFile(file);
-      }
-    },
     async submitUserResponse(bodyData){
+      for(const file of bodyData.files){
+        const { data, error } = await supabaseAdmin.storage.from("response-media").upload("public/" + bodyData.participant + "/"  + bodyData.prompt + "/" + file.name.trim().replace(/\s/g, "-"), file);
+        bodyData.media.push(data.id);
+        if (error) {
+          console.error(error);
+        }
+      }
+      bodyData.files = undefined;
         await supabase
         .from( 'responses' )
         .insert( bodyData ).then( ( res ) => {
@@ -111,12 +102,7 @@ export const useCounterStore = defineStore("counter", {
       this.prompts = prompts.data;
     },
     async editGreeting(bodydata){
-      await supabase.from('greetings').update(bodydata).eq('id', bodydata.id)
-      // await supabase 
-      // console.log(bodydata)
-      // .from('greetings')
-      // .update({ name: 'Australia' })
-      // .eq('id', 1)
+      await supabase.from('greetings').update(bodydata).eq('id', bodydata.id);
     } ,
     async getResponses() {
       const responses = await supabase.from("responses").select();
