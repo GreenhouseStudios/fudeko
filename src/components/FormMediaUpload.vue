@@ -2,8 +2,9 @@
     <div class="flex flex-col gap-2 my-5">
         Upload Files
         <FileUpload ref="fileupload" mode="basic" class="h-2 p-5" customUpload multiple auto
-            accept="image/*,audio/*,video/*,application/pdf" :maxFileSize="10000000" @select="addFile">
+            accept="image/*,audio/*,video/*,application/pdf" :maxFileSize="10000000" @select="addFile" :disabled="fileLimitReached">
         </FileUpload>
+        
         <div class="flex flex-wrap gap-5 p-5 bg-gray-100 border-2 border-black rounded-md" v-if="filesModel.length > 0">
             <div v-tooltip="file.name" v-for="file in filesModel" :key="file.name" class="relative grid bg-gray-400 border-2 border-black w-14 h-14 place-content-center"> 
                 <img :src="file.objectURL" class="w-full h-full" alt="" v-if="isImage(file)">
@@ -18,7 +19,7 @@
 </template>
 
 <script setup>
-import { toRefs, defineProps, ref } from "vue";
+import { toRefs, defineProps, ref , computed} from "vue";
 import FileUpload from "primevue/fileupload";
 import Button from "primevue/button";
 import Tooltip from "primevue/tooltip";
@@ -38,4 +39,6 @@ const isImage = ( file ) => {
 const isAudio = (file) => {
     return file.name.includes(".mp3") || file.name.includes(".wav") || file.name.includes(".ogg");
 };
+const fileLimit = 3;
+const fileLimitReached = computed(() => filesModel.value.length >= fileLimit);
 </script>
