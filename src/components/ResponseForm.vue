@@ -14,24 +14,30 @@
               v-model="userTitle" />
           </div>
           <div v-if="isAdminRoute">
-            <AdminResponseConfig :adminParticipant="adminParticipant"
-              :participants="participants" :adminPrompt="adminPrompt" :prompts="prompts" @admin-participant-change="handleAdminParticipantChange" />
+            <AdminResponseConfig :adminParticipant="adminParticipant" :participants="participants"
+              :adminPrompt="adminPrompt" :prompts="prompts" @admin-participant-change="handleAdminParticipantChange" />
           </div>
 
           <Editor class="my-20 bg-white" v-model="response" style="height: 320px" placeholder="Type your response here">
           </Editor>
 
+
+
           <span class="py-5 my-5">{{
             saved ? "Saved ✓" : "Saving in..." + countDown
           }}</span>
-          
+
+         <FormMediaUpload :handleFileChange="handleFileChange" v-bind:files="files"></FormMediaUpload>
+
           <WritingTip :tip="currentTip" v-if="!isAdminRoute"></WritingTip>
         </section>
         <!-- <ResponseDifficultySelect :difficulty="difficulty" :difficultyOptions="difficultyOptions" @change-difficulty="difficulty = $event"></ResponseDifficultySelect> -->
-        <ResponseDifficultySelect v-model="difficulty" :difficultyOptions="difficultyOptions" ></ResponseDifficultySelect>
-        
-        <ShareOptionSelect :shareSettings="shareSettingArray" v-model:shareOption="shareOption" :attrSettings="attrSettingArray"
-          v-model:attrOption="attrOption" v-model:creditName="creditName" :participantRecord="participantRecord"></ShareOptionSelect> 
+        <ResponseDifficultySelect v-model="difficulty" :difficultyOptions="difficultyOptions">
+        </ResponseDifficultySelect>
+
+        <ShareOptionSelect :shareSettings="shareSettingArray" v-model:shareOption="shareOption"
+          :attrSettings="attrSettingArray" v-model:attrOption="attrOption" v-model:creditName="creditName"
+          :participantRecord="participantRecord"></ShareOptionSelect>
 
         <div class="flex justify-end gap-4 mt-5">
           <button @click="submit" :disabled="submitButtonDisabled" class="p-2 font-bold rounded" :class="submitButtonDisabled
@@ -58,12 +64,14 @@
 <script lang="ts">
 import { useCounterStore } from "@/stores/store";
 import { mapStores, mapState, mapActions } from "pinia";
+import FileUpload from 'primevue/fileupload';
 import WritingTip from "@/components/WritingTip.vue";
 import Editor from "primevue/editor";
 import AdminResponseConfig from "@/components/AdminResponseConfig.vue";
 import ResponseDifficultySelect from "@/components/ResponseDifficultySelect.vue";
 import ShareOptionSelect from "@/components/ShareOptionSelect.vue";
 import { ShareOption, AttrOption } from "../types/Form";
+import FormMediaUpload from "./FormMediaUpload.vue";
 
 const shareSettings: ShareOption[] = [
   { name: "Keep Private", description: "You can always opt to share your response later if you change your mind. You can still share your responses with your friends and family on your private page if you want." },
@@ -86,7 +94,9 @@ export default {
     Editor,
     AdminResponseConfig,
     ResponseDifficultySelect,
-    ShareOptionSelect
+    ShareOptionSelect,
+    FileUpload,
+    FormMediaUpload,
   },
   data() {
     return {
@@ -111,17 +121,18 @@ export default {
       countDownInterval: null,
       shareSettingArray: shareSettings,
       attrSettingArray: attrOptions,
+      files: [],
     };
   },
   async mounted() {
-    if ( this.$route.params.email ) {
-      if ( !this.participantRecord )
-        await this.getParticipantRecordByEmail( this.$route.params.email );
-      if ( await this.participantHasUnansweredSets( this.participantRecord.id ) )
-        await this.getUserPrompts( this.user );
+    if (this.$route.params.email) {
+      if (!this.participantRecord)
+        await this.getParticipantRecordByEmail(this.$route.params.email);
+      if (await this.participantHasUnansweredSets(this.participantRecord.id))
+        await this.getUserPrompts(this.user);
       else this.hasUnansweredSet = false;
     }
-    if ( this.partialResponse?.response_text ) {
+    if (this.partialResponse?.response_text) {
       this.response = this.partialResponse.response_text;
       this.userTitle = this.partialResponse.user_title;
       // this.shareOption = shareSettings.find(
@@ -131,23 +142,23 @@ export default {
     }
   },
   watch: {
-    response( newValue ) {
+    response(newValue) {
       this.saved = false;
       this.countDown = this.timeToSave;
-      if ( this.countDownInterval ) clearInterval( this.countDownInterval );
-      this.countDownInterval = setInterval( () => {
-        if ( this.countDown > 0 ) this.countDown--;
+      if (this.countDownInterval) clearInterval(this.countDownInterval);
+      this.countDownInterval = setInterval(() => {
+        if (this.countDown > 0) this.countDown--;
         else {
-          clearInterval( this.countDownInterval );
+          clearInterval(this.countDownInterval);
           this.saved = true;
-          this.record( newValue );
+          this.record(newValue);
         }
-      }, 1000 );
+      }, 1000);
 
     },
   },
   methods: {
-    ...mapActions( useCounterStore, [
+    ...mapActions(useCounterStore, [
       "submitUserResponse",
       "toggleLoading",
       "getUserPrompts",
@@ -156,9 +167,12 @@ export default {
       "getParticipantRecordByEmail",
       "recordPartialResponse",
       "clearPartialResponse",
-    ] ),
-    record( value ) {
-      this.recordPartialResponse( {
+    ]),
+    async handleFileChange(event) {
+      this.files.push(event.files[0])
+    },
+    record(value) {
+      this.recordPartialResponse({
         response_text: value,
         participant: this.participantRecord.id,
         prompt: this.activePrompt.id,
@@ -169,7 +183,7 @@ export default {
         attribution_name:
           this.attrOption.name == "CreditDifferent" ? this.creditName : null,
         entered_by_admin: this.adminPrompt ? true : false,
-      } );
+      });
     },
     preview() {
       this.previewing = true;
@@ -177,24 +191,24 @@ export default {
     back() {
       this.previewing = false;
     },
-    addFile( e ) {
+    addFile(e) {
       this.file = e.target.files[0];
     },
     async submit() {
-      if ( this.submitButtonDisabled ) return;
+      if (this.submitButtonDisabled) return;
       this.toggleLoading();
-      await this.submitUserResponse( this.formData );
+      await this.submitUserResponse(this.formData);
       this.clearPartialResponse();
       this.toggleLoading();
-      this.$router.push( { name: "ConfirmSubmit" } );
+      this.$router.push({ name: "ConfirmSubmit" });
     },
-    handleAdminParticipantChange( e ) {
+    handleAdminParticipantChange(e) {
       this.adminParticipant = e.value;
     },
   },
   computed: {
-    ...mapStores( useCounterStore ),
-    ...mapState( useCounterStore, [
+    ...mapStores(useCounterStore),
+    ...mapState(useCounterStore, [
       "loading",
       "error",
       "usersPromptChoices",
@@ -204,23 +218,23 @@ export default {
       "prompts",
       "participants",
       "partialResponse",
-    ] ),
+    ]),
     submitButtonDisabled() {
       return (
         this.response.length < 1 ||
         !this.shareOption ||
-        ( this.shareOption.name != "Keep Private" && !this.attrOption ) ||
-        ( this.attrOption.name == "CreditDifferent" && !this.creditName )
+        (this.shareOption.name != "Keep Private" && !this.attrOption) ||
+        (this.attrOption.name == "CreditDifferent" && !this.creditName)
       );
     },
     custom() {
-      return this.$route.path.includes( "custom" );
+      return this.$route.path.includes("custom");
     },
     responseCharCount() {
       return this.response.length;
     },
     responseWordCount() {
-      return this.response.split( " " ).length;
+      return this.response.split(" ").length;
     },
     formData() {
       return {
@@ -234,41 +248,42 @@ export default {
         attribution_name:
           this.attrOption.name == "CreditDifferent" ? this.creditName : null,
         entered_by_admin: this.adminPrompt ? true : false,
+        files: this.files,
+        media: []
       };
     },
     activePrompt() {
-      if ( this.partialResponse?.prompt ) {
-        return this.prompts.find( ( p ) => p.id == this.partialResponse.prompt );
+      if (this.partialResponse?.prompt) {
+        return this.prompts.find((p) => p.id == this.partialResponse.prompt);
       }
-      if ( this.isAdminRoute ) {
+      if (this.isAdminRoute) {
         return this.prompts[0];
       }
       if (
         this.$route.params.promptNumber &&
         this.usersPromptChoices.length > 0
       ) {
-        const promptNumber = parseInt( this.$route.params.promptNumber );
+        const promptNumber = parseInt(this.$route.params.promptNumber);
         return this.usersPromptChoices[promptNumber - 1];
       }
-      if(this.$route.params.promptId){
-        return this.prompts.find( ( p ) => p.id == this.$route.params.promptId );
+      if (this.$route.params.promptId) {
+        return this.prompts.find((p) => p.id == this.$route.params.promptId);
       }
-      if ( this.custom ) {
+      if (this.custom) {
         return { prompt_text: "Custom Prompt" };
       }
-      if ( this.$route.params.id ) {
+      if (this.$route.params.id) {
         return this.usersPromptChoices.find(
-          ( p ) => p.id == parseInt( this.$route.params.id )
+          (p) => p.id == parseInt(this.$route.params.id)
         );
       }
-
-      return null;
+      else return null;
     },
     promptID() {
-      return parseInt( this.$route.params.id );
+      return parseInt(this.$route.params.id);
     },
     numberOfResponses() {
-      if ( this.isAdminRoute ) {
+      if (this.isAdminRoute) {
         return 0;
       }
       return this.participantRecord.number_answered_sets;
@@ -277,9 +292,8 @@ export default {
       return this.tips[this.numberOfResponses % this.tips.length];
     },
     isAdminRoute() {
-      return this.$route.path.includes( "new" );
+      return this.$route.path.includes("new");
     },
   },
 };
 </script>
-

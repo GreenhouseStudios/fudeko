@@ -1,7 +1,8 @@
 import { defineStore } from "pinia";
 import { supabase } from "../lib/supabaseClient";
 import { useLocalStorage } from "@vueuse/core";
-
+import { createClient } from '@supabase/supabase-js'
+const supabaseAdmin = createClient(import.meta.env.VITE_APP_SUPABASE_URL, import.meta.env.VITE_APP_SUPABASE_KEY)
 export const useCounterStore = defineStore("counter", {
   state: () => {
     return {
@@ -30,6 +31,14 @@ export const useCounterStore = defineStore("counter", {
   },
   actions: {
     async submitUserResponse(bodyData){
+      for(const file of bodyData.files){
+        const { data, error } = await supabaseAdmin.storage.from("response-media").upload("public/" + bodyData.participant + "/"  + bodyData.prompt + "/" + file.name.trim().replace(/\s/g, "-"), file);
+        bodyData.media.push(data.id);
+        if (error) {
+          console.error(error);
+        }
+      }
+      bodyData.files = undefined;
         await supabase
         .from( 'responses' )
         .insert( bodyData ).then( ( res ) => {
@@ -93,12 +102,7 @@ export const useCounterStore = defineStore("counter", {
       this.prompts = prompts.data;
     },
     async editGreeting(bodydata){
-      await supabase.from('greetings').update(bodydata).eq('id', bodydata.id)
-      // await supabase 
-      // console.log(bodydata)
-      // .from('greetings')
-      // .update({ name: 'Australia' })
-      // .eq('id', 1)
+      await supabase.from('greetings').update(bodydata).eq('id', bodydata.id);
     } ,
     async getResponses() {
       const responses = await supabase.from("responses").select();
