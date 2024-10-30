@@ -25,6 +25,16 @@ const routes = [
     component: () => import("../views/Login.vue"),
   },
   {
+    path: "/register",
+    name: "Register",
+    component: () => import("../views/RegisterView.vue"),
+  },
+  {
+    path: "/setPassword",
+    name: "SetPassword",
+    component: () => import("../components/SetPassword.vue"),
+  },
+  {
     path: "/magic",
     name: "magic",
     component: () => import("../components/SignInMagicLink.vue"),
@@ -138,7 +148,7 @@ const routes = [
   },
   {
     path: "/confirmSubmit",
-    name: "ConfirmSubmit",
+    name: "Confirm",
     component: () => import("../components/Confirmation.vue"),
   },
   {

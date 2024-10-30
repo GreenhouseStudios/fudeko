@@ -15,7 +15,7 @@
         The Fudeko Project helps Japanese American former incarcerees share
         their stories with loved ones.
       </h2>
-      <p class="text-lg">
+      <p class="text-lg text-left">
         <strong
           >We send you weekly prompts. You pick one and respond via email or
           letter.</strong
