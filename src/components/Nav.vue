@@ -8,8 +8,8 @@
             </div>
         </div>
         <div class="flex gap-1 m-5">
-            <RouterLink to="/register" class="text-sm underline from-blue-400"><Button>Register</Button></RouterLink>
-            <RouterLink to="/login" class="text-sm underline from-blue-400"><Button>Login</Button></RouterLink>
+            <RouterLink to="/register" class="mr-4 text-lg font-black underline from-blue-400">Register</RouterLink>
+            <RouterLink to="/login" class="mr-4 text-lg font-black underline from-blue-400">Login</RouterLink>
         </div>
     </section>
 </template>
@@ -18,7 +18,7 @@
 import { mapStores, mapState, mapActions } from 'pinia'
 import { useCounterStore } from '@/stores/store'
 import { RouterLink } from 'vue-router';
-import Button from 'primevue/button'
+// import Button from 'primevue/button'
 export default {
     computed: {
         ...mapStores( useCounterStore ),

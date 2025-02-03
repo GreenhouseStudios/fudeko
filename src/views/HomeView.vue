@@ -42,25 +42,7 @@
         to be directed to your prompts of the day!
       </p>
     </section>
-    <section class="my-24">
-      <h2 class="text-2xl font-bold text-left">Sign up</h2>
-      <p class="my-2">
-        Ready to sign up? Fill out the form below or mail in the print copy to
-        the address on the form.
-      </p>
-      <div class="flex justify-center">
-        <iframe
-          src="https://docs.google.com/forms/d/e/1FAIpQLScx_8WOpPrrqXlrD6BJ5KZujxSjxWbq9KIzlrg9Q-azQO7QKQ/viewform?embedded=true"
-          width="640"
-          height="1000"
-          frameborder="0"
-          marginheight="0"
-          marginwidth="0"
-          >Loading…</iframe
-        >
-      </div>
-    </section>
-  </div>
+ </div>
 </template>
 
 <script>

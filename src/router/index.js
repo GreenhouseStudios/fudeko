@@ -27,7 +27,7 @@ const routes = [
   {
     path: "/register",
     name: "Register",
-    component: () => import("../views/RegisterView.vue"),
+    component: () => import("../views/FormkitRegisterView.vue"),
   },
   {
     path: "/setPassword",

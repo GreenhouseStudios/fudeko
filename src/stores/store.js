@@ -96,6 +96,11 @@ export const useCounterStore = defineStore("counter", {
         .signUp({
           email: value.email,
           password: value.password,
+          options: {
+            data: {
+              
+            }
+          }
         })
         .then((res) => {
           console.log(res);
@@ -174,7 +179,8 @@ export const useCounterStore = defineStore("counter", {
     toggleLoading() {
       this.loading = !this.loading;
     },
-    toggleError() {
+    toggleError(err) {
+      console.log( err );
       this.error = !this.error;
     },
     async getParticipants() {
@@ -221,13 +227,26 @@ export const useCounterStore = defineStore("counter", {
         console.log(err);
       }
     },
-    async AddNewParticipant(bodyData) {
-      await supabase
+    async AddNewParticipant(bodyData, password) {
+      const res = await supabase.auth.signUp({
+        email: bodyData.email,
+        password: password,
+      });
+
+      if (res.error) {
+        console.error(res.error);
+        return;
+      }
+
+      const { data, error } = await supabase
         .from("participants")
-        .insert(bodyData)
-        .then((res) => {
-          console.log(res);
-        });
+        .insert(bodyData);
+
+      if (error) {
+        console.error(error);
+      } else {
+        console.log(data);
+      }
     },
     async AddNewTip(bodyData) {
       await supabase

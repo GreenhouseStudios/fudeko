@@ -47,7 +47,7 @@ import Nav from './components/Nav.vue'
 import { RouterLink } from 'vue-router'
 import Footer from './components/Footer.vue'
 import Modal from './components/Modal.vue'
-import Button from 'primevue/button'
+// import Button from 'primevue/button'
 
 export default {
   data() {
@@ -86,14 +86,14 @@ export default {
     RouterLink,
     Footer,
     Modal,
-    Button
+    // Button
   },
 }
 </script>
 
 
 
-<style>
+<style >
 #app {
   /* font-family: Avenir Black, Helvetica, Arial, sans-serif; */
   -webkit-font-smoothing: antialiased;
@@ -159,5 +159,52 @@ nav a.router-link-exact-active {
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity .5s ease-out;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Remove list styles */
+ul, ol {
+  list-style: none;
+}
+
+/* Remove default link styles */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Remove default button styles */
+button {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
+/* Remove default form element styles */
+input, textarea, select, button {
+  font: inherit;
+}
+
+fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+legend {
+  padding: 0;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 </style>
