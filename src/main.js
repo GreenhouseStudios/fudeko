@@ -12,10 +12,9 @@ import { plugin } from '@formkit/vue'
 import defaultConfig from '../formkit.config.js'
 // import 'vue-awesome/icons'
 // import Icon from 'vue-awesome/components/Icon'
-// import Tooltip from 'primevue/tooltip';
-// import PrimeVue from 'primevue/config';
-// import Aura from '@primevue/themes/aura';
-// import "primevue/resources/themes/saga-orange/theme.css";
+import Tooltip from 'primevue/tooltip';
+import PrimeVue from 'primevue/config';
+import Aura from '@primevue/themes/aura';
 // import "primevue/resources/primevue.min.css";
 // import "primeicons/primeicons.css";
 
@@ -24,18 +23,17 @@ pinia.use(piniaPluginPersistedstate)
 const app = createApp(App)
 app.use(router)
 app.use(pinia)
-// app.use(PrimeVue, {
-//     theme: {
-//         // preset: Aura,
-//         options: {
-//             prefix: 'p',
-//             darkModeSelector: 'system',
-//             cssLayer: false
-//         }
-//     }
-//  });
+app.use(PrimeVue, {
+    theme: {
+        preset: Aura,
+        options: {
+            prefix: 'p',
+            darkModeSelector: 'system',
+            cssLayer: false
+        }
+    }
+ });
 app.use(plugin, defaultConfig)
-// app.use(plugin, defaultConfig)
 // watch(
 //     pinia.state,
 //     (state) => {
