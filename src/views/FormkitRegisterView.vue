@@ -1,5 +1,5 @@
 <template>
-    <div class="grid my-32 place-content-center">
+    <div class="grid h-screen my-32 place-content-center">
         <section v-if="!formSubmitted">
             <h2 class="text-4xl font-black ">Sign Up for Fudeko!</h2>
             <div class="py-10">
@@ -7,6 +7,14 @@
                     <FormKit type="text" label="First Name" validation="required" v-model="firstName"
                         name="firstName" />
                     <FormKit type="text" label="Last Name" validation="required" v-model="lastName" name="lastName" />
+                    <div class="my-5">
+                        <FormKit type="email" label="Email" validation="required|email" v-model="email" name="email" />
+                        <FormKit type="email" label="Confirm Email" validation="required|email" v-model="confirmEmail"
+                            name="confirmEmail" />
+                        <FormKit type="password" label="Password" validation="required|length:6" v-model="password"
+                            name="password" />
+
+                    </div>
                     <FormKit type="select" label="How will you participate?" v-model="participantType"
                         name="participantType" :options="participantTypes" />
 
@@ -19,13 +27,8 @@
                             <FormKit type="text" label="Zip" v-model="zip" name="zip" />
                         </div>
                     </div>
-                    <div class="my-5">
-                        <FormKit type="email" label="Email" validation="required" v-model="email" name="email" />
-                        <FormKit type="password" label="Password" v-model="password" name="password" />
 
-                    </div>
                     <div v-if="participantType == 'email'">
-                        <FormKit type="email" label="Confirm Email" v-model="confirmEmail" name="confirmEmail" />
                         <FormKit type="text" label="Partner Email" :value="partnerEmail" name="partnerEmail" />
 
                         <FormKit type="select" label="Send Partner Prompts" :options="yesNoOptions"
@@ -35,11 +38,10 @@
                     </div>
                     <FormKit type="select" label="How easy is it to tell your story?" v-model="storyDifficulty"
                         name="storyDifficulty" :options="storyDifficultyOptions" />
-                    <button type="submit"
-                        class="p-4 text-lg font-black text-white bg-yellow-500 rounded-md hover:bg-yellow-300"
+                    <button @click="addParticipant" class="p-4 text-lg font-black text-white rounded-md"
+                        :class="`${formValid ? 'bg-yellow-500 hover:bg-yellow-300' : 'bg-gray-200 cursor-not-allowed'} `"
                         :disabled="!formValid">Register</button>
                 </FormKit>
-                <!-- <button @click="partnerReceivesPrompts = !partnerReceivesPrompts">Toggle Loading</button> -->
             </div>
         </section>
         <section>
@@ -54,6 +56,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useCounterStore } from '@/stores/store';
+import { add } from '@formkit/icons';
 const formSubmitted = ref( false );
 const participantTypes = ref( [
     { label: 'Email', value: 'email' },
@@ -138,18 +141,33 @@ const yesNoOptions = ref( [
     { label: 'Yes', value: true },
     { label: 'No', value: false },
 ] );
+const missingFields = ref( [] );
 
 const formValid = computed( () => {
+    missingFields.value = [];
+    const basicValid = email.value && confirmEmail.value && password.value.length >= 6 && email.value == confirmEmail.value;
+
+    if ( !email.value ) missingFields.value.push( 'Email is required' );
+    if ( !confirmEmail.value ) missingFields.value.push( 'Confirm Email is required' );
+    if ( password.value.length < 6 ) missingFields.value.push( 'Password must be at least 6 characters' );
+    if ( email.value !== confirmEmail.value ) missingFields.value.push( 'Emails do not match' );
+
     if ( participantType.value == 'email' ) {
-        return email.value && confirmEmail.value && password.value.length > 8 && email.value == confirmEmail.value;
+        return basicValid;
     } else if ( participantType.value == 'mail' ) {
-        return address.value && city.value && state.value && zip.value;
+        if ( !address.value ) missingFields.value.push( 'Address is required' );
+        if ( !city.value ) missingFields.value.push( 'City is required' );
+        if ( !state.value ) missingFields.value.push( 'State is required' );
+        if ( !zip.value ) missingFields.value.push( 'Zip is required' );
+
+        return basicValid && address.value && city.value && state.value && zip.value;
     }
-    return true;
+
+    return false;
 } );
 const store = useCounterStore();
 const addParticipant = async () => {
-
+    console.log( missingFields.value );
     await store.AddNewParticipant( {
         first_name: firstName.value,
         last_name: lastName.value,
@@ -178,7 +196,8 @@ const addParticipant = async () => {
 label {
     text-align: left;
 }
-input{
+
+input {
     flex-grow: 1;
 }
 </style>

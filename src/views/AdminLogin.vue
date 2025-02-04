@@ -1,6 +1,6 @@
 <template>
     <div class="flex justify-center ">
-        <div class="">
+        <div class="h-screen py-24">
             <h1 class="text-2xl font-bold">Admin Login</h1>
             <!-- <form class="flex flex-col"> -->
                 <div class="flex flex-col items-start w-full my-2">
