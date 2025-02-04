@@ -57,12 +57,12 @@ const participantTypes = ref( [
     { label: 'Email', value: 'email' },
     { label: 'Mail', value: 'mail' },
 ] );
-const participantType = ref( 'email' );
-const email = ref( 'jcblee@gmail.com' );
-const confirmEmail = ref( 'jcblee@gmail.com' )
-const password = ref( 'asdfasdf' );
-const firstName = ref( 'test' );
-const lastName = ref( 'mctest' );
+const participantType = ref( '' );
+const email = ref( '' );
+const confirmEmail = ref( '' )
+const password = ref( '' );
+const firstName = ref( '' );
+const lastName = ref( '' );
 const address = ref( '' )
 const address2 = ref( '' )
 const city = ref( '' )
@@ -121,7 +121,7 @@ const stateOptions = ref( [
     { label: 'Wisconsin', value: 'WI' },
     { label: 'Wyoming', value: 'WY' },
 ] );
-const partnerEmail = ref( 'partner@test.com' );
+const partnerEmail = ref( '' );
 const partnerReceivesPrompts = ref( false );
 const partnerReceivesResponses = ref( false );
 const storyDifficulty = ref( '' )
@@ -147,7 +147,6 @@ const formValid = computed( () => {
 } );
 const store = useCounterStore();
 const addParticipant = async () => {
-    // formSubmitted.value = true;
 
     await store.AddNewParticipant( {
         first_name: firstName.value,
