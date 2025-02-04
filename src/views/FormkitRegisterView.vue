@@ -23,6 +23,8 @@
                     </div>
 
                     <FormKit type="email" label="Email" validation="required" v-model="email" name="email" />
+                    
+                    <div v-if="participantType == 'email'">
                     <FormKit type="email" label="Confirm Email" v-model="confirmEmail" name="confirmEmail" />
                     <FormKit type="password" label="Password" v-model="password" name="password" />
                     <FormKit type="text" label="Partner Email" :value="partnerEmail" name="partnerEmail" />
@@ -31,7 +33,7 @@
                         v-model="partnerReceivesPrompts" name="sendPromptEmails" />
                     <FormKit type="select" label="Send Partner Responses" :options="yesNoOptions"
                         v-model="partnerReceivesResponses" name="sendResponseEmails" />
-
+</div>
                     <FormKit type="select" label="How easy is it to tell your story?" v-model="storyDifficulty"
                         name="storyDifficulty" :options="storyDifficultyOptions" />
                     <button type="submit"
