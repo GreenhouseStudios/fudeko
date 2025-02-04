@@ -10,30 +10,29 @@
                     <FormKit type="select" label="How will you participate?" v-model="participantType"
                         name="participantType" :options="participantTypes" />
 
-
-                    <FormKit type="text" label="Address" v-show="participantType == 'mail'" v-model="address"
-                        name="address" />
-                    <FormKit type="text" label="Address Line 2" v-show="participantType == 'mail'" v-model="address2"
-                        name="address2" />
-                    <FormKit type="text" label="City" v-show="participantType == 'mail'" v-model="city" name="city" />
-                    <div class="flex gap-2">
-                        <FormKit type="select" :options="stateOptions" label="State" v-show="participantType == 'mail'"
-                            v-model="state" name="state" />
-                        <FormKit type="text" label="Zip" v-show="participantType == 'mail'" v-model="zip" name="zip" />
+                    <div v-if="participantType == 'mail'">
+                        <FormKit type="text" label="Address" v-model="address" name="address" />
+                        <FormKit type="text" label="Address Line 2" v-model="address2" name="address2" />
+                        <FormKit type="text" label="City" v-model="city" name="city" />
+                        <div class="flex gap-2">
+                            <FormKit type="select" :options="stateOptions" label="State" v-model="state" name="state" />
+                            <FormKit type="text" label="Zip" v-model="zip" name="zip" />
+                        </div>
                     </div>
+                    <div class="my-5">
+                        <FormKit type="email" label="Email" validation="required" v-model="email" name="email" />
+                        <FormKit type="password" label="Password" v-model="password" name="password" />
 
-                    <FormKit type="email" label="Email" validation="required" v-model="email" name="email" />
-                    
+                    </div>
                     <div v-if="participantType == 'email'">
-                    <FormKit type="email" label="Confirm Email" v-model="confirmEmail" name="confirmEmail" />
-                    <FormKit type="password" label="Password" v-model="password" name="password" />
-                    <FormKit type="text" label="Partner Email" :value="partnerEmail" name="partnerEmail" />
+                        <FormKit type="email" label="Confirm Email" v-model="confirmEmail" name="confirmEmail" />
+                        <FormKit type="text" label="Partner Email" :value="partnerEmail" name="partnerEmail" />
 
-                    <FormKit type="select" label="Send Partner Prompts" :options="yesNoOptions"
-                        v-model="partnerReceivesPrompts" name="sendPromptEmails" />
-                    <FormKit type="select" label="Send Partner Responses" :options="yesNoOptions"
-                        v-model="partnerReceivesResponses" name="sendResponseEmails" />
-</div>
+                        <FormKit type="select" label="Send Partner Prompts" :options="yesNoOptions"
+                            v-model="partnerReceivesPrompts" name="sendPromptEmails" />
+                        <FormKit type="select" label="Send Partner Responses" :options="yesNoOptions"
+                            v-model="partnerReceivesResponses" name="sendResponseEmails" />
+                    </div>
                     <FormKit type="select" label="How easy is it to tell your story?" v-model="storyDifficulty"
                         name="storyDifficulty" :options="storyDifficultyOptions" />
                     <button type="submit"
@@ -44,9 +43,10 @@
             </div>
         </section>
         <section>
-            <p v-if="formSubmitted">
-                Thank you for registering! Please check your email for a link to confirm your account.
-            </p>
+            <div v-if="formSubmitted">
+                <p>Thank you for registering!</p>
+                <p>Please check your email for a link to confirm your account.</p>
+            </div>
         </section>
     </div>
 </template>
@@ -59,7 +59,7 @@ const participantTypes = ref( [
     { label: 'Email', value: 'email' },
     { label: 'Mail', value: 'mail' },
 ] );
-const participantType = ref( '' );
+const participantType = ref( 'email' );
 const email = ref( '' );
 const confirmEmail = ref( '' )
 const password = ref( '' );
@@ -141,9 +141,9 @@ const yesNoOptions = ref( [
 
 const formValid = computed( () => {
     if ( participantType.value == 'email' ) {
-        return email.value && confirmEmail.value && password.value && email.value == confirmEmail.value;
+        return email.value && confirmEmail.value && password.value.length > 8 && email.value == confirmEmail.value;
     } else if ( participantType.value == 'mail' ) {
-        return address.value;
+        return address.value && city.value && state.value && zip.value;
     }
     return true;
 } );
@@ -157,14 +157,20 @@ const addParticipant = async () => {
         partner_email: partnerEmail.value,
         partner_receives_prompts: partnerReceivesPrompts.value,
         partner_receives_responses: partnerReceivesResponses.value,
+        participant_type: participantType.value,
+        address: address.value,
+        address2: address2.value,
+        city: city.value,
+        state: state.value,
+        zip: zip.value,
         status: 'active',
-        
+
     }, password.value ).then( () => {
         formSubmitted.value = true;
     } )
-    .catch( (err) => {
-        // console.log( err );
-    } )
+        .catch( ( err ) => {
+            // console.log( err );
+        } )
 };
 </script>
 
