@@ -178,4 +178,7 @@ const addParticipant = async () => {
 label {
     text-align: left;
 }
+input{
+    flex-grow: 1;
+}
 </style>
