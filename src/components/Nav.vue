@@ -1,5 +1,5 @@
 <template>
-    <section>
+    <section class="">
         <div v-if="participantRecord" class="flex flex-col justify-end py-2 md:px-10 md:mt-4 sm:mt-1 md:px-2">
             <div v-show="participantID" class="flex flex-col"><span v-if="participantID">Welcome Back, {{
                     participantRecord?.first_name }}</span>
@@ -7,9 +7,9 @@
                     participantRecord?.email }}?</router-link>
             </div>
         </div>
-        <div class="flex gap-1 m-5">
-            <RouterLink to="/register" class="mr-4 text-lg font-black underline from-blue-400">Register</RouterLink>
-            <RouterLink to="/login" class="mr-4 text-lg font-black underline from-blue-400">Login</RouterLink>
+        <div class="flex gap-1 m-2">
+            <RouterLink to="/register" class="p-2 mr-4 text-lg font-black text-white hover:bg-yellow-400 fudeko-orange from-blue-400">Register</RouterLink>
+            <RouterLink to="/login" class="p-2 mr-4 text-lg font-black text-white hover:bg-yellow-400 fudeko-orange from-blue-400">Login</RouterLink>
         </div>
     </section>
 </template>

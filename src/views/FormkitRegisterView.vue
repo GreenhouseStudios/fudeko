@@ -1,6 +1,6 @@
 <template>
-    <div class="grid h-screen my-32 place-content-center">
-        <section v-if="!formSubmitted">
+    <div class="w-11/12 mx-auto md:w-1/2">
+        <section class="" v-if="!formSubmitted">
             <h2 class="text-4xl font-black ">Sign Up for Fudeko!</h2>
             <div class="py-10">
                 <FormKit type="form" theme="genesis" submit-label="Register" @submit="addParticipant" :actions="false">

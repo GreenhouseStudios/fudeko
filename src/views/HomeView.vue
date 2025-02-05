@@ -1,11 +1,7 @@
 <template>
   <div class="flex flex-col justify-center flex-shrink py-5 mx-auto mt-20">
     <section>
-      <img
-        src="@/assets/Fudeko-Logo-Final.png"
-        alt="fudeko mikan logo"
-        class="w-2/3 md:w-1/3"
-      />
+      <img src="@/assets/Fudeko-Logo-Final.png" alt="fudeko mikan logo" class="w-2/3 md:w-1/3" />
     </section>
     <section class="">
       <h1 class="text-4xl font-bold">
@@ -16,10 +12,8 @@
         their stories with loved ones.
       </h2>
       <p class="text-lg text-left">
-        <strong
-          >We send you weekly prompts. You pick one and respond via email or
-          letter.</strong
-        >
+        <strong>We send you weekly prompts. You pick one and respond via email or
+          letter.</strong>
         We compile your responses online so you can share them with family and
         friends. At the end of a year, you get a booklet, a physical record of
         your work. I saw firsthand how my grandmother, Fudeko Tsuji Maruyama,
@@ -35,14 +29,23 @@
         join us on this adventure—when you're ready, you can sign up below.
       </p>
     </section>
-    <section class="px-12 py-5 my-24 text-lg font-bold fudeko-blue">
+    <section class="flex flex-col items-center justify-center my-12">
+
+      <router-link :to="'/register/'">
+        <button class="p-5 text-2xl font-extrabold text-white fudeko-orange hover:bg-yellow-400">
+          Register Now
+        </button>
+      </router-link>
+    </section>
+    <section class="px-12 py-5 my-8 text-lg font-bold fudeko-blue">
       <p>
-        Already signed up? 
-        <router-link :to="participantRecord ? '/form/' + participantRecord.email  : '/login'" class="fudeko-orange-text">Click here</router-link>
+        Already signed up?
+        <router-link :to="participantRecord ? '/form/' + participantRecord.email : '/login'"
+          class="fudeko-orange-text">Click here</router-link>
         to be directed to your prompts of the day!
       </p>
     </section>
- </div>
+  </div>
 </template>
 
 <script>
@@ -53,9 +56,8 @@ export default {
     return {};
   },
   computed: {
-    ...mapStores(useCounterStore),
-    ...mapState(useCounterStore, ["partialResponse","participantRecord"]),
+    ...mapStores( useCounterStore ),
+    ...mapState( useCounterStore, ["partialResponse", "participantRecord"] ),
   },
 };
 </script>
-

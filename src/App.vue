@@ -16,14 +16,14 @@
     </Modal>
 
     <div :class="modalShowing ? 'filter blur-lg' : ''" v-if="!loading">
-      <header class="pb-12">
+      <header class="flex justify-between pb-12 mb-24">
 
         <router-link to="/">
           <span class="flex items-center float-left pt-2">
             <img src="./assets/Fudeko-Logo-Final.png" alt="fudeko mikan logo" class="inline w-16 md:w-36">
           </span>
         </router-link>
-        <Nav class="float-right"></Nav>
+        <Nav></Nav>
       </header>
       <main class="md:px-48 sm:px-4">
 
