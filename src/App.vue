@@ -16,14 +16,14 @@
     </Modal>
 
     <div :class="modalShowing ? 'filter blur-lg' : ''" v-if="!loading">
-      <header class="pb-12">
+      <header class="flex justify-between pb-12 mb-24">
 
         <router-link to="/">
           <span class="flex items-center float-left pt-2">
             <img src="./assets/Fudeko-Logo-Final.png" alt="fudeko mikan logo" class="inline w-16 md:w-36">
           </span>
         </router-link>
-        <Nav class="float-right"></Nav>
+        <Nav></Nav>
       </header>
       <main class="md:px-48 sm:px-4">
 
@@ -47,7 +47,7 @@ import Nav from './components/Nav.vue'
 import { RouterLink } from 'vue-router'
 import Footer from './components/Footer.vue'
 import Modal from './components/Modal.vue'
-import Button from 'primevue/button'
+// import Button from 'primevue/button'
 
 export default {
   data() {
@@ -86,14 +86,14 @@ export default {
     RouterLink,
     Footer,
     Modal,
-    Button
+    // Button
   },
 }
 </script>
 
 
 
-<style>
+<style >
 #app {
   /* font-family: Avenir Black, Helvetica, Arial, sans-serif; */
   -webkit-font-smoothing: antialiased;
@@ -159,5 +159,52 @@ nav a.router-link-exact-active {
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity .5s ease-out;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Remove list styles */
+ul, ol {
+  list-style: none;
+}
+
+/* Remove default link styles */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Remove default button styles */
+button {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
+/* Remove default form element styles */
+input, textarea, select, button {
+  font: inherit;
+}
+
+fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+legend {
+  padding: 0;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 </style>

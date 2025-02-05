@@ -1,12 +1,12 @@
 <template>
-    <div class="flex justify-center ">
+    <div class="flex justify-center h-screen py-24">
         <div class="">
-            <sign-in-magic-link />
-            <!-- <h1 class="text-2xl font-bold">Login</h1>
+            <!-- <sign-in-magic-link /> -->
+            <h1 class="text-2xl font-bold">Login</h1>
             <form class="flex flex-col">
                 <div class="flex flex-col items-start w-full my-2">
-                <label for="email">Email</label>
-                <input id="email" type="text" v-model="email" class="border-2"/>
+                <FormKit id="email" type="text" v-model="email" class="border-2" label="Email"/>
+                <FormKit id="password" label="Password" type="password" class="border-2"/>
             </div>
 
                 <div>
@@ -14,7 +14,7 @@
                     <Button v-else @click="loginUser" class="p-2 my-2 bg-yellow-300 border-2 border-yellow-400">Login</Button>
                 </div>
             </form>
-            <p id="error-message"></p> -->
+            <p id="error-message"></p>
         </div>
     </div>
 </template>

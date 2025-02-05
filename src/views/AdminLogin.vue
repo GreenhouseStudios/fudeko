@@ -1,24 +1,24 @@
 <template>
     <div class="flex justify-center ">
-        <div class="">
+        <div class="h-screen py-24">
             <h1 class="text-2xl font-bold">Admin Login</h1>
-            <!-- <form class="flex flex-col"> -->
-                <div class="flex flex-col items-start w-full my-2">
-                    <label for="email">Email</label>
-                    <input class="border-2" id="email" type="text" v-model="email" />
-                </div>
-                <div class="flex flex-col items-start w-full my-2">
-                    <label for="password">Password</label>
-                    <input type="password" class="border-2" id="password" v-model="password" :feedback="false">
-                </div>
-                <div>
-                    <button v-if="!this.email || !this.password" Button @click="loginUser"
-                        class="p-2 my-2 bg-gray-300 border-2 border-gray-400" disabled>Login</button>
-                    <button v-else @click="loginUser"
-                        class="p-2 my-2 bg-yellow-300 border-2 border-yellow-400">Login</button>
-                </div>
-            <!-- </form> -->
-            <p id="error-message"></p>
+
+            <div class="flex flex-col items-start w-full my-2">
+                <label for="email">Email</label>
+                <input class="border-2" id="email" type="text" v-model="email" />
+            </div>
+            <div class="flex flex-col items-start w-full my-2">
+                <label for="password">Password</label>
+                <input type="password" class="border-2" id="password" v-model="password" :feedback="false">
+            </div>
+            <div>
+                <button v-if="!this.email || !this.password" Button @click="loginUser"
+                    class="p-2 my-2 bg-gray-300 border-2 border-gray-400" disabled>Login</button>
+                <button v-else @click="loginUser"
+                    class="p-2 my-2 bg-yellow-300 border-2 border-yellow-400">Login</button>
+            </div>
+
+            <p id="error-message" class="text-red-500"></p>
         </div>
     </div>
 </template>
@@ -40,20 +40,30 @@ export default {
         }
     },
     methods: {
-        ...mapActions(useCounterStore, ['toggleLoading', 'toggleError', 'loginAdmin']),
+        ...mapActions( useCounterStore, ['toggleLoading', 'toggleError', 'loginAdmin'] ),
         async loginUser() {
-            await supabase.auth.signInWithPassword({ email: this.email, password: this.password }).then((res) => {
-                console.log(res)
+            // const adminCheck = await supabase.rpc( 'is_user_admin', { email: this.email } );
+            const { data, error } = await supabase.from('user_roles').select('email').eq('email', this.email);
+            console.log( data );
+            if ( data.length === 0 ) {
+                document.querySelector( '#error-message' ).innerHTML = "Invalid Login Credentials";
+                return false;
+            }
+            else {
+
                 this.toggleLoading();
-                if (res.data.user && !res.error) {
-                    this.loginAdmin({ email: this.email, password: this.password })
-                    this.$router.push('/admin')
-                }
-                else {
-                    document.querySelector('#error-message').innerHTML = "Invalid Login Credentials"
-                }
-                this.toggleLoading();
-            }).catch(err => console.log(err))
+                await supabase.auth.signInWithPassword( { email: this.email, password: this.password } )
+                    .then( ( res ) => {
+                        if ( res.data.user && !res.error ) {
+                            this.loginAdmin( { email: this.email, password: this.password } );
+                            this.$router.push( '/admin' );
+                        }
+                    } )
+                    .catch( err => console.log( err ) )
+                    .finally( () => {
+                        this.toggleLoading();
+                    } );
+            }
         }
     },
     components: {
@@ -64,10 +74,10 @@ export default {
     },
     computed: {
         mapStores() {
-            return mapStores(useCounterStore)
+            return mapStores( useCounterStore )
         },
         mapState() {
-            return mapState(useCounterStore, ['count', 'prompts', 'user', 'responses', 'loading', 'error', 'usersPromptChoices'])
+            return mapState( useCounterStore, ['count', 'prompts', 'user', 'responses', 'loading', 'error', 'usersPromptChoices'] )
         },
         name() {
             return this.data
@@ -80,4 +90,5 @@ export default {
 #email,
 #password {
     width: 250px
-}</style>
+}
+</style>

@@ -25,7 +25,7 @@ import Column from 'primevue/column';
 import Button from 'primevue/button';
 
 // import Dropdown from 'primevue/dropdown';
-import { FilterMatchMode } from 'primevue/api';
+// import { FilterMatchMode } from 'primevue/api';
 import { useCounterStore } from '@/stores/store'
 import { mapStores, mapState } from 'pinia'
 // import _ from 'lodash';
@@ -37,7 +37,7 @@ export default {
     data() {
         return {
             filters: {
-                prompt_set: { value: null, matchMode: FilterMatchMode.EQUALS },
+                // prompt_set: { value: null, matchMode: FilterMatchMode.EQUALS },
             },
         }
     },

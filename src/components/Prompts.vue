@@ -28,12 +28,16 @@
 </template>
 
 <script>
+
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
+import ColumnGroup from 'primevue/columngroup';   // optional
+import Row from 'primevue/row';                   // optional
+
 import Button from 'primevue/button';
 
 import Dropdown from 'primevue/dropdown';
-import { FilterMatchMode } from 'primevue/api';
+import { FilterMatchMode } from '@primevue/core/api';
 import { useCounterStore } from '@/stores/store'
 import { mapStores, mapState, } from 'pinia'
 import _ from 'lodash';
