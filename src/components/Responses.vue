@@ -1,59 +1,60 @@
 <template>
     <div class="">
         <div class="my-5">
-            <router-link to="/responses/new"><Button label="New" icon="pi pi-plus"></Button></router-link>
+            <router-link v-if="!user" to="/responses/new"><Button label="New" icon="pi pi-plus"></Button></router-link>
         </div>
 
         <DataTable :value="joinedResponses" class="" sortField="created_at" :sortOrder="-1" >
-            <Column field="participant" header="Participant"><template></template></Column>
+            <Column v-if="!user" field="participant" header="Participant"><template></template></Column>
             <Column field="created_at" sortable header="Date">
-
-                <template #body="slotProps" class="text-xs">{{ new
+            <template #body="slotProps" class="text-xs">{{ new
             Date(slotProps.data.created_at).toLocaleDateString() + " " + new
-                Date(slotProps.data.created_at).toLocaleTimeString() }}</template>
+            Date(slotProps.data.created_at).toLocaleTimeString() }}</template>
             </Column>
             <Column field="prompt" header="Prompt"></Column>
             <Column field="responsePreview" header="Response"></Column>
             <Column>
-
-                <template #body="slotProps"> <router-link :to="'/responses/' + slotProps.data.id"
-                        class="p-2 text-white bg-blue-400 rounded-sm hover:bg-blue-500"> View</router-link></template>
+            <template #body="slotProps"> <router-link :to="'/responses/' + slotProps.data.id"
+                class="p-2 text-white bg-blue-400 rounded-sm hover:bg-blue-500"> View</router-link></template>
             </Column>
         </DataTable>
-    </div>
-</template>
+        </div>
+    </template>
 
-<script>
-import Button from 'primevue/button';
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
-import { useCounterStore } from '@/stores/store'
-import { mapStores, mapState, } from 'pinia'
+    <script setup>
+    import { computed } from 'vue';
+    import { useCounterStore } from '@/stores/store';
+    import Button from 'primevue/button';
+    import DataTable from 'primevue/datatable';
+    import Column from 'primevue/column';
 
-export default {
-    components: {
-        DataTable, Column, Button
-    },
-    data() {
-        return {
+    const props = defineProps({
+        user: {
+        type: Object,
+        required: false
         }
-    },
-    computed: {
-        ...mapStores( useCounterStore ),
-        ...mapState( useCounterStore, ['count', 'prompts', 'responses', 'loading', 'error', 'participants'] ),
+    });
 
-        joinedResponses() {
-            return this.responses.map( r => {
-                return {
-                    ...r,
-                    prompt: this.prompts.find( p => p.id === r.prompt )?.prompt_text || "Custom",
-                    participant: this.participants.find( p => p.id === r.participant )?.first_name,
-                    responsePreview: r.response_text?.slice( 0, 50 ).replace(/<[^>]*>?/gm, '') + "..."
-                }
-            } )
+    const store = useCounterStore();
+
+    const joinedResponses = computed(() => {
+        return store.responses.map(r => {
+        if (props.user) {
+            return {
+            ...r,
+            prompt: store.prompts.find(p => p.id === r.prompt)?.prompt_text || "Custom",
+            responsePreview: r.response_text?.slice(0, 50).replace(/<[^>]*>?/gm, '') + "..."
+            }
+        } else {
+            return {
+            ...r,
+            prompt: store.prompts.find(p => p.id === r.prompt)?.prompt_text || "Custom",
+            participant: store.participants.find(p => p.id === r.participant)?.first_name,
+            responsePreview: r.response_text?.slice(0, 50).replace(/<[^>]*>?/gm, '') + "..."
+            }
         }
-    },
-}
-</script>
+        });
+    });
+    </script>
 
-<style lang="scss" scoped></style>
+    <style lang="scss" scoped></style>

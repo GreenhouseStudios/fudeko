@@ -135,11 +135,9 @@ export default {
     if (this.partialResponse?.response_text) {
       this.response = this.partialResponse.response_text;
       this.userTitle = this.partialResponse.user_title;
-      // this.shareOption = shareSettings.find(
-      //   ( s ) => s.name == this.partialResponse.share_option
-      // );
       this.difficulty = this.partialResponse.response_difficulty;
     }
+   
   },
   watch: {
     response(newValue) {
@@ -218,6 +216,7 @@ export default {
       "prompts",
       "participants",
       "partialResponse",
+      "responses"
     ]),
     submitButtonDisabled() {
       return (
@@ -273,9 +272,7 @@ export default {
         return { prompt_text: "Custom Prompt" };
       }
       if (this.$route.params.id) {
-        return this.usersPromptChoices.find(
-          (p) => p.id == parseInt(this.$route.params.id)
-        );
+        return this.prompts.find((p) => p.id == this.$route.params.id);
       }
       else return null;
     },

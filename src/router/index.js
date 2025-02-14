@@ -40,6 +40,11 @@ const routes = [
     component: () => import("../components/SignInMagicLink.vue"),
   },
   {
+    path: "/participantDashboard",
+    name: "ParticipantDashboard",
+    component: () => import("../views/ParticipantDashboard.vue"),
+  },
+  {
     path: "/form/:email",
     name: "Form",
     component: () => import("../components/Form.vue"),
@@ -179,7 +184,7 @@ export const router = createRouter({
 
 
 router.beforeEach(async (to) => {
-  const protectedRoutes = ["Participant", "Responses", "Greetings"];
+  const protectedRoutes = ["Participant",  "Greetings"];
   const protectedAdminRoutes = [
     "Admin",
     "ResponseFormAdmin",

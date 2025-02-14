@@ -47,7 +47,7 @@ import Nav from './components/Nav.vue'
 import { RouterLink } from 'vue-router'
 import Footer from './components/Footer.vue'
 import Modal from './components/Modal.vue'
-// import Button from 'primevue/button'
+import Button from 'primevue/button'
 
 export default {
   data() {

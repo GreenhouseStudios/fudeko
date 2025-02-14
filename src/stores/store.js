@@ -12,6 +12,7 @@ export const useCounterStore = defineStore("counter", {
       user: null,
       loading: false,
       error: false,
+      userLoggedIn: false,
       greetings: [],
       participantID: useLocalStorage("participantID", 0),
       participantRecord: null,
@@ -81,15 +82,38 @@ export const useCounterStore = defineStore("counter", {
     clearPartialResponse() {
       this.partialResponse = null;
     },
-    async login(value) {
-      this.loggedInUser = value;
+    async updateResponse(response) {
+      await supabase.from("responses").update(response).eq("id", response.id);
+    },
+    async login(email, password) {
+      await supabase.auth
+        .signInWithPassword({ email: email, password: password })
+        .then((res) => {
+          console.log(res);
+          this.userLoggedIn = true;
+          if (res.error) {
+            console.log(res.error);
+            this.userLoggedIn = false;
+          }
+        }).
+        catch((err) => {
+          console.log(err);
+        });
       const rec = await supabase
         .from("participants")
         .select()
-        .eq("email", value);
+        .eq("email", email);
       this.participantRecord = rec.data[0];
       this.setParticipantID(this.participantRecord.id);
-      await this.getUserPrompts(value);
+      await this.getUserPrompts(email);
+      await this.getUserResponses(email);
+    },
+    async getUserResponses() {
+      const responses = await supabase
+        .from("responses")
+        .select()
+      this.responses = responses.data; 
+      console.log(this.responses)
     },
     async setPassword(value) {
       await this.sbAdmin.auth
@@ -97,10 +121,8 @@ export const useCounterStore = defineStore("counter", {
           email: value.email,
           password: value.password,
           options: {
-            data: {
-              
-            }
-          }
+            data: {},
+          },
         })
         .then((res) => {
           console.log(res);
@@ -180,7 +202,7 @@ export const useCounterStore = defineStore("counter", {
       this.loading = !this.loading;
     },
     toggleError(err) {
-      console.log( err );
+      console.log(err);
       this.error = !this.error;
     },
     async getParticipants() {
@@ -194,6 +216,7 @@ export const useCounterStore = defineStore("counter", {
       await this.getGreetings();
       if (this.participantID) {
         await this.getParticipantRecord(this.participantID);
+        await this.getUserResponses();
       }
     },
     async participantHasUnansweredSets(participantID) {
