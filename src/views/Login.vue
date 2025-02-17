@@ -25,8 +25,8 @@ import { mapStores, mapState, mapActions } from 'pinia'
 export default {
     data() {
         return {
-            email: 'jcblee@gmail.com',
-            password: 'asdfasdf'
+            email: '',
+            password: ''
         }
     },
     methods: {
