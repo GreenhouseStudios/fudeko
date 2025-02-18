@@ -10,13 +10,13 @@ import './assets/tailwind.css'
 
 import { plugin } from '@formkit/vue'
 import defaultConfig from '../formkit.config.js'
-// import 'vue-awesome/icons'
-// import Icon from 'vue-awesome/components/Icon'
+import 'vue-awesome/icons'
+import Icon from 'vue-awesome/components/Icon'
 import Tooltip from 'primevue/tooltip';
 import PrimeVue from 'primevue/config';
 import Aura from '@primevue/themes/aura';
 // import "primevue/resources/primevue.min.css";
-// import "primeicons/primeicons.css";
+import "primeicons/primeicons.css";
 
 const pinia = createPinia()
 pinia.use(piniaPluginPersistedstate)
@@ -45,6 +45,6 @@ app.use(plugin, defaultConfig)
 //     { deep: true }
 //     );
 
-// app.directive('tooltip', Tooltip);
-// app.component('v-icon', Icon)
+app.directive('tooltip', Tooltip);
+app.component('v-icon', Icon)
 app.mount('#app')
