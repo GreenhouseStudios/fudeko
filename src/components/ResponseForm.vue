@@ -198,7 +198,7 @@ export default {
       await this.submitUserResponse(this.formData);
       this.clearPartialResponse();
       this.toggleLoading();
-      this.$router.push({ name: "ConfirmSubmit" });
+      this.$router.push('/confirmSubmit');
     },
     handleAdminParticipantChange(e) {
       this.adminParticipant = e.value;

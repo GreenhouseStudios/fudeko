@@ -32,7 +32,7 @@ import { useCounterStore } from '@/stores/store'
 import { mapStores, mapState, mapActions } from 'pinia'
 import { defineComponent } from 'vue';
 import PromptList from './PromptList.vue'
-export default defineComponent( {
+export default defineComponent({
   data() {
     return {
 
@@ -46,27 +46,27 @@ export default defineComponent( {
     // if(this.participantID && this.partialResponse){
     //   this.$router.push('/continue')
     // }
-    if ( this.$route.params.email){
-      if( !this.participantRecord )
-        await this.login( this.$route.params.email );
+    if (this.$route.params.email) {
+      if (!this.participantRecord)
+        await this.login(this.$route.params.email);
       this.user = this.$route.params.email;
-      if ( this.participantRecord ) {
+      if (this.participantRecord) {
         this.userVerified = true
-        this.setParticipantID( this.participantRecord.id );
+        this.setParticipantID(this.participantRecord.id);
       }
 
-      if ( await this.participantHasUnansweredSets( this.participantRecord.id ) )
-        await this.getUserPrompts( this.user );
+      if (await this.participantHasUnansweredSets(this.participantRecord.id))
+        await this.getUserPrompts(this.user);
       else this.hasUnansweredSet = false;
     }
   },
 
   methods: {
 
-    ...mapActions( useCounterStore, ['toggleLoading', 'toggleError', 'getUserPrompts', 'setParticipantID', 'participantHasUnansweredSets',  'login'] ),
-    addFile( e ) {
-      this.files.push( e.target.files[0] )
-      console.log( e.target.files[0] )
+    ...mapActions(useCounterStore, ['toggleLoading', 'toggleError', 'getUserPrompts', 'setParticipantID', 'participantHasUnansweredSets', 'login']),
+    addFile(e) {
+      this.files.push(e.target.files[0])
+      console.log(e.target.files[0])
     },
 
 
@@ -74,23 +74,23 @@ export default defineComponent( {
     useCustomPrompt() {
       // this.custom = true;
       // this.activePrompt = "custom";
-      this.$router.push( { name: 'ResponseFormCustom' } )
+      this.$router.push({ name: 'ResponseFormCustom' })
     },
 
 
   },
   computed: {
-    ...mapStores( useCounterStore ),
-    ...mapState( useCounterStore, ['prompts', 'loading', 'error', 'usersPromptChoices', 'tips', 'participantRecord','participantID','partialResponse'] ),
+    ...mapStores(useCounterStore),
+    ...mapState(useCounterStore, ['prompts', 'loading', 'error', 'usersPromptChoices', 'tips', 'participantRecord', 'participantID', 'partialResponse']),
 
     userCaughtUp() {
       return this.usersPromptChoices && this.usersPromptChoices.length < 1;
     },
 
     preselectedPromptNumber() {
-      if ( this.$route.params.promptNumber ) {
-        this.activePrompt = this.usersPromptChoices[parseInt( this.$route.params.promptNumber ) - 1]
-        return parseInt( this.$route.params.promptNumber )
+      if (this.$route.params.promptNumber) {
+        this.activePrompt = this.usersPromptChoices[parseInt(this.$route.params.promptNumber) - 1]
+        return parseInt(this.$route.params.promptNumber)
       }
       else {
         return null
@@ -99,7 +99,7 @@ export default defineComponent( {
 
   },
   components: { PromptList, }
-} );
+});
 </script>
 
 <style lang="scss" scoped>
@@ -138,4 +138,5 @@ button {
   font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
-#sharing-options {}</style>
+#sharing-options {}
+</style>
