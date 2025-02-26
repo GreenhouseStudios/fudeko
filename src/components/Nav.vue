@@ -7,10 +7,11 @@
                     Logout</router-link>
             </div>
         </div>
-     <section v-if="!userLoggedIn">   <div class="flex gap-1 m-2" >
+     <section v-if="!userLoggedIn">
+        <div class="flex gap-1 m-2" v-if="!userLoggedIn">
+            <CheckEnvironment class="p-2 mr-4 text-lg font-black text-red-500" />
             <RouterLink to="/register" class="p-2 mr-4 text-lg font-black text-white hover:bg-yellow-400 fudeko-orange from-blue-400">Register</RouterLink>
             <RouterLink  to="/login" class="p-2 mr-4 text-lg font-black text-white hover:bg-yellow-400 fudeko-orange from-blue-400">Login</RouterLink>
-            
         </div>
         <RouterLink to="/forgotPassword" class="p-2 mr-4 text-md relative from-blue-400 hover:text-blue-400 font-bold">Forgot Password</RouterLink>
     </section>
@@ -22,6 +23,8 @@ import { mapStores, mapState, mapActions } from 'pinia'
 import { useCounterStore } from '@/stores/store'
 import { RouterLink } from 'vue-router';
 // import Button from 'primevue/button'
+import CheckEnvironment from './CheckEnvironment.vue';
+
 export default {
     computed: {
         ...mapStores( useCounterStore ),
@@ -36,6 +39,7 @@ export default {
     },
     components: {
         RouterLink,
+        CheckEnvironment,
     },
 }
 </script>
