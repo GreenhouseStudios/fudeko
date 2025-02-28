@@ -30,6 +30,11 @@ const routes = [
     component: () => import("../views/FormkitRegisterView.vue"),
   },
   {
+    path: "/adminregister",
+    name: "AdminRegister",
+    component: () => import("../views/AdminRegisterView.vue"),
+  },
+  {
     path: "/setPassword",
     name: "SetPassword",
     component: () => import("../components/SetPassword.vue"),
