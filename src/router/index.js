@@ -90,11 +90,6 @@ const routes = [
     component: () => import("../components/ParticipantForm.vue"),
   },
   {
-    path: "/emails/new",
-    name: "EmailFormAdmin",
-    component: () => import("../components/NewEmailForm.vue"),
-  },
-  {
     path: "/tips/new",
     name: "TipFormAdmin",
     component: () => import("../components/TipForm.vue"),
