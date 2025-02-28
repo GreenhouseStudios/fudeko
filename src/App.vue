@@ -25,7 +25,7 @@
         </router-link>
         <Nav></Nav>
       </header>
-      <main class="md:px-48 sm:px-4">
+      <main class="md:px-48 sm:px-4 min-h-screen">
 
         <router-view class="" v-if="!loading" v-slot="{ Component, route }">
           <transition :name="route.meta.transition" mode="out-in" duration="1000">

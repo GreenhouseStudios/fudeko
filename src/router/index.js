@@ -35,6 +35,11 @@ const routes = [
     component: () => import("../components/SetPassword.vue"),
   },
   {
+    path: "/forgotPassword",
+    name: "ForgotPassword",
+    component: () => import("../views/ForgotPassword.vue"),
+  },
+  {
     path: "/magic",
     name: "magic",
     component: () => import("../components/SignInMagicLink.vue"),
@@ -83,6 +88,11 @@ const routes = [
     path: "/participants/new",
     name: "ParticipantFormAdmin",
     component: () => import("../components/ParticipantForm.vue"),
+  },
+  {
+    path: "/emails/new",
+    name: "EmailFormAdmin",
+    component: () => import("../components/NewEmailForm.vue"),
   },
   {
     path: "/tips/new",
