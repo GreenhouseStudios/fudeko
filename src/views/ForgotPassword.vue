@@ -1,6 +1,7 @@
 <template>
-    <div class="flex flex-col gap-5 mx-auto text-left w-1/2">
-        <h1>Forgot Password</h1>
+    <h1 class="mb-12">Forgot Password</h1>
+    <div class="flex flex-col gap-5 mx-auto text-left w-1/2" v-if="!formSubmitted">
+        
         <p>Enter your email address to reset your password.</p>
         <div>
             <div class="form-group">
@@ -8,6 +9,9 @@
             </div>
             <Button @click="submitForm"  class="mt-12">Submit</Button>
         </div>
+    </div>
+    <div v-else>
+        <p>Check your email for a link to reset your password.</p>
     </div>
 </template>
 
