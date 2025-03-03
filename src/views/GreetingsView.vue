@@ -1,49 +1,24 @@
 <template>
-    <div class="w-1/2 mx-auto ">
-        <!-- <div v-html="greetings" class="p-12 my-24 bg-yellow-100 ">
-
-        </div> -->
-        <p v-html="greetingID"></p>
-        <p v-html="greeting"></p>
-        <router-link :to="'/greetings/edit/' + this.$route.params.id "><button>Edit</button></router-link>
+    <div class="w-1/2 mx-auto flex flex-col gap-5">
+        <h1 v-html="greeting.title"></h1>
+        <p v-html="greeting.text" class="font-bold fudeko-blue p-8"></p>
+        <router-link :to="'/greetings/edit/' + $route.params.id" class="font-bold text-lg my-5"><Button>Edit</Button></router-link>
         <!-- <div v-html="response.response_text" class="p-12 my-24 bg-yellow-100 "> -->
     <!-- </div> -->
     </div>
 </template>
 
-<script>
-import { mapStores, mapState, mapActions } from 'pinia'
+<script setup>
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 import { useCounterStore } from '@/stores/store'
 
-export default {
-    // props: {
-    //     response: {
-    //         type: Object,
-    //         default: () => {}
-    //     },
-    // },
-    data() {
-        return {
-        }
-    },
-    methods: {
+const route = useRoute()
+const counterStore = useCounterStore()
 
-        ...mapActions( useCounterStore, ['toggleLoading', 'toggleError', ] ),
-    },
-    computed: {
-        ...mapStores( useCounterStore ),
-        ...mapState( useCounterStore, ['count', 'prompts', 'responses','greetings', 'loading', 'error', 'usersPromptChoices', 'participants'] ),
-        greeting() {
-            return this.greetings.find(r => r.id == parseInt(this.$route.params.id) )?.text
-        },
-        greetingID(){
-            return this.$route.params.id
-        },
-        // response() {
-        //     return this.responses.find( r => r.id == this.$route.params.id )
-        // },
-    },
-}
+const greeting = computed(() => {
+    return counterStore.greetings.find(r => r.id == parseInt(route.params.id))
+})
 </script>
 
 <style lang="scss" scoped></style>
