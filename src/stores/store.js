@@ -13,6 +13,7 @@ export const useCounterStore = defineStore("counter", {
       loading: false,
       error: false,
       userLoggedIn: false,
+      session: null,
       emails: useLocalStorage("emails", []),
       greetings: useLocalStorage("greetings", []),
       participantID: useLocalStorage("participantID", 0),
@@ -41,11 +42,11 @@ export const useCounterStore = defineStore("counter", {
           .from("response-media")
           .upload(
             "public/" +
-              bodyData.participant +
-              "/" +
-              bodyData.prompt +
-              "/" +
-              file.name.trim().replace(/\s/g, "-"),
+            bodyData.participant +
+            "/" +
+            bodyData.prompt +
+            "/" +
+            file.name.trim().replace(/\s/g, "-"),
             file
           );
         bodyData.media.push(data.id);
@@ -114,10 +115,10 @@ export const useCounterStore = defineStore("counter", {
       const responses = await supabase
         .from("responses")
         .select()
-      this.responses = responses.data; 
+      this.responses = responses.data;
     },
     async setPassword(value) {
-      const result = await supabase.auth.updateUser({password: value});
+      const result = await supabase.auth.updateUser({ password: value });
       console.log(result);
     },
     async getParticipantRecordByEmail(email) {
@@ -144,16 +145,11 @@ export const useCounterStore = defineStore("counter", {
       this.partialResponse = {};
       this.participantRecord = null;
     },
-    listenForAuthChanges() {
+    async listenForAuthChanges() {
       supabase.auth.onAuthStateChange((event, session) => {
-        console.log(`Auth event: ${event}`, session);
-        if (session) {
-          this.session = session;
-          this.user = session.user;
-        } else {
-          this.session = null;
-          this.user = null;
-        }
+        console.log(event);
+        this.session = session;
+        this.user = session?.user;
 
         // Handle password reset session
         if (event === 'PASSWORD_RECOVERY') {
@@ -224,6 +220,8 @@ export const useCounterStore = defineStore("counter", {
       this.participants = data;
     },
     async initializeStore() {
+      this.session = await supabase.auth.getSession().data;
+      console.log(this.session);
       await this.getPrompts();
       await this.getPromptEnums();
       await this.getTips();

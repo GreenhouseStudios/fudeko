@@ -59,8 +59,8 @@ export default {
   async mounted() {
     this.toggleLoading();
     await this.initializeStore();
+    await this.listenForAuthChanges();
     this.modalShowing = !!( this.partialResponse.prompt && this.participantID );
-
     this.toggleLoading();
   },
   computed: {
@@ -73,7 +73,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions( useCounterStore, ['initializeStore', 'toggleLoading', 'clearPartialResponse'] ),
+    ...mapActions( useCounterStore, ['initializeStore', 'toggleLoading', 'clearPartialResponse','listenForAuthChanges'] ),
     discardResponse() {
       let userEmail = this.participantRecord.email;
       this.modalShowing = false;

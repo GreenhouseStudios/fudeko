@@ -25,7 +25,7 @@ const formSubmitted = ref(false);
 const submitForm = () => {
     console.log(email.value);
     try{
-    supabase.auth.resetPasswordForEmail(email.value,{redirectTo: 'https://fudeko.netlify.app/resetpassword',});
+    supabase.auth.resetPasswordForEmail(email.value);
     formSubmitted.value = true;
     }catch(e){
         console.log(e);
