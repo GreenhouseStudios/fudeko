@@ -117,18 +117,8 @@ export const useCounterStore = defineStore("counter", {
       this.responses = responses.data; 
     },
     async setPassword(value) {
-      // await this.sbAdmin.auth
-      //   .signUp({
-      //     email: value.email,
-      //     password: value.password,
-      //     options: {
-      //       data: {},
-      //     },
-      //   })
-      //   .then((res) => {
-      //     console.log(res);
-      //   });
-
+      const result = await supabase.auth.updateUser({password: value});
+      console.log(result);
     },
     async getParticipantRecordByEmail(email) {
       const rec = await supabase
