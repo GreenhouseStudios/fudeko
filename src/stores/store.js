@@ -144,6 +144,23 @@ export const useCounterStore = defineStore("counter", {
       this.partialResponse = {};
       this.participantRecord = null;
     },
+    listenForAuthChanges() {
+      supabase.auth.onAuthStateChange((event, session) => {
+        console.log(`Auth event: ${event}`, session);
+        if (session) {
+          this.session = session;
+          this.user = session.user;
+        } else {
+          this.session = null;
+          this.user = null;
+        }
+
+        // Handle password reset session
+        if (event === 'PASSWORD_RECOVERY') {
+          console.log('User is authenticated via password reset link.');
+        }
+      });
+    },
     setPrompts(value) {
       this.prompts = value;
     },
