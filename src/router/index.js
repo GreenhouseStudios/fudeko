@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 import { useCounterStore } from "@/stores/store";
+import { props } from "vue-awesome";
 
 const routes = [
   {
@@ -160,6 +161,7 @@ const routes = [
     path: "/confirmSubmit",
     name: "Confirm",
     component: () => import("../components/Confirmation.vue"),
+    props: true,
   },
   {
     path: "/submitresponse",
