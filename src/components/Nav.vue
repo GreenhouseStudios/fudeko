@@ -7,7 +7,7 @@
                     Logout</router-link>
             </div>
         </div>
-     <section>   <div class="flex gap-1 m-2" v-if="!userLoggedIn">
+     <section v-if="!userLoggedIn">   <div class="flex gap-1 m-2" >
             <RouterLink to="/register" class="p-2 mr-4 text-lg font-black text-white hover:bg-yellow-400 fudeko-orange from-blue-400">Register</RouterLink>
             <RouterLink  to="/login" class="p-2 mr-4 text-lg font-black text-white hover:bg-yellow-400 fudeko-orange from-blue-400">Login</RouterLink>
             
