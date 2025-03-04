@@ -13,18 +13,20 @@ export const useCounterStore = defineStore("counter", {
       loading: false,
       error: false,
       userLoggedIn: false,
-      greetings: [],
+      session: null,
+      emails: useLocalStorage("emails", []),
+      greetings: useLocalStorage("greetings", []),
       participantID: useLocalStorage("participantID", 0),
       participantRecord: null,
       loggedInUser: null,
-      participants: [],
+      participants: useLocalStorage("participants", []),
       prompts: useLocalStorage("prompts", []),
       promptDifficulties: useLocalStorage("promptDifficulties", []),
       promptAssociations: useLocalStorage("promptAssociations", []),
       promptFamiliarities: useLocalStorage("promptFamiliarities", []),
       responses: [],
       usersPromptChoices: [],
-      tips: [],
+      tips: useLocalStorage("tips", []),
       partialResponse: useLocalStorage("partialResponse", {}),
       sbAdmin: supabaseAdmin,
     };
@@ -40,11 +42,11 @@ export const useCounterStore = defineStore("counter", {
           .from("response-media")
           .upload(
             "public/" +
-              bodyData.participant +
-              "/" +
-              bodyData.prompt +
-              "/" +
-              file.name.trim().replace(/\s/g, "-"),
+            bodyData.participant +
+            "/" +
+            bodyData.prompt +
+            "/" +
+            file.name.trim().replace(/\s/g, "-"),
             file
           );
         bodyData.media.push(data.id);
@@ -72,7 +74,6 @@ export const useCounterStore = defineStore("counter", {
       this.participantID = value;
     },
     async getParticipantRecord(id) {
-      // this.participantRecord = await supabase.from("participants").select().eq("id", id).data;
       const rec = await supabase.from("participants").select().eq("id", id);
       this.participantRecord = rec.data[0];
     },
@@ -86,19 +87,21 @@ export const useCounterStore = defineStore("counter", {
       await supabase.from("responses").update(response).eq("id", response.id);
     },
     async login(email, password) {
-      await supabase.auth
-        .signInWithPassword({ email: email, password: password })
-        .then((res) => {
-          console.log(res);
-          this.userLoggedIn = true;
-          if (res.error) {
-            console.log(res.error);
-            this.userLoggedIn = false;
-          }
-        }).
-        catch((err) => {
-          console.log(err);
-        });
+      if (password) {
+        await supabase.auth
+          .signInWithPassword({ email: email, password: password })
+          .then((res) => {
+            console.log(res);
+            this.userLoggedIn = true;
+            if (res.error) {
+              console.log(res.error);
+              this.userLoggedIn = false;
+            }
+          }).
+          catch((err) => {
+            console.log(err);
+          });
+      }
       const rec = await supabase
         .from("participants")
         .select()
@@ -112,21 +115,11 @@ export const useCounterStore = defineStore("counter", {
       const responses = await supabase
         .from("responses")
         .select()
-      this.responses = responses.data; 
-      console.log(this.responses)
+      this.responses = responses.data;
     },
     async setPassword(value) {
-      await this.sbAdmin.auth
-        .signUp({
-          email: value.email,
-          password: value.password,
-          options: {
-            data: {},
-          },
-        })
-        .then((res) => {
-          console.log(res);
-        });
+      const result = await supabase.auth.updateUser({ password: value });
+      console.log(result);
     },
     async getParticipantRecordByEmail(email) {
       const rec = await supabase
@@ -145,11 +138,24 @@ export const useCounterStore = defineStore("counter", {
     async fetchAdminData() {
       await this.getParticipants();
       await this.getResponses();
+      this.emails = await this.getEmails();
     },
     logout() {
       this.user = null;
       this.partialResponse = {};
       this.participantRecord = null;
+    },
+    async listenForAuthChanges() {
+      supabase.auth.onAuthStateChange((event, session) => {
+        console.log(event);
+        this.session = session;
+        this.user = session?.user;
+
+        // Handle password reset session
+        if (event === 'PASSWORD_RECOVERY') {
+          console.log('User is authenticated via password reset link.');
+        }
+      });
     },
     setPrompts(value) {
       this.prompts = value;
@@ -167,6 +173,10 @@ export const useCounterStore = defineStore("counter", {
     async getResponses() {
       const responses = await supabase.from("responses").select();
       this.responses = responses.data;
+    },
+    async getEmails() {
+      const emails = await supabase.from("emails").select();
+      return emails.data;
     },
     async getGreetings() {
       const greetings = await supabase.from("greetings").select();
@@ -210,6 +220,8 @@ export const useCounterStore = defineStore("counter", {
       this.participants = data;
     },
     async initializeStore() {
+      this.session = await supabase.auth.getSession().data;
+      console.log(this.session);
       await this.getPrompts();
       await this.getPromptEnums();
       await this.getTips();
@@ -250,7 +262,7 @@ export const useCounterStore = defineStore("counter", {
         console.log(err);
       }
     },
-    async AddNewParticipant(bodyData, password) {
+    async addNewParticipant(bodyData, password) {
       const res = await supabase.auth.signUp({
         email: bodyData.email,
         password: password,
@@ -271,7 +283,7 @@ export const useCounterStore = defineStore("counter", {
         console.log(data);
       }
     },
-    async AddNewTip(bodyData) {
+    async addNewTip(bodyData) {
       await supabase
         .from("tips")
         .insert(bodyData)

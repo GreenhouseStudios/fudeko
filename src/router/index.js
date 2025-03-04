@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from "vue-router";
-
 import { useCounterStore } from "@/stores/store";
 
 const routes = [
@@ -33,6 +32,11 @@ const routes = [
     path: "/setPassword",
     name: "SetPassword",
     component: () => import("../components/SetPassword.vue"),
+  },
+  {
+    path: "/forgotPassword",
+    name: "ForgotPassword",
+    component: () => import("../views/ForgotPassword.vue"),
   },
   {
     path: "/magic",
@@ -155,6 +159,7 @@ const routes = [
     path: "/confirmSubmit",
     name: "Confirm",
     component: () => import("../components/Confirmation.vue"),
+    props: true,
   },
   {
     path: "/submitresponse",
