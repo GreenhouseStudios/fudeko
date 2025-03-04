@@ -1,7 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-
 import { useCounterStore } from "@/stores/store";
-import { props } from "vue-awesome";
 
 const routes = [
   {
