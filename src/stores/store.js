@@ -271,6 +271,35 @@ export const useCounterStore = defineStore("counter", {
         console.log(data);
       }
     },
+    async addNewAdmin(bodyData, password) {
+      try {
+        const { data: authData, error: authError } = await supabase.auth.signUp({
+          email: bodyData.email,
+          password: password,
+        });
+
+        if (authError) {
+          console.error("Error: ", authError);
+          return;
+        }
+
+        const { data, error } = await supabase.from("user_roles").insert([
+          {
+            user_id: authData.user.id,
+            email: bodyData.email,
+            role: "pending"
+          },
+        ]);
+
+        if (error) {
+          console.error("Error: ", error);
+        } else {
+          console.log("New admin added: ", data);
+        }
+      } catch (err) {
+        console.error("Error: ", err);
+      }
+    },
     async AddNewTip(bodyData) {
       await supabase
         .from("tips")

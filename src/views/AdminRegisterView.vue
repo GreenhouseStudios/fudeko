@@ -1,5 +1,9 @@
 <script setup>
 import { ref, computed } from 'vue';
+import { useCounterStore } from '@/stores/store';
+
+const store = useCounterStore();
+
 const formSubmitted = ref(false);
 
 const firstName = ref('');
@@ -23,12 +27,17 @@ const formValid = computed(() => {
 });
 
 const addAdmin = async () => {
-  console.log(firstName.value);
-  console.log(lastName.value);
-  console.log(email.value);
-  console.log(password.value);
-
-  formSubmitted.value = true;
+  await store.addNewAdmin({
+    first_name: firstName.value,
+    last_name: lastName.value,
+    email: email.value
+  }, password.value)
+  .then(() => {
+    formSubmitted.value = true;
+  })
+  .catch((err) => {
+    console.error('ERROR: ', err);
+  });
 };
 
 </script>
