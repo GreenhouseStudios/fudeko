@@ -5,7 +5,7 @@ import { createClient } from "@supabase/supabase-js";
 const supabaseAdmin = createClient(
   import.meta.env.VITE_APP_SUPABASE_URL,
   import.meta.env.VITE_APP_SUPABASE_KEY
-);
+)
 export const useCounterStore = defineStore("counter", {
   state: () => {
     return {
