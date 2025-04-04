@@ -17,7 +17,7 @@ export default {
 </script>
 
 <template>
-  <div>
+  <div class="fixed bottom-5 right-5 z-50 w-64 p-2">
     <p v-if="isDev">Development</p>
     <small>Commit: {{ commitHash }}</small><br>
     <small>Message: {{ commitMessage }}</small>
