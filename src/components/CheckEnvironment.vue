@@ -3,6 +3,8 @@ export default {
   data() {
     return {
       isDev: this.checkEnvironment(),
+      commitHash: import.meta.env.VITE_GIT_COMMIT_HASH || '',
+      commitMessage: import.meta.env.VITE_GIT_COMMIT_MSG || ''
     }
   },
   methods: {
@@ -17,5 +19,7 @@ export default {
 <template>
   <div>
     <p v-if="isDev">Development</p>
+    <small>Commit: {{ commitHash }}</small><br>
+    <small>Message: {{ commitMessage }}</small>
   </div>
 </template>

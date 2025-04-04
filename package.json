@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "set-commit": "./set-commit.sh",
+    "dev": "npm run set-commit && vite",
+    "build": "npm run set-commit && vite build",
     "test:unit": "vite test:unit",
     "lint": "eslint --ext .js,.vue src"
   },
