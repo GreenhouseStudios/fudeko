@@ -1,5 +1,5 @@
 <template>
-    <div class="px-40">
+    <div class="mx-auto max-w-[1200px]">
 
         <div class="my-5">
             <router-link to="/tips/new"><Button label="New" icon="pi pi-plus"></Button></router-link>

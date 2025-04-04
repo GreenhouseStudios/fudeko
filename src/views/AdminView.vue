@@ -1,8 +1,8 @@
 <template>
-    <div class="px-10 py-3 mx-auto md:px-40">
+    <div class="px-4 py-3 mx-auto md:px-12 max-w-[1400px]">
         <h1 class="my-5 text-4xl font-bold">Admin Console</h1>
 
-        <Menubar :model="views" class="gap-5 mb-5"></Menubar>
+        <Menubar :model="views" class="flex justify-center [&_.p-menubar-root-list]:justify-center mb-5"></Menubar>
 
         <component v-bind:is="currentTabComponent"></component>
     </div>
