@@ -140,7 +140,10 @@ const generatePrompts = async () => {
 
 const sendEmail = async () => {
     const res = await generatePrompts();
-
+    const greeting = await store.editGreeting({
+        id: selectedGreeting.value.id,
+        is_active_greeting: true,
+    });
     let { data, error } = await supabase
     .rpc('send_weekly_emails')
     if (error) console.error(error)
