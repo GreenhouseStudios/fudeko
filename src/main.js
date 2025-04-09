@@ -17,6 +17,7 @@ import PrimeVue from 'primevue/config';
 import Aura from '@primevue/themes/aura';
 // import "primevue/resources/primevue.min.css";
 import "primeicons/primeicons.css";
+import '@formkit/themes/genesis'
 
 const pinia = createPinia()
 pinia.use(piniaPluginPersistedstate)

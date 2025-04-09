@@ -25,13 +25,13 @@ export const useCounterStore = defineStore("counter", {
       responses: [],
       usersPromptChoices: [],
       tips: [],
+      emails: [],
       partialResponse: useLocalStorage("partialResponse", {}),
       sbAdmin: supabaseAdmin,
     };
   },
   persist: {
     storage: sessionStorage,
-    paths: ["user"],
   },
   actions: {
     async submitUserResponse(bodyData) {
@@ -56,6 +56,23 @@ export const useCounterStore = defineStore("counter", {
       await supabase
         .from("responses")
         .insert(bodyData)
+        .then((res) => {
+          console.log(res);
+        });
+    },
+    async submitRecord(tableName, bodyData) {
+      await supabase
+        .from(tableName)
+        .insert(bodyData)
+        .then((res) => {
+          console.log(res);
+        });
+    },
+    async deleteRecord(tableName, id) {
+      await supabase
+        .from(tableName)
+        .delete()
+        .eq("id", id)
         .then((res) => {
           console.log(res);
         });
@@ -172,6 +189,10 @@ export const useCounterStore = defineStore("counter", {
       const greetings = await supabase.from("greetings").select();
       this.greetings = greetings.data;
     },
+    async getEmails() {
+      const emails = await supabase.from("emails").select();
+      this.emails = emails.data;
+    },
     async getTips() {
       const tips = await supabase
         .from("tips")
@@ -214,6 +235,7 @@ export const useCounterStore = defineStore("counter", {
       await this.getPromptEnums();
       await this.getTips();
       await this.getGreetings();
+      await this.getEmails();
       if (this.participantID) {
         await this.getParticipantRecord(this.participantID);
         await this.getUserResponses();
@@ -279,6 +301,33 @@ export const useCounterStore = defineStore("counter", {
           console.log(res);
         });
     },
+    async AddNewEmail(bodyData) {
+      await supabase
+        .from("emails")
+        .insert(bodyData)
+        .then((res) => {
+          console.log(res);
+        });
+    }
   },
-  getters: {},
+  getters: {
+    // getPrompts: (state) => {
+    //   return state.prompts;
+    // },
+    // getPromptAssociations: (state) => {
+    //   return state.promptAssociations;
+    // },
+    // getPromptDifficulties: (state) => {
+    //   return state.promptDifficulties;
+    // },
+    // getPromptFamiliarities: (state) => {
+    //   return state.promptFamiliarities;
+    // },
+    // getParticipantID: (state) => {
+    //   return state.participantID;
+    // },
+    getActiveParticipants: (state) => {
+      return state.participants.filter((participant) => participant.status === "active");
+    }
+  },
 });

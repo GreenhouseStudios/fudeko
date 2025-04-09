@@ -50,6 +50,11 @@ const routes = [
     component: () => import("../components/Form.vue"),
   },
   {
+    path: "/emails/:email",
+    name: "Emails",
+    component: () => import("../components/NewEmailForm.vue"),
+  },
+  {
     path: "/confirmDecline",
     name: "ConfirmDecline",
     component: () => import("../components/ConfirmDecline.vue"),

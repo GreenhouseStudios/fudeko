@@ -4,50 +4,45 @@
 
         <!-- Simple list of participant first and last names without selection -->
         <section class="my-5 mx-auto">
-            <Accordion value="null">
+            <Accordion value="0">
                 <AccordionPanel value="0">
                     <AccordionHeader>Participants List</AccordionHeader>
                     <AccordionContent>
                         <h4>Click on a participant to see details</h4>
                         <div class="flex flex-wrap gap-2 p-4 my-5 fudeko-blue">
-                            <Chip @click="handleSelectParticipant(participant)" v-for="participant in activeParticipants"
+                            <Chip @click="handleSelectParticipant(participant)" v-for="participant in store.getActiveParticipants"
                                 :key="participant.id" class="font-bold p-1 border rounded text-center hover:bg-blue-100 cursor-pointer">
                                 {{ participant.first_name }} {{ participant.last_name }}
                             </Chip>
                         </div>
                     </AccordionContent>
                 </AccordionPanel>
-                <AccordionPanel class="my-5" value="1">
-                    <AccordionHeader>Greeting</AccordionHeader>
-                    <AccordionContent>
-
-                        <h4 class="text-left my-5 text-sm font-normal">Click option below to use a template greeting.
-                        </h4>
-                        <div class="grid grid-cols-5 gap-4">
-                            <Button class="text-xs" v-for="greeting in greetings" :key="greeting.id"
-                                :label="textExcerpt(greeting.text)" @click="changeSelectedGreeting(greeting)"></Button>
-
-                        </div>
-                    </AccordionContent>
-                </AccordionPanel>
             </Accordion>
         </section>
 
-        <section v-if="selectedGreeting" class="text-left flex gap-2 flex-col my-12">
+        <!-- <Select v-model="selectedGreetingMode" :options="greetingMode" optionLabel="label"
+                            class="w-1/3 my-5"></Select> -->
+                    <div v-if="selectedGreetingMode.value === 'existing'">
+                        <h4 class="text-left my-5 text-sm font-normal">Click option below to use a template greeting.
+                        </h4>
+                        <div class="grid grid-cols-5 gap-4" >
+                            <Button class="text-xs" v-for="greeting in greetings" :key="greeting.id"
+                                :label="textExcerpt(greeting.text)" @click="changeSelectedGreeting(greeting)"></Button>
+
+                        </div></div>
+        <section v-if="selectedGreetingMode.value === 'existing'" class="text-left flex gap-2 flex-col my-12 min-h-56">
             <h2>{{ selectedGreeting?.title }}</h2>
-            <p v-html="selectedGreeting.text"></p>
+            <p v-html="selectedGreeting?.text"></p>
         </section>
-        <!-- <section>
+        <section v-if="selectedGreetingMode.value === 'new'" class="text-left flex gap-2 flex-col my-12">
             <Editor class=" bg-white text-center m-auto mb-24" v-model="text" style="height: 320px; max-width: 600px">
             </Editor>
-        </section> -->
+        </section>
 
-        <section class="flex gap-2 justify-center">
-            <!-- <Button label="Save Email" class="mt-5 relative bottom-0 right-0"></Button> -->
-            <!-- <FormKit type="checkbox" v-model="saveAsTemplate" label="Save as Template"></FormKit> -->
-            <!-- <FormKit type="date" v-model="sendDate" label="Send Date"></FormKit> -->
-            <Button @click="sendEmail">Send Email Now</Button>
-            <Button>Schedule Email</Button>
+        <section class="flex flex-col w-1/3 gap-2 justify-center mx-auto items-center">
+            <FormKit v-if="selectedGreetingMode.value ==='new'" type="checkbox" v-model="saveAsTemplate" label="Save Greeting as Template"></FormKit>
+            <Button v-if="selectedGreetingMode.value ==='existing' && selectedGreeting" class="w-36" @click="sendEmail">Send Now</Button>
+            <!-- <Button class="w-36" @click="saveForLater">Save</Button> -->
         </section>
     </div>
     <Modal :showing="!!selectedParticipant" @close="handleParticipantReset" v-if="selectedParticipant"
@@ -80,8 +75,9 @@ import AccordionPanel from 'primevue/accordionpanel';
 import AccordionHeader from 'primevue/accordionheader';
 import AccordionContent from 'primevue/accordioncontent';
 
-//Get greetings from store
 const store = useCounterStore();
+
+const activeParticipants = store.participants.filter(participant => participant.status === 'active');
 
 //Email Text
 const text = ref('');
@@ -91,30 +87,14 @@ const greetings = computed(() => store.greetings.filter(greeting => greeting.is_
 //Selected Greeting
 const selectedGreeting = ref(null);
 
-//Get participants from store
-const participants = computed(() => store.participants);
-
 const promptsToSend = ref([]);
 const selectedParticipant = ref(null);
 const selectedParticipantPrompts = ref([]);
-
-//Selected Participants
-// const selectedParticipants = ref([]);
-
-//Filter participants where status = 'active'
-const activeParticipants = computed(() => store.participants.filter(participant => participant.status === 'active'));
-
-// const selectAllParticipants = () => {
-//     if (selectedParticipants.value.length === activeParticipants.value.length) {
-//         selectedParticipants.value = [];
-//     } else {
-//         selectedParticipants.value = activeParticipants.value.map(participant => participant.id);
-//     }
-// }
-
-// const selectAllLabel = computed(() => {
-//     return selectedParticipants.value.length === activeParticipants.value.length ? 'Deselect All' : 'Select All';
-// });
+const greetingMode = [
+    { label: 'Use Existing Greeting', value: 'existing' },
+    { label: 'Create New Greeting', value: 'new' }
+];
+const selectedGreetingMode = ref(greetingMode[0]);
 
 const textExcerpt = (text) => {
     return text.substr(0, 15) + '...';
@@ -144,12 +124,44 @@ const handleParticipantReset = () => {
     selectedParticipantPrompts.value = [];
 }
 
+const generatePrompts = async () => {
+    const obj = promptsToSend.value.map(p => {
+    return {
+        participant: p.participant,
+        prompts: p.prompts.map(prompt => {
+            return prompt.id
+        })
+    }
+  })
+    for(const o of obj) {
+        const { data, error } = await supabase.rpc('create_outbounds',o);
+    }
+}
+
 const sendEmail = async () => {
-    
+    const res = await generatePrompts();
+
+    let { data, error } = await supabase
+    .rpc('send_weekly_emails')
+    if (error) console.error(error)
+    else console.log(data)
+}
+
+const saveForLater = async () => {
+    if (selectedGreetingMode.value === 'new') {
+        await store.submitGreeting({
+            text: text.value,
+            title: selectedGreeting.value.title,
+            is_template: saveAsTemplate.value,
+        });
+    }
+    await store.AddNewEmail({
+        greeting: selectedGreeting.value.id,
+    });
 }
 
 onMounted(async () => {
-    const activeParticipants = store.participants.filter(participant => participant.status === 'active');
+    
     for(let participant of activeParticipants) {
         if (participant.id) {
             const promptSet = await fetchNextPrompts(participant);

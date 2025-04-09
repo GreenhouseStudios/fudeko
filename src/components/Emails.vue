@@ -16,6 +16,12 @@
                     )"></span>
                 </template>
             </Column>
+            <Column>
+                <template #body="slotProps">
+                    <router-link :to="'/emails/' + slotProps.data.id"
+                        class="p-2 text-white bg-blue-400 rounded-sm hover:bg-blue-500"> View</router-link>
+                </template>
+            </Column>
 
             <!-- <Column field="text" header="Greeting Text"></Column> -->
         </DataTable>
