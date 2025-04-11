@@ -164,7 +164,8 @@ export const useCounterStore = defineStore("counter", {
       const prompts = await supabase
         .from("prompts")
         .select("*")
-        .eq("prompt_set", "fudeko");
+        .eq("prompt_set", "fudeko", "overall_prompt_difficulty");
+      console.log('Prompts data:', prompts.data);
       this.prompts = prompts.data;
     },
     async editGreeting(bodydata) {

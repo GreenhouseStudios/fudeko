@@ -1,5 +1,5 @@
 <template>
-    <div class="px-40">
+    <div class="mx-auto max-w-[1200px]">
         <!-- <h1 class="mt-5 text-xl font-bold text-left">Participants</h1> -->
         <div class="my-5">
             <router-link to="/greetings/new"><Button label="New" icon="pi pi-plus"></Button></router-link>
