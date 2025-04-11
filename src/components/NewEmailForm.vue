@@ -25,24 +25,22 @@
                     <div v-if="selectedGreetingMode.value === 'existing'">
                         <h4 class="text-left my-5 text-sm font-normal">Click option below to use a template greeting.
                         </h4>
-                        <div class="grid grid-cols-5 gap-4" >
-                            <Button class="text-xs" v-for="greeting in greetings" :key="greeting.id"
-                                :label="textExcerpt(greeting.text)" @click="changeSelectedGreeting(greeting)"></Button>
-
-                        </div></div>
-        <section v-if="selectedGreetingMode.value === 'existing'" class="text-left flex gap-2 flex-col my-12 min-h-56">
-            <h2>{{ selectedGreeting?.title }}</h2>
+                        <Select v-model="selectedGreeting" :options="greetings" optionLabel="title"
+                            class="w-1/3 my-5"></Select>
+                    </div>
+        <section v-if="selectedGreetingMode.value === 'existing' && selectedGreeting" class="text-left flex gap-2 flex-col my-12 min-h-56 bg-yellow-100 p-8">
+            <h2 v-html="selectedGreeting?.title"></h2>
             <p v-html="selectedGreeting?.text"></p>
         </section>
+
         <section v-if="selectedGreetingMode.value === 'new'" class="text-left flex gap-2 flex-col my-12">
             <Editor class=" bg-white text-center m-auto mb-24" v-model="text" style="height: 320px; max-width: 600px">
             </Editor>
         </section>
 
-        <section class="flex flex-col w-1/3 gap-2 justify-center mx-auto items-center">
+        <section class="flex flex-col w-1/3 gap-2 justify-center mx-auto items-center mt-8">
             <FormKit v-if="selectedGreetingMode.value ==='new'" type="checkbox" v-model="saveAsTemplate" label="Save Greeting as Template"></FormKit>
             <Button v-if="selectedGreetingMode.value ==='existing' && selectedGreeting" class="w-36" @click="sendEmail">Send Now</Button>
-            <!-- <Button class="w-36" @click="saveForLater">Save</Button> -->
         </section>
     </div>
     <Modal :showing="!!selectedParticipant" @close="handleParticipantReset" v-if="selectedParticipant"
@@ -69,20 +67,19 @@ import Editor from 'primevue/editor'
 import Chip from 'primevue/chip';
 import Modal from '@/components/Modal.vue';
 import { supabase } from "../lib/supabaseClient";
-
 import Accordion from 'primevue/accordion';
 import AccordionPanel from 'primevue/accordionpanel';
 import AccordionHeader from 'primevue/accordionheader';
 import AccordionContent from 'primevue/accordioncontent';
 
 const store = useCounterStore();
-
-const activeParticipants = store.participants.filter(participant => participant.status === 'active');
+const activeParticipants = store.getActiveParticipants;
 
 //Email Text
 const text = ref('');
 
-const greetings = computed(() => store.greetings.filter(greeting => greeting.is_template === true));
+const greetings = store.greetings
+const greetingsTemplates = computed(() => store.greetings.filter(greeting => greeting.is_template === true));
 
 //Selected Greeting
 const selectedGreeting = ref(null);
@@ -96,8 +93,15 @@ const greetingMode = [
 ];
 const selectedGreetingMode = ref(greetingMode[0]);
 
+const stripHTML = function stripHtml(html)
+{
+   let tmp = document.createElement("DIV");
+   tmp.innerHTML = html;
+   return tmp.textContent || tmp.innerText || "";
+}
+
 const textExcerpt = (text) => {
-    return text.substr(0, 15) + '...';
+    return stripHTML(text).substring(0, 15) + '...';
 }
 
 const longExcerpt = (text) => {
@@ -144,6 +148,10 @@ const sendEmail = async () => {
         id: selectedGreeting.value.id,
         is_active_greeting: true,
     });
+    const email = await store.AddNewEmail({
+        greeting: selectedGreeting.value.id,
+        status: 'sent',
+    });
     let { data, error } = await supabase
     .rpc('send_weekly_emails')
     if (error) console.error(error)
@@ -162,6 +170,10 @@ const saveForLater = async () => {
         greeting: selectedGreeting.value.id,
     });
 }
+
+const showSendButton = computed(() => {
+    return selectedGreetingMode.value === 'existing' && selectedGreeting.value;
+});
 
 onMounted(async () => {
     

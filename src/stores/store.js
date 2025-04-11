@@ -112,8 +112,8 @@ export const useCounterStore = defineStore("counter", {
             console.log(res.error);
             this.userLoggedIn = false;
           }
-        }).
-        catch((err) => {
+        })
+        .catch((err) => {
           console.log(err);
         });
       const rec = await supabase
@@ -126,11 +126,9 @@ export const useCounterStore = defineStore("counter", {
       await this.getUserResponses(email);
     },
     async getUserResponses() {
-      const responses = await supabase
-        .from("responses")
-        .select()
-      this.responses = responses.data; 
-      console.log(this.responses)
+      const responses = await supabase.from("responses").select();
+      this.responses = responses.data;
+      console.log(this.responses);
     },
     async setPassword(value) {
       await this.sbAdmin.auth
@@ -171,6 +169,7 @@ export const useCounterStore = defineStore("counter", {
     setPrompts(value) {
       this.prompts = value;
     },
+    
     async getPrompts() {
       const prompts = await supabase
         .from("prompts")
@@ -180,6 +179,15 @@ export const useCounterStore = defineStore("counter", {
     },
     async editGreeting(bodydata) {
       await supabase.from("greetings").update(bodydata).eq("id", bodydata.id);
+    },
+    async editRecord(tableName, bodyData) {
+      await supabase
+        .from(tableName)
+        .update(bodyData)
+        .eq("id", bodyData.id)
+        .then((res) => {
+          console.log(res);
+        });
     },
     async getResponses() {
       const responses = await supabase.from("responses").select();
@@ -308,7 +316,7 @@ export const useCounterStore = defineStore("counter", {
         .then((res) => {
           console.log(res);
         });
-    }
+    },
   },
   getters: {
     // getPrompts: (state) => {
@@ -327,7 +335,9 @@ export const useCounterStore = defineStore("counter", {
     //   return state.participantID;
     // },
     getActiveParticipants: (state) => {
-      return state.participants.filter((participant) => participant.status === "active");
-    }
+      return state.participants.filter(
+        (participant) => participant.status === "active"
+      );
+    },
   },
 });
