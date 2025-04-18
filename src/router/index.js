@@ -50,7 +50,7 @@ const routes = [
     component: () => import("../components/Form.vue"),
   },
   {
-    path: "/emails/:email",
+    path: "/emails/new",
     name: "Emails",
     component: () => import("../components/NewEmailForm.vue"),
   },

@@ -1,6 +1,6 @@
 <template>
     <div class="py-48">
-        <h2 class="text-xl font-bold"> {{ message }}</h2>
+        <h2 class="text-xl font-bold"> {{ displayMessage }}</h2>
     </div>
 </template>
 
@@ -22,6 +22,7 @@ export default {
  
     data() {
         return {
+            displayMessage: 'Submission Complete.'
         }
     },
     methods: {
@@ -29,6 +30,13 @@ export default {
         backEdit() {
             this.$router.push( { name: 'ResponseForm' } )
         },
+    },
+    mounted() {
+        if(this.$router.params.message) {
+            this.displayMessage = this.$router.params.message;
+        } else {
+            this.displayMessage = this.message;
+        }
     },
 }
 </script>
