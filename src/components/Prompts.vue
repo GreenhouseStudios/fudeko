@@ -14,12 +14,12 @@
                 :filterMenuStyle="{ width: '14rem' }" style="min-width: 12rem">
                 <template #body="slotProps"> {{ slotProps.data.prompt_set }}</template>
                 <template #filter="{ filterModel, filterCallback }">
-                    <Dropdown v-model="filterModel.value" @change="filterCallback()" :options="promptSets"
+                    <Select v-model="filterModel.value" @change="filterCallback()" :options="promptSets"
                         placeholder="Select One" class="p-column-filter" style="min-width: 12rem" :showClear="true">
                         <template #option="slotProps">
                             {{ slotProps.option }}
                         </template>
-                    </Dropdown>
+                    </Select>
                 </template>
             </Column>
             <Column> <template #body="slotProps"> <router-link :to="'/prompt/' + slotProps.data.id"
@@ -34,10 +34,8 @@ import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import ColumnGroup from 'primevue/columngroup';   // optional
 import Row from 'primevue/row';                   // optional
-
 import Button from 'primevue/button';
-
-import Dropdown from 'primevue/dropdown';
+import Select from 'primevue/selectbutton';
 import { FilterMatchMode } from '@primevue/core/api';
 import { useCounterStore } from '@/stores/store'
 import { mapStores, mapState, } from 'pinia'
@@ -45,7 +43,7 @@ import _ from 'lodash';
 
 export default {
     components: {
-        DataTable, Column, Button, Dropdown,
+        DataTable, Column, Button, Select
     },
     data() {
         return {
