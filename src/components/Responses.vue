@@ -49,7 +49,7 @@ const joinedResponses = computed(() => {
         return {
         ...r,
         prompt: store.prompts.find(p => p.id === r.prompt)?.prompt_text || "Custom",
-        participant: store.participants.find(p => p.id === r.participant)?.first_name,
+        participant: store.participants?.find(p => p.id === r.participant)?.first_name,
         responsePreview: r.response_text?.slice(0, 50).replace(/<[^>]*>?/gm, '') + "..."
         }
     }

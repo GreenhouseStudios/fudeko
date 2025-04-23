@@ -15,7 +15,7 @@
       </router-link>
     </Modal>
 
-    <div :class="modalShowing ? 'filter blur-lg' : ''" v-if="!loading">
+    <div :class="modalShowing ? 'filter blur-lg' : ''">
       <header class="flex justify-between pb-12 mb-24">
 
         <router-link to="/">
@@ -27,7 +27,7 @@
       </header>
       <main class="md:px-48 sm:px-4 min-h-screen">
 
-        <router-view class="" v-if="!loading" v-slot="{ Component, route }">
+        <router-view class=""  v-slot="{ Component, route }">
           <transition :name="route.meta.transition" mode="out-in" duration="1000">
             <component :is="Component" :route="route"></component>
           </transition>
@@ -86,7 +86,7 @@ export default {
     RouterLink,
     Footer,
     Modal,
-    // Button
+    Button
   },
 }
 </script>

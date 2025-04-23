@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import { mapActions } from 'pinia'
+import { useCounterStore } from '@/stores/store'
 
 export default {
     props: {

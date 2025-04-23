@@ -3,7 +3,7 @@
         <!-- <div v-html="greetings" class="p-12 my-24 bg-yellow-100 ">
 
         </div> -->
-        <Editor class="my-10 bg-white" v-model="greeting" style="height: 320px"></Editor>
+        <Editor class="my-10 bg-white" v-model="editedGreeting" style="height: 320px"></Editor>
         <div class="my-20">
             <button @click="submit" :disabled="submitButtonDisabled" class="p-2 font-bold rounded "
                 :class="submitButtonDisabled ? 'bg-gray-300 border-2 border-gray-400' : 'hover:bg-yellow-200 border-yellow-400 bg-yellow-300 border-2 '">Submit</button>
@@ -30,6 +30,7 @@ export default {
     },
     data() {
         return {
+            editedGreeting: ''
         }
     },
     methods: {
@@ -40,7 +41,7 @@ export default {
             this.toggleLoading();
             await this.editGreeting(this.formData)
             this.toggleLoading();
-            this.$router.push({ name: 'ConfirmSubmit' })
+            this.$router.push({ name: 'Confirm' })
         },
     },
     computed: {
@@ -57,10 +58,13 @@ export default {
         },
         formData() {
             return {
-                text: this.greeting.replaceAll(`"`, `\\"`),
+                text: this.editedGreeting,
                 id: this.$route.params.id
             }
         },
+    },
+    mounted() {
+        this.editedGreeting = this.greeting;
     },
 }
 </script>

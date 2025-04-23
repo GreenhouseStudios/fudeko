@@ -26,7 +26,6 @@ export const useCounterStore = defineStore("counter", {
       promptFamiliarities: useLocalStorage("promptFamiliarities", []),
       responses: [],
       usersPromptChoices: [],
-      emails: [],
       tips: useLocalStorage("tips", []),
       partialResponse: useLocalStorage("partialResponse", {}),
       sbAdmin: supabaseAdmin,
@@ -198,10 +197,6 @@ export const useCounterStore = defineStore("counter", {
     async getResponses() {
       const responses = await supabase.from("responses").select();
       this.responses = responses.data;
-    },
-    async getEmails() {
-      const emails = await supabase.from("emails").select();
-      return emails.data;
     },
     async getGreetings() {
       const greetings = await supabase.from("greetings").select();
