@@ -5,21 +5,14 @@
 </template>
 
 <script>
-import { useCounterStore } from '@/stores/store'
-import { mapActions } from 'pinia'
 
 export default {
     props: {
-        response: {
-            type: String,
-            default: ""
-        },
         message: {
             type: String,
             default: "Thank you for your submission!"
         }
     },
- 
     data() {
         return {
             displayMessage: 'Submission Complete.'

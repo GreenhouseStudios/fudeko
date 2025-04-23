@@ -2,7 +2,7 @@
     <div class="w-11/12 mx-auto md:w-1/2">
         <section class="" v-if="!formSubmitted">
             <h2 class="text-4xl font-black ">Sign Up for Fudeko!</h2>
-            <div class="py-10">
+            <div class="py-10 flex justify-center">
                 <FormKit type="form" theme="genesis" submit-label="Register" @submit="addParticipant" :actions="false">
                     <FormKit type="text" label="First Name" validation="required" v-model="firstName"
                         name="firstName" />

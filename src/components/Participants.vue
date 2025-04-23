@@ -9,7 +9,6 @@
            <label for="cb1" class="pl-2">Show Test Users</label>
         </div> -->
         <DataTable :value="filteredParticipants" class="mx-auto">
-            <Column field="id" header="ParticipantID"></Column>
             <Column field="first_name" header="Name"><template #body="slotProps">{{ slotProps.data.first_name +  " " + slotProps.data.last_name }}</template></Column>
             <Column field="email" header="Email"></Column>
             <Column field="partner_email" header="Partner Email"></Column>

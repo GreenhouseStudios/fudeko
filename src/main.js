@@ -2,12 +2,10 @@ import {createApp} from 'vue'
 import App from './App.vue'
 import {router} from './router'
 import { createPinia } from 'pinia'
-
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import 'animate.css';
 import './index.css'
 import './assets/tailwind.css'
-
 import { plugin } from '@formkit/vue'
 import defaultConfig from '../formkit.config.js'
 import 'vue-awesome/icons'
@@ -35,17 +33,6 @@ app.use(PrimeVue, {
     }
  });
 app.use(plugin, defaultConfig)
-// watch(
-//     pinia.state,
-//     (state) => {
-//         if(state.user){
-//             localStorage.setItem("counter", JSON.stringify(state.user));
-//         }
-
-//     },
-//     { deep: true }
-//     );
-
 app.directive('tooltip', Tooltip);
 app.component('v-icon', Icon)
 app.mount('#app')
