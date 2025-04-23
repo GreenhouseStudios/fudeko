@@ -5,7 +5,7 @@ import { createClient } from "@supabase/supabase-js";
 const supabaseAdmin = createClient(
   import.meta.env.VITE_APP_SUPABASE_URL,
   import.meta.env.VITE_APP_SUPABASE_KEY
-);
+)
 export const useCounterStore = defineStore("counter", {
   state: () => {
     return {
@@ -26,6 +26,7 @@ export const useCounterStore = defineStore("counter", {
       promptFamiliarities: useLocalStorage("promptFamiliarities", []),
       responses: [],
       usersPromptChoices: [],
+      emails: [],
       tips: useLocalStorage("tips", []),
       partialResponse: useLocalStorage("partialResponse", {}),
       sbAdmin: supabaseAdmin,
@@ -33,7 +34,6 @@ export const useCounterStore = defineStore("counter", {
   },
   persist: {
     storage: sessionStorage,
-    paths: ["user"],
   },
   actions: {
     async submitUserResponse(bodyData) {
@@ -58,6 +58,23 @@ export const useCounterStore = defineStore("counter", {
       await supabase
         .from("responses")
         .insert(bodyData)
+        .then((res) => {
+          console.log(res);
+        });
+    },
+    async submitRecord(tableName, bodyData) {
+      await supabase
+        .from(tableName)
+        .insert(bodyData)
+        .then((res) => {
+          console.log(res);
+        });
+    },
+    async deleteRecord(tableName, id) {
+      await supabase
+        .from(tableName)
+        .delete()
+        .eq("id", id)
         .then((res) => {
           console.log(res);
         });
@@ -87,21 +104,19 @@ export const useCounterStore = defineStore("counter", {
       await supabase.from("responses").update(response).eq("id", response.id);
     },
     async login(email, password) {
-      if (password) {
-        await supabase.auth
-          .signInWithPassword({ email: email, password: password })
-          .then((res) => {
-            console.log(res);
-            this.userLoggedIn = true;
-            if (res.error) {
-              console.log(res.error);
-              this.userLoggedIn = false;
-            }
-          }).
-          catch((err) => {
-            console.log(err);
-          });
-      }
+      await supabase.auth
+        .signInWithPassword({ email: email, password: password })
+        .then((res) => {
+          console.log(res);
+          this.userLoggedIn = true;
+          if (res.error) {
+            console.log(res.error);
+            this.userLoggedIn = false;
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
       const rec = await supabase
         .from("participants")
         .select()
@@ -112,10 +127,9 @@ export const useCounterStore = defineStore("counter", {
       await this.getUserResponses(email);
     },
     async getUserResponses() {
-      const responses = await supabase
-        .from("responses")
-        .select()
+      const responses = await supabase.from("responses").select();
       this.responses = responses.data;
+      console.log(this.responses);
     },
     async setPassword(value) {
       const result = await supabase.auth.updateUser({ password: value });
@@ -160,15 +174,26 @@ export const useCounterStore = defineStore("counter", {
     setPrompts(value) {
       this.prompts = value;
     },
+    
     async getPrompts() {
       const prompts = await supabase
         .from("prompts")
         .select("*")
-        .eq("prompt_set", "fudeko");
+        .eq("prompt_set", "fudeko", "overall_prompt_difficulty");
+      console.log('Prompts data:', prompts.data);
       this.prompts = prompts.data;
     },
     async editGreeting(bodydata) {
       await supabase.from("greetings").update(bodydata).eq("id", bodydata.id);
+    },
+    async editRecord(tableName, bodyData) {
+      await supabase
+        .from(tableName)
+        .update(bodyData)
+        .eq("id", bodyData.id)
+        .then((res) => {
+          console.log(res);
+        });
     },
     async getResponses() {
       const responses = await supabase.from("responses").select();
@@ -181,6 +206,10 @@ export const useCounterStore = defineStore("counter", {
     async getGreetings() {
       const greetings = await supabase.from("greetings").select();
       this.greetings = greetings.data;
+    },
+    async getEmails() {
+      const emails = await supabase.from("emails").select();
+      this.emails = emails.data;
     },
     async getTips() {
       const tips = await supabase
@@ -226,6 +255,7 @@ export const useCounterStore = defineStore("counter", {
       await this.getPromptEnums();
       await this.getTips();
       await this.getGreetings();
+      await this.getEmails();
       if (this.participantID) {
         await this.getParticipantRecord(this.participantID);
         await this.getUserResponses();
@@ -283,7 +313,36 @@ export const useCounterStore = defineStore("counter", {
         console.log(data);
       }
     },
-    async addNewTip(bodyData) {
+    async addNewAdmin(bodyData, password) {
+      try {
+        const { data: authData, error: authError } = await supabase.auth.signUp({
+          email: bodyData.email,
+          password: password,
+        });
+
+        if (authError) {
+          console.error("Error: ", authError);
+          return;
+        }
+
+        const { data, error } = await supabase.from("user_roles").insert([
+          {
+            user_id: authData.user.id,
+            email: bodyData.email,
+            role: "pending"
+          },
+        ]);
+
+        if (error) {
+          console.error("Error: ", error);
+        } else {
+          console.log("New admin added: ", data);
+        }
+      } catch (err) {
+        console.error("Error: ", err);
+      }
+    },
+    async AddNewTip(bodyData) {
       await supabase
         .from("tips")
         .insert(bodyData)
@@ -291,6 +350,35 @@ export const useCounterStore = defineStore("counter", {
           console.log(res);
         });
     },
+    async AddNewEmail(bodyData) {
+      await supabase
+        .from("emails")
+        .insert(bodyData)
+        .then((res) => {
+          console.log(res);
+        });
+    },
   },
-  getters: {},
+  getters: {
+    // getPrompts: (state) => {
+    //   return state.prompts;
+    // },
+    // getPromptAssociations: (state) => {
+    //   return state.promptAssociations;
+    // },
+    // getPromptDifficulties: (state) => {
+    //   return state.promptDifficulties;
+    // },
+    // getPromptFamiliarities: (state) => {
+    //   return state.promptFamiliarities;
+    // },
+    // getParticipantID: (state) => {
+    //   return state.participantID;
+    // },
+    getActiveParticipants: (state) => {
+      return state.participants.filter(
+        (participant) => participant.status === "active"
+      );
+    },
+  },
 });

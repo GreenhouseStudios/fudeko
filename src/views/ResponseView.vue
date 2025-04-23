@@ -1,7 +1,7 @@
 <template>
     <div class="w-1/2 mx-auto text-left ">
         <div>
-            <h3>Prompt: {{ promptText.prompt_text }}</h3>
+            <h3 v-if="promptText">Prompt: {{ promptText.prompt_text }}</h3>
             <h4>Submitted: {{ new Date(response.created_at).toLocaleDateString() }}</h4>
         </div>
         <div  class="relative p-12 my-24 bg-yellow-100 " v-if="!editing">

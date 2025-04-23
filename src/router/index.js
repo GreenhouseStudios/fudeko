@@ -29,6 +29,11 @@ const routes = [
     component: () => import("../views/FormkitRegisterView.vue"),
   },
   {
+    path: "/adminregister",
+    name: "AdminRegister",
+    component: () => import("../views/AdminRegisterView.vue"),
+  },
+  {
     path: "/setPassword",
     name: "SetPassword",
     component: () => import("../components/SetPassword.vue"),
@@ -52,6 +57,11 @@ const routes = [
     path: "/form/:email",
     name: "Form",
     component: () => import("../components/Form.vue"),
+  },
+  {
+    path: "/emails/new",
+    name: "Emails",
+    component: () => import("../components/NewEmailForm.vue"),
   },
   {
     path: "/confirmDecline",
