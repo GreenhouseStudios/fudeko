@@ -1,7 +1,7 @@
 <template>
   <div class="container relative px-4 py-36 md:px-8 md:w-full">
 
-    <div v-if="!loading">
+    <div>
       <div v-if="hasUnansweredSet">
 
         <div id="prompt-choose-container" class="mb-10">

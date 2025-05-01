@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="admin-response-config">
     <h1 class="m-10 text-xl">Admin: Enter Response for Participant</h1>
     <div class="my-10">
       <label for="participant-select" class="mr-5">Select Participant</label>

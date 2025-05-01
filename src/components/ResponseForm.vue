@@ -1,9 +1,9 @@
 <template>
-  <div id="response-write" class="z-0 py-32 md:px-24" v-if="participantRecord || isAdminRoute">
+  <div id="response-form" class="z-0 py-32 md:px-24" v-if="participantRecord || isAdminRoute">
     <span class="p-3 mx-auto md:px-5 md:w-2/3 md:p-5 prompt" v-if="hasUnansweredSets">
       <span class="flex flex-col mx-auto md:w-1/2 prompt-write-header" v-if="!isAdminRoute">
-        <h2 class="pb-3 text-4xl" v-html="activePrompt.prompt_text"></h2>
-        <h3 class="pt-1 text-lg font-bold" v-html="activePrompt.prompt_subtext"></h3>
+        <h2 id="prompt-text" class="pb-3 text-4xl" v-html="activePrompt?.prompt_text"></h2>
+        <h3 id="prompt-subtext" class="pt-1 text-lg font-bold" v-html="activePrompt?.prompt_subtext"></h3>
       </span>
 
       <span>
@@ -13,12 +13,12 @@
             <input type="text" id="custom-prompt-title" placeholder="Title (optional)" class="p-1 w-100" size="75"
               v-model="userTitle" />
           </div>
-          <div v-if="isAdminRoute">
+          <div v-if="isAdminRoute" id="admin-response-config-container">
             <AdminResponseConfig :adminParticipant="adminParticipant" :participants="participants"
               :adminPrompt="adminPrompt" :prompts="prompts" @admin-participant-change="handleAdminParticipantChange" />
           </div>
 
-          <Editor class="my-20 bg-white" v-model="response" style="height: 320px" placeholder="Type your response here">
+          <Editor id="editor" class="my-20 bg-white" v-model="response" style="height: 320px" placeholder="Type your response here">
           </Editor>
 
 
@@ -27,19 +27,19 @@
             saved ? "Saved ✓" : "Saving in..." + countDown
           }}</span>
 
-         <FormMediaUpload :handleFileChange="handleFileChange" v-bind:files="files"></FormMediaUpload>
+         <FormMediaUpload id="form-media-upload" :handleFileChange="handleFileChange" v-bind:files="files"></FormMediaUpload>
 
-          <WritingTip :tip="currentTip" v-if="!isAdminRoute"></WritingTip>
+          <WritingTip :tip="currentTip" v-if="!isAdminRoute" id="writing-tip"></WritingTip>
         </section>
         <!-- <ResponseDifficultySelect :difficulty="difficulty" :difficultyOptions="difficultyOptions" @change-difficulty="difficulty = $event"></ResponseDifficultySelect> -->
-        <ResponseDifficultySelect v-model="difficulty" :difficultyOptions="difficultyOptions">
+        <ResponseDifficultySelect id="response-difficulty-select" v-model="difficulty" :difficultyOptions="difficultyOptions">
         </ResponseDifficultySelect>
 
-        <ShareOptionSelect :shareSettings="shareSettingArray" v-model:shareOption="shareOption"
+        <ShareOptionSelect id="share-option-select" :shareSettings="shareSettingArray" v-model:shareOption="shareOption"
           :attrSettings="attrSettingArray" v-model:attrOption="attrOption" v-model:creditName="creditName"
           :participantRecord="participantRecord"></ShareOptionSelect>
 
-        <div class="flex justify-end gap-4 mt-5">
+        <div class="flex justify-end gap-4 mt-5" id="response-submit">
           <button @click="submit" :disabled="submitButtonDisabled" class="p-2 font-bold rounded" :class="submitButtonDisabled
             ? 'bg-gray-300 border-2 border-gray-400'
             : 'hover:bg-yellow-200 border-yellow-400 bg-yellow-300 border-2 '

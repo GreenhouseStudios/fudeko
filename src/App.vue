@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-
     <Modal @close="modalShowing = false" :showing="modalShowing" v-if="modalShowing && partialResponse">
       <h1 class="text-4xl font-black">Welcome back, {{ first_name }}</h1>
       <p class="m-0 text-xl font-bold">It looks like you were in the middle of something.</p>
@@ -16,15 +15,7 @@
     </Modal>
 
     <div :class="modalShowing ? 'filter blur-lg' : ''">
-      <header class="flex justify-between pb-12 mb-24">
-
-        <router-link to="/">
-          <span class="flex items-center float-left pt-2">
-            <img src="./assets/Fudeko-Logo-Final.png" alt="fudeko mikan logo" class="inline w-16 md:w-36">
-          </span>
-        </router-link>
-        <Nav></Nav>
-      </header>
+      <Header></Header>
       <main class="md:px-48 sm:px-4 min-h-screen">
 
         <router-view class=""  v-slot="{ Component, route }">
@@ -35,18 +26,16 @@
       </main>
       <Footer></Footer>
     </div>
-
-
   </div>
 </template>
 <script>
 //  import { supabase } from './lib/supabaseClient'
 import { useCounterStore } from '@/stores/store'
 import { mapActions, mapState } from 'pinia'
-import Nav from './components/Nav.vue'
 import { RouterLink } from 'vue-router'
 import Footer from './components/Footer.vue'
 import Modal from './components/Modal.vue'
+import Header from './components/Header.vue'
 import Button from 'primevue/button'
 
 export default {
@@ -57,11 +46,11 @@ export default {
     }
   },
   async mounted() {
-    this.toggleLoading();
+    // this.toggleLoading();
     await this.initializeStore();
     await this.listenForAuthChanges();
     this.modalShowing = !!( this.partialResponse.prompt && this.participantID );
-    this.toggleLoading();
+    // this.toggleLoading();
   },
   computed: {
     ...mapState( useCounterStore, ['user', 'loading', 'participantID', 'participantRecord', 'partialResponse'] ),
@@ -82,11 +71,11 @@ export default {
     },
   },
   components: {
-    Nav,
     RouterLink,
     Footer,
     Modal,
-    Button
+    Button,
+    Header,
   },
 }
 </script>
