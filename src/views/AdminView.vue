@@ -9,12 +9,12 @@
 <script>
 
 // import Select from 'primevue/Select';
-import Prompts from '../components/Prompts.vue';
-import Responses from '../components/Responses.vue';
-import Participants from '../components/Participants.vue';
-import Tips from '../components/Tips.vue';
-import Greetings from '../components/Greetings.vue';
-import Emails from '../components/Emails.vue';
+import Prompts from '../components/admin/Prompts.vue';
+import Responses from '../components/admin/Responses.vue';
+import Participants from '../components/admin/Participants.vue';
+import Tips from '../components/admin/Tips.vue';
+import Greetings from '../components/admin/Greetings.vue';
+import Emails from '../components/admin/Emails.vue';
 import Menubar from 'primevue/menubar';
 import { useCounterStore } from '../stores/store';
 import { mapActions } from 'pinia';

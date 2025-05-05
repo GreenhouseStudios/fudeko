@@ -56,17 +56,17 @@ const routes = [
   {
     path: "/form/:email",
     name: "Form",
-    component: () => import("../components/Form.vue"),
+    component: () => import("../components/form/Form.vue"),
   },
   {
     path: "/emails/new",
     name: "Emails",
-    component: () => import("../components/NewEmailForm.vue"),
+    component: () => import("../components/admin/NewEmailForm.vue"),
   },
   {
     path: "/confirmDecline",
     name: "ConfirmDecline",
-    component: () => import("../components/ConfirmDecline.vue"),
+    component: () => import("../components/form/ConfirmDecline.vue"),
   },
   // {
   //   path: "/form",
@@ -76,7 +76,7 @@ const routes = [
   {
     path: "/form/:email/:promptNumber",
     name: "SinglePrompt",
-    component: () => import("../components/ResponseForm.vue"),
+    component: () => import("../components/form/ResponseForm.vue"),
   },
   {
     path: "/logout",
@@ -91,22 +91,22 @@ const routes = [
   {
     path: "/responses/new",
     name: "ResponseFormAdmin",
-    component: () => import("../components/ResponseForm.vue"),
+    component: () => import("../components/form/ResponseForm.vue"),
   },
   {
     path: "/participants/new",
     name: "ParticipantFormAdmin",
-    component: () => import("../components/ParticipantForm.vue"),
+    component: () => import("../components/admin/ParticipantForm.vue"),
   },
   {
     path: "/tips/new",
     name: "TipFormAdmin",
-    component: () => import("../components/TipForm.vue"),
+    component: () => import("../components/admin/TipForm.vue"),
   },
   {
     path: "/greetings/new",
     name: "GreetingFormAdmin",
-    component: () => import("../components/GreetingsForm.vue"),
+    component: () => import("../components/admin/GreetingsForm.vue"),
   },
   {
     path: "/greetings/:id",
@@ -136,7 +136,7 @@ const routes = [
   {
     path: "/prompts/new",
     name: "NewPrompt",
-    component: () => import("../components/PromptEdit.vue"),
+    component: () => import("../components/admin/PromptEdit.vue"),
   },
   {
     path: "/prompt/:id",
@@ -151,18 +151,18 @@ const routes = [
   {
     path: "/form/page2/:id",
     name: "ResponseForm",
-    component: () => import("../components/ResponseForm.vue"),
+    component: () => import("../components/form/ResponseForm.vue"),
     meta: {transition: 'fade'}
   },
   { path: "/form/:email/prompt/:promptId",
     name: "ResponseFormPrompt",
-    component: () => import("../components/ResponseForm.vue"),
+    component: () => import("../components/form/ResponseForm.vue"),
     meta: {transition: 'fade'}
   },
   {
     path: "/form/:email/page2/custom",
     name: "ResponseFormCustom",
-    component: () => import("../components/ResponseForm.vue"),
+    component: () => import("../components/form/ResponseForm.vue"),
     meta: {transition: 'fade'}
   },
   {

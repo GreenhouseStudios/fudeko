@@ -34,7 +34,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ShareOption, AttrOption } from "../types/Form";
+import { ShareOption, AttrOption } from "../../types/Form";
 const creditName = defineModel("creditName");
 const shareOption = defineModel<ShareOption>("shareOption");
 const attrOption = defineModel<AttrOption>("attrOption");

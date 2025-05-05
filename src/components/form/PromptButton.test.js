@@ -1,4 +1,4 @@
-import PromptButton from '@/components/PromptButton.vue';
+import PromptButton from '@/components/form/PromptButton.vue';
 import { mount } from '@vue/test-utils';
 
 describe('PromptButton.vue', () => {

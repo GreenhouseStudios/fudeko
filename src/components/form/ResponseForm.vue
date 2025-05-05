@@ -65,13 +65,13 @@
 import { useCounterStore } from "@/stores/store";
 import { mapStores, mapState, mapActions } from "pinia";
 import FileUpload from 'primevue/fileupload';
-import WritingTip from "@/components/WritingTip.vue";
+import WritingTip from "@/components/form/WritingTip.vue";
 import Editor from "primevue/editor";
-import AdminResponseConfig from "@/components/AdminResponseConfig.vue";
-import ResponseDifficultySelect from "@/components/ResponseDifficultySelect.vue";
-import ShareOptionSelect from "@/components/ShareOptionSelect.vue";
-import { ShareOption, AttrOption } from "../types/Form";
-import FormMediaUpload from "./FormMediaUpload.vue";
+import AdminResponseConfig from "@/components/admin/AdminResponseConfig.vue";
+import ResponseDifficultySelect from "@/components/form/ResponseDifficultySelect.vue";
+import ShareOptionSelect from "@/components/form/ShareOptionSelect.vue";
+import { ShareOption, AttrOption } from "../../types/Form";
+import FormMediaUpload from "./form/FormMediaUpload.vue";
 
 const shareSettings: ShareOption[] = [
   { name: "Keep Private", description: "You can always opt to share your response later if you change your mind. You can still share your responses with your friends and family on your private page if you want." },

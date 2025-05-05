@@ -21,7 +21,7 @@
 import { useCounterStore } from '@/stores/store'
 import { supabase } from "../lib/supabaseClient";
 import { mapStores, mapState } from 'pinia'
-import PromptButton from './PromptButton.vue';
+import PromptButton from './form/PromptButton.vue';
 export default {
     props: {
         prompts: {

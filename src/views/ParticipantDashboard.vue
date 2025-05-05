@@ -6,7 +6,7 @@
 </template>
 
 <script setup>
-import Responses from '@/components/Responses.vue';
+import Responses from '@/components/admin/Responses.vue';
 import { useCounterStore } from '@/stores/store';
 const store = useCounterStore();
 
