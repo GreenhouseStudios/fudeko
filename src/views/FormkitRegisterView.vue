@@ -168,7 +168,7 @@ const formValid = computed( () => {
 const store = useCounterStore();
 const addParticipant = async () => {
     console.log( missingFields.value );
-    await store.AddNewParticipant( {
+    await store.addNewParticipant( {
         first_name: firstName.value,
         last_name: lastName.value,
         email: email.value,
