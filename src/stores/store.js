@@ -199,7 +199,7 @@ export const useCounterStore = defineStore("counter", {
       this.responses = responses.data;
     },
     async getGreetings() {
-      const greetings = await supabase.from("greetings").select();
+      const greetings = await supabase.from("greetings").select().eq("excluded_from_query",false)
       this.greetings = greetings.data;
     },
     async getEmails() {
