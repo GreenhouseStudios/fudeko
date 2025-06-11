@@ -42,7 +42,7 @@ async submit() {
     this.toggleLoading();
     await this.submitGreetings( this.formData )
     this.toggleLoading();
-    this.$router.push( { name: 'ConfirmSubmit' } )
+    this.$router.push('/admin')
 },
 
 },
