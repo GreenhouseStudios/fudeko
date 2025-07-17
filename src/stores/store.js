@@ -36,6 +36,7 @@ export const useCounterStore = defineStore("counter", {
   },
   actions: {
     async submitUserResponse(bodyData) {
+      console.log(bodyData);
       for (const file of bodyData.files) {
         const { data, error } = await supabaseAdmin.storage
           .from("response-media")

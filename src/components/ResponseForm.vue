@@ -14,8 +14,14 @@
               v-model="userTitle" />
           </div>
           <div v-if="isAdminRoute">
-            <AdminResponseConfig :adminParticipant="adminParticipant" :participants="participants"
-              :adminPrompt="adminPrompt" :prompts="prompts" @admin-participant-change="handleAdminParticipantChange" />
+            <AdminResponseConfig
+              :adminParticipant="adminParticipant"
+              :participants="participants"
+              :adminPrompt="adminPrompt"
+              :prompts="prompts"
+              @admin-participant-change="handleAdminParticipantChange"
+              @admin-prompt-change="handleAdminPromptChange"
+            />
           </div>
 
           <Editor class="my-20 bg-white" v-model="response" style="height: 320px" placeholder="Type your response here">
@@ -115,6 +121,8 @@ export default {
       ],
       adminPrompt: null,
       adminParticipant: null,
+      selectedPrompt: "",
+      selectedParticipant: "",
       saved: true,
       timeToSave: 5,
       countDown: 5,
@@ -172,8 +180,8 @@ export default {
     record(value) {
       this.recordPartialResponse({
         response_text: value,
-        participant: this.participantRecord.id,
-        prompt: this.activePrompt.id,
+        participant: this.selectedParticipant.id,
+        prompt: this.selectedPrompt.id,
         user_title: this.userTitle,
         share_option: this.shareOption.name,
         response_difficulty: this.difficulty,
@@ -200,8 +208,11 @@ export default {
       this.toggleLoading();
       this.$router.push('/confirmSubmit');
     },
+    handleAdminPromptChange(e) {
+      this.selectedPrompt = e;
+    },
     handleAdminParticipantChange(e) {
-      this.adminParticipant = e.value;
+      this.selectedParticipant = e;
     },
   },
   computed: {
@@ -238,8 +249,8 @@ export default {
     formData() {
       return {
         response_text: this.response,
-        participant: this.adminParticipant?.id || this.participantID,
-        prompt: this.adminPrompt?.id || this.activePrompt?.id,
+        participant: this.selectedParticipant?.id || this.participantID,
+        prompt: this.selectedPrompt?.id || this.activePrompt?.id,
         user_title: this.userTitle,
         share_option: this.shareOption.name,
         response_difficulty: this.difficulty,
