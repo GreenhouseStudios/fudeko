@@ -13,6 +13,7 @@ import Icon from 'vue-awesome/components/Icon'
 import Tooltip from 'primevue/tooltip';
 import PrimeVue from 'primevue/config';
 import Aura from '@primevue/themes/aura';
+import Dropdown from 'primevue/dropdown';
 // import "primevue/resources/primevue.min.css";
 import "primeicons/primeicons.css";
 import '@formkit/themes/genesis'
@@ -35,4 +36,5 @@ app.use(PrimeVue, {
 app.use(plugin, defaultConfig)
 app.directive('tooltip', Tooltip);
 app.component('v-icon', Icon)
+app.component('Dropdown', Dropdown)
 app.mount('#app')
