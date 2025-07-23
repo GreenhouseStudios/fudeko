@@ -127,8 +127,23 @@ export const useCounterStore = defineStore("counter", {
       await this.getUserResponses(email);
     },
     async getUserResponses() {
-      const responses = await supabase.from("responses").select();
-      this.responses = responses.data;
+      if (!this.participantID) {
+        console.warn("No participant ID found.");
+        return;
+      }
+    
+      const { data, error } = await supabase
+        .from("responses")
+        .select()
+        .eq("participant", this.participantID);
+    
+      if (error) {
+        console.error("Error fetching user responses:", error);
+        this.error = true;
+        return;
+      }
+    
+      this.responses = data;
       console.log(this.responses);
     },
     async setPassword(value) {
