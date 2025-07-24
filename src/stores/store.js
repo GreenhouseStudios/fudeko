@@ -126,6 +126,12 @@ export const useCounterStore = defineStore("counter", {
       await this.getUserPrompts(email);
       await this.getUserResponses(email);
     },
+    logout() {
+      this.user = null;
+      this.partialResponse = {};
+      this.participantRecord = null;
+      this.userLoggedIn = false;
+    },
     async getUserResponses() {
       if (!this.participantID) {
         console.warn("No participant ID found.");
@@ -168,11 +174,6 @@ export const useCounterStore = defineStore("counter", {
       await this.getParticipants();
       await this.getResponses();
       this.emails = await this.getEmails();
-    },
-    logout() {
-      this.user = null;
-      this.partialResponse = {};
-      this.participantRecord = null;
     },
     async listenForAuthChanges() {
       supabase.auth.onAuthStateChange((event, session) => {
