@@ -1,6 +1,6 @@
 <template>
     <section class="">
-        <div v-if="participantRecord" class="flex flex-col justify-end py-2 md:px-10 md:mt-4 sm:mt-1 md:px-2">
+        <div v-if="userLoggedIn" class="flex flex-col justify-end py-2 md:px-10 md:mt-4 sm:mt-1 md:px-2">
             <div v-show="participantID" class="flex flex-col"><span v-if="userLoggedIn">Welcome Back, {{
                     participantRecord?.first_name }}</span>
                 <router-link to="/logout" @click="clearParticipant" class="text-sm underline from-blue-400">

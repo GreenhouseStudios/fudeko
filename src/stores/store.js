@@ -127,10 +127,15 @@ export const useCounterStore = defineStore("counter", {
       await this.getUserResponses(email);
     },
     logout() {
+      supabase.auth.signOut();
+
       this.user = null;
       this.partialResponse = {};
       this.participantRecord = null;
       this.userLoggedIn = false;
+
+      localStorage.removeItem('participantID');
+      localStorage.removeItem('participantRecord');
     },
     async getUserResponses() {
       if (!this.participantID) {
