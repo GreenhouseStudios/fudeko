@@ -37,7 +37,11 @@ export default {
         }
     },
     mounted() {
+        const store = useCounterStore();
 
+        if (store.userLoggedIn) {
+            this.$router.push("/participantDashboard");
+        }
     },
     computed: {
         mapStores() {
