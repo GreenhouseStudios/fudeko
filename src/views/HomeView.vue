@@ -30,12 +30,16 @@
       </p>
     </section>
     <section class="flex flex-col items-center justify-center my-12">
-
-      <router-link :to="'/register/'">
+      <RouterLink to="/participantDashboard" v-if="userLoggedIn">
+        <button class="p-5 text-2xl font-extrabold text-white fudeko-orange hover:bg-yellow-400">
+          My Dashboard
+        </button>
+      </RouterLink>
+      <RouterLink to="/register" v-else>
         <button class="p-5 text-2xl font-extrabold text-white fudeko-orange hover:bg-yellow-400">
           Register Now
         </button>
-      </router-link>
+      </RouterLink>
     </section>
     <section class="px-12 py-5 my-8 text-lg font-bold fudeko-blue">
       <p>
@@ -51,13 +55,14 @@
 <script>
 import { useCounterStore } from "@/stores/store";
 import { mapStores, mapState, mapActions } from "pinia";
+import { RouterLink, RouterView } from "vue-router";
 export default {
   setup() {
     return {};
   },
   computed: {
     ...mapStores( useCounterStore ),
-    ...mapState( useCounterStore, ["partialResponse", "participantRecord"] ),
+    ...mapState( useCounterStore, ["partialResponse", "participantRecord", "userLoggedIn"] ),
   },
 };
 </script>
