@@ -124,7 +124,7 @@ export const useCounterStore = defineStore("counter", {
       this.participantRecord = rec.data[0];
       this.setParticipantID(this.participantRecord.id);
       await this.getUserPrompts(email);
-      await this.getUserResponses(email);
+      await this.getUserResponses();
     },
     logout() {
       supabase.auth.signOut();
@@ -155,7 +155,6 @@ export const useCounterStore = defineStore("counter", {
       }
     
       this.responses = data;
-      console.log(this.responses);
     },
     async setPassword(value) {
       const result = await supabase.auth.updateUser({ password: value });
@@ -169,11 +168,6 @@ export const useCounterStore = defineStore("counter", {
       this.participantRecord = rec.data[0];
       this.setParticipantID(this.participantRecord.id);
       await this.getUserPrompts(email);
-    },
-    loginAdmin(value) {
-      this.user = value;
-
-      this.participantRecord = null;
     },
     async fetchAdminData() {
       await this.getParticipants();

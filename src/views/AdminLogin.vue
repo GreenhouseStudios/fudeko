@@ -40,7 +40,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions( useCounterStore, ['toggleLoading', 'toggleError', 'loginAdmin'] ),
+        ...mapActions( useCounterStore, ['toggleLoading', 'toggleError', 'loginAdmin', 'login'] ),
         async loginUser() {
             // const adminCheck = await supabase.rpc( 'is_user_admin', { email: this.email } );
             const { data, error } = await supabase.from('user_roles').select('email').eq('email', this.email);
@@ -50,19 +50,15 @@ export default {
                 return false;
             }
             else {
-
                 this.toggleLoading();
-                await supabase.auth.signInWithPassword( { email: this.email, password: this.password } )
-                    .then( ( res ) => {
-                        if ( res.data.user && !res.error ) {
-                            this.loginAdmin( { email: this.email, password: this.password } );
-                            this.$router.push( '/admin' );
-                        }
-                    } )
-                    .catch( err => console.log( err ) )
-                    .finally( () => {
-                        this.toggleLoading();
-                    } );
+                try {
+                    await this.login(this.email, this.password);
+                    this.$router.push( '/admin' );
+                } catch (err) {
+                    console.log(err);
+                } finally {
+                    this.toggleLoading();
+                }
             }
         }
     },
