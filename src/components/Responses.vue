@@ -38,7 +38,7 @@ const props = defineProps({
 const store = useCounterStore();
 
 const joinedResponses = computed(() => {
-    return store.responses.map(r => {
+    return store.adminResponses.map(r => {
     if (props.user) {
         return {
         ...r,
