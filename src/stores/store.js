@@ -25,6 +25,7 @@ export const useCounterStore = defineStore("counter", {
       promptAssociations: useLocalStorage("promptAssociations", []),
       promptFamiliarities: useLocalStorage("promptFamiliarities", []),
       responses: [],
+      adminResponses: [],
       usersPromptChoices: [],
       tips: useLocalStorage("tips", []),
       partialResponse: useLocalStorage("partialResponse", {}),
@@ -213,6 +214,7 @@ export const useCounterStore = defineStore("counter", {
     async getResponses() {
       const responses = await supabase.from("responses").select();
       this.responses = responses.data;
+      this.adminResponses = responses.data;
     },
     async getGreetings() {
       const greetings = await supabase.from("greetings").select().eq("excluded_from_query",false)
