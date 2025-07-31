@@ -10,7 +10,7 @@
 
 // import Select from 'primevue/Select';
 import Prompts from '../components/Prompts.vue';
-import Responses from '../components/Responses.vue';
+import AdminReponses from '@/components/AdminReponses.vue';
 import Participants from '../components/Participants.vue';
 import Tips from '../components/Tips.vue';
 import Greetings from '../components/Greetings.vue';
@@ -20,13 +20,13 @@ import { useCounterStore } from '../stores/store';
 import { mapActions } from 'pinia';
 export default {
     components: {
-        Responses, Participants, Prompts, Tips, Greetings, Menubar
+        AdminReponses, Participants, Prompts, Tips, Greetings, Menubar
     },
     data() {
         return {
-            view: { label: 'Responses', value: 'responses', component: Responses },
+            view: { label: 'AdminResponses', value: 'responses', component: AdminReponses },
             views: [
-                { label: 'Responses', value: 'responses', component: Responses, command: () => { this.view = { label: 'Responses', value: 'responses', component: Responses } } },
+                { label: 'AdminResponses', value: 'responses', component: AdminReponses, command: () => { this.view = { label: 'Responses', value: 'responses', component: AdminReponses } } },
                 { label: 'Prompts', value: 'prompts', component: Prompts, command: () => { this.view = { label: 'Prompts', value: 'prompts', component: Prompts } } },
                 { label: 'Participants', value: 'participants', component: Participants, command: () => { this.view = { label: 'Participants', value: 'participants', component: Participants } } },
                 { label: 'Tips', value: 'tips', component: Tips, command: () => { this.view = { label: 'Tips', value: 'tips', component: Tips } } },
