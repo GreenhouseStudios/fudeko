@@ -207,11 +207,4 @@ ul {
   margin: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  body {
-    background-color: black;
-    color: white; /* Light font color for dark mode */
-  }  
-}
-
 </style>
