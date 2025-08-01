@@ -28,7 +28,7 @@
       <main class="md:px-48 sm:px-4 min-h-screen">
 
         <router-view class=""  v-slot="{ Component, route }" :key="$route.fullPath">
-          <transition :name="$route.meta.transition" mode="out-in" duration="1000">
+          <transition :name="route.meta.transition" appear mode="out-in" duration="1000">
             <component :is="Component" :route="route"></component>
           </transition>
         </router-view>
