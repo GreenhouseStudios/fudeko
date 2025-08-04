@@ -24,9 +24,9 @@ export default {
     },
     data() {
         return {
-            view: { label: 'AdminResponses', value: 'responses', component: AdminReponses },
+            view: { label: 'Responses', value: 'responses', component: AdminReponses },
             views: [
-                { label: 'AdminResponses', value: 'responses', component: AdminReponses, command: () => { this.view = { label: 'Responses', value: 'responses', component: AdminReponses } } },
+                { label: 'Responses', value: 'responses', component: AdminReponses, command: () => { this.view = { label: 'Responses', value: 'responses', component: AdminReponses } } },
                 { label: 'Prompts', value: 'prompts', component: Prompts, command: () => { this.view = { label: 'Prompts', value: 'prompts', component: Prompts } } },
                 { label: 'Participants', value: 'participants', component: Participants, command: () => { this.view = { label: 'Participants', value: 'participants', component: Participants } } },
                 { label: 'Tips', value: 'tips', component: Tips, command: () => { this.view = { label: 'Tips', value: 'tips', component: Tips } } },
