@@ -276,7 +276,7 @@ export const useCounterStore = defineStore("counter", {
     },
     async participantHasUnansweredSets(participantID) {
       const { data } = await supabase.rpc("has_unanswered_sets", {
-        participant_id: participantID,
+        participant_id: BigInt(participantID),
       });
       return data;
     },
