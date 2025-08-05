@@ -220,6 +220,18 @@ export const useCounterStore = defineStore("counter", {
       const greetings = await supabase.from("greetings").select().eq("excluded_from_query",false)
       this.greetings = greetings.data;
     },
+    async setActiveGreeting(greetingId) {
+      const { error } = await supabase.rpc("set_active_greeting_new", {
+        gid: greetingId,
+      });
+    
+      if (error) {
+        console.error("Error setting active greeting:", error);
+        return;
+      }
+    
+      await this.getGreetings();
+    },    
     async getEmails() {
       const emails = await supabase.from("emails").select();
       this.emails = emails.data;
