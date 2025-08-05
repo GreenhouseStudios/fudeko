@@ -4,6 +4,8 @@
 
         </div> -->
         <Editor class="my-10 bg-white" v-model="editedGreeting" style="height: 320px"></Editor>
+        <br></br>
+        <Editor class="my-10 bg-white" v-model="editedSubject" style="height: 320px"></Editor>
         <div class="my-20">
             <button @click="submit" :disabled="submitButtonDisabled" class="p-2 font-bold rounded "
                 :class="submitButtonDisabled ? 'bg-gray-300 border-2 border-gray-400' : 'hover:bg-yellow-200 border-yellow-400 bg-yellow-300 border-2 '">Submit</button>
@@ -30,7 +32,8 @@ export default {
     },
     data() {
         return {
-            editedGreeting: ''
+            editedGreeting: '',
+            editedSubject: ''
         }
     },
     methods: {
@@ -48,7 +51,7 @@ export default {
         ...mapStores(useCounterStore),
         ...mapState(useCounterStore, ['count', 'prompts', 'responses', 'greetings', 'loading', 'error', 'usersPromptChoices', 'participants']),
         greeting() {
-                return this.greetings.find(r => r.id == parseInt(this.$route.params.id))?.text
+                return this.greetings.find(r => r.id == parseInt(this.$route.params.id))
         },
         greetingID() {
             return this.$route.params.id
@@ -59,12 +62,14 @@ export default {
         formData() {
             return {
                 text: this.editedGreeting,
-                id: this.$route.params.id
+                id: this.$route.params.id,
+                subject: this.editedSubject
             }
         },
     },
     mounted() {
-        this.editedGreeting = this.greeting;
+        this.editedGreeting = this.greeting?.text;
+        this.editedSubject = this.greeting?.subject;
     },
 }
 </script>
