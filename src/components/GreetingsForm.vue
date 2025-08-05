@@ -59,7 +59,7 @@ async submit() {
     this.toggleLoading();
     await this.submitGreetings( this.formData )
     this.toggleLoading();
-    this.$router.push( { name: 'Confirm' } )
+    this.$router.push( { name: 'Confirm' } );
 },
 
 },

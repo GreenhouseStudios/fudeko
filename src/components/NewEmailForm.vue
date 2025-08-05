@@ -4,20 +4,18 @@
             <h1>New Email</h1>
 
             <section class="my-5 mx-auto">
-                <Accordion value="0">
-                    <AccordionPanel value="0">
-                        <AccordionHeader>Participants List</AccordionHeader>
-                        <AccordionContent>
-                            <div class="flex flex-wrap gap-2 p-4 my-5">
-                                <Chip @click="handleSelectParticipant(participant)"
-                                    v-for="participant in activeParticipants" :key="participant.id"
-                                    class="font-bold p-1 border rounded text-center hover:bg-blue-100 cursor-pointer fudeko-blue">
-                                    {{ participant.first_name }} {{ participant.last_name }}
-                                </Chip>
-                            </div>
-                        </AccordionContent>
-                    </AccordionPanel>
-                </Accordion>
+                <DataTable :value="activeParticipants" dataKey="id" class="mx-auto my-5" v-model:selection="includedParticipants" selectionMode="multiple" :sortOrder="-1">
+                    <Column selectionMode="multiple" headerStyle="width: 3rem"></Column>
+                    <Column field="first_name" header="First Name"></Column>
+                    <Column field="last_name" header="Last Name"></Column>
+                    <Column field="email" header="Email"></Column>
+                    <Column header="Actions">
+                        <template #body="slotProps">
+                            <Button @click="handleSelectParticipant(slotProps.data)" label="View Prompts"
+                                class="p-button-outlined p-button-secondary"></Button>
+                        </template>
+                    </Column>
+                </DataTable>
             </section>
 
             <h4 class="text-left my-5 text-sm font-normal">Click option below to use a template greeting.</h4>
@@ -65,11 +63,17 @@ import AccordionHeader from 'primevue/accordionheader';
 import AccordionContent from 'primevue/accordioncontent';
 import { useRouter } from 'vue-router';
 
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
+import Checkbox from 'primevue/checkbox';
+
+
 const counterStore = useCounterStore();
 const router = useRouter();
 const text = ref('');
 const selectedGreeting = ref(null);
 const promptsToSend = ref([]);
+const includedParticipants = ref([]);
 const selectedParticipant = ref(null);
 const selectedParticipantPrompts = ref([]);
 const greetingMode = ref([
@@ -133,10 +137,13 @@ const handleParticipantReset = () => {
 };
 
 const generatePrompts = async () => {
-    const obj = promptsToSend.value.map(p => ({
+    const includedIds = includedParticipants.value.map(p => p.id);
+    console.log('Included Participants:', includedIds);
+    const obj = promptsToSend.value.filter(pr => includedIds.includes(pr.participant) ).map(p => ({
         participant: p.participant,
         prompts: p.prompts.map(prompt => prompt.id)
     }));
+    console.log(obj)
     for (const o of obj) {
         await supabase.rpc('create_outbounds', o);
     }
@@ -149,7 +156,10 @@ const sendEmail = async () => {
         greeting: selectedGreeting.value.id,
         status: 'sent',
     });
-    const { error } = await supabase.rpc('send_weekly_emails');
+    console.log('Sending emails to:', includedParticipants.value.map(p => p.id));
+    const { error } = await supabase.rpc('send_emails', {
+        participant_ids: includedParticipants.value.map(p => p.id),
+    });
     if (error) console.error(error);
     else {
         router.push('/admin');
