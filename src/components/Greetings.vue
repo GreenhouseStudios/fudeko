@@ -22,6 +22,17 @@
                 <template #body="slotProps"> <router-link :to="'/greetings/' + slotProps.data.id"
                         class="p-2 text-white bg-blue-400 rounded-sm hover:bg-blue-500"> View</router-link></template>
             </Column>
+            <Column>
+                <template #body="slotProps">
+                <button
+                    @click="handleSetActive(slotProps.data.id)"
+                    class="p-2 text-white rounded w-full"
+                    :class="slotProps.data.is_active_greeting ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600'"
+                >
+                    {{ slotProps.data.is_active_greeting ? "Active" : "Inactive" }}
+                </button>
+            </template>
+            </Column>
         </DataTable>
     </div>
 </template>
@@ -46,8 +57,13 @@ export default {
     },
     computed: {
         ...mapStores(useCounterStore),
-        ...mapState(useCounterStore, ['count', 'prompts', 'responses', 'loading', 'error', 'participants', 'greetings']),
+        ...mapState(useCounterStore, ['count', 'prompts', 'responses', 'loading', 'error', 'participants', 'greetings', 'setActiveGreeting']),
     },
+    methods: {
+        handleSetActive(greetingId) {
+            this.setActiveGreeting(greetingId);
+        }
+    }
 }
 </script>
 
